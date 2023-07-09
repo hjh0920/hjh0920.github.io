@@ -93,7 +93,7 @@
 <p>以太网是为了实现局域网通信而设计的一种技术，它规定了包括物理层的连线、电子信号和介质访问层协议的内容。以太网根据最大传输速率的不同可以分为标准的以太网(10Mbit&#x2F;s)、快速以太网(100Mbit&#x2F;s)、千兆以太网 (1000Mbit&#x2F;s)和万兆以太网(10Gbit&#x2F;s)。百兆网和千兆网是目前应用最多的，顾名思义，百兆网的最大传输速率为 100Mbit&#x2F;s，需要注意的是，我们常见的网速的单位是 MByte&#x2F;s，而 1Byte 为 8bit，所以百兆网能达到的最大网速为 12.5MByte&#x2F;s。同理，千兆网的最大传输速率为 1000Mbit&#x2F;s，能达到的最大网速为 125MByte&#x2F;s。</p>
 <h1 id="计算机网络体系结构模型"><a href="#计算机网络体系结构模型" class="headerlink" title="计算机网络体系结构模型"></a>计算机网络体系结构模型</h1><p>国际标准化组织(ISO)在 1978 年提出了“开放系统互联参考模型”，即著名的 OSI&#x2F;RM 模型(Open System  Interconnection&#x2F;Reference Model)。它将计算机网络体系结构的通信协议划分为七层，自下而上依次为：物理层(Physics Layer)、数据链路层(Data Link Layer)、网络层(Network Layer)、传输层(Transport Layer)、会话层(Session Layer)、表示层(Presentation Layer)、应用层 (Application Layer)。下面 4 层主要提供数据传输和交换功能，即以节点到节点之间的通信为主；第 4 层作为上下两部分的桥梁，是整个网络体系结构中最关键的部分；上 3 层则以提供用户与应用程序之间的信息和数据处理功能为主。</p>
 <p>除了标准的 OSI 七层模型以外，常见的网络层次划分还有 TCP&#x2F;IP 四层协议，它们之间的对应关系如图所示：</p>
-<img src="MD_IMG/以太网.assets/image-20220125203948363.png" alt="image-20220125203948363" style="zoom:80%;" />
+<img src="/MD_IMG/以太网.assets/image-20220125203948363.png" alt="image-20220125203948363" style="zoom:80%;" />
 
 <p>不管是 OSI 七层模型还是 TCP&#x2F;IP 的四层模型，它们每一层中都有自己的专属协议，需要完成相应的工作以及与上下层级之间进行沟通。由于目前 TCP&#x2F;IP 协议已经成为 Internet 中的【通用语言】，任何和互联网有关的操作都离不开 TCP&#x2F;IP 协议，没有它我们就根本不可能上网，所以下面就以 TCP&#x2F;IP 协议为主来进行讲解。</p>
 <ul>
@@ -102,7 +102,7 @@
 <li><strong>网络层</strong>：负责提供基本的数据封包传送功能，让每个据包都能够到达目的主机，主要协议有 IP 协议(网际协议)、ICMP 协议(Internet 互连网控制报文协议)、ARP&#x2F;RARP (地址解析&#x2F;反向地址解析协议)以及 IGMP 协议(Internet 组管理协议)。</li>
 <li><strong>网络接口层</strong>：通常包括操作系统中的设备驱动程序和计算机中对应的网络接口卡，它们一起处理与电缆的物理接口细节，主要协议有：以太网、令牌环、帧中继等；</li>
 </ul>
-<img src="MD_IMG/以太网.assets/image-20220125204150283.png" alt="image-20220125204150283"  />
+<img src="/MD_IMG/以太网.assets/image-20220125204150283.png" alt="image-20220125204150283"  />
 
 <p>从该图中可以看出，当主机 A 向主机 B 发送数据时，用户数据将由应用层产生；当用户数据在经过传输层时，传输层对用户数据进行封装，在用户数据的基础上添加了一个 TCP&#x2F;UDP 首部数据，此时数据包变成了 TCP&#x2F;UDP 段；当它经过网络层时，网络层对 TCP&#x2F;UDP 段进行封装，在 TCP&#x2F;UDP 段的基础上添加了一个 IP 首部数据，此时 TCP&#x2F;UDP 段变成了 IP 数据报；当 它经过网络接口层时，网络接口层对 IP 数据报进行封装，在 IP 数据报的基础上添加了以太网首部数据和以太网尾部（一般为 4byte CRC校验值）两个数据，此时 IP 数据报变成了以太网帧。由此可以看出，数据经过层层封装成帧后发到传输介质上，到达目的主机后每层协议再剥掉相应的首部数据，最后将应用层数据交给主机 B 处理。</p>
 <h1 id="MAC-x2F-PHY-基本概念"><a href="#MAC-x2F-PHY-基本概念" class="headerlink" title="MAC&#x2F;PHY 基本概念"></a>MAC&#x2F;PHY 基本概念</h1><p>MAC 即媒介访问控制层（Media Access Control）, 位于TCP&#x2F;IP协议栈的第二层-数据链路层，用于数据传输过程的数据流控制，其将上层IP数据包分割成适合于物理层传输的数据帧，并负责数据传输的冲突管理。按照 IEEE Std 802-2001 上的定义，MAC主要做如下几个事情：</p>
@@ -935,20 +935,6 @@
   </div>
 
    
-  <nav class="article-nav">
-    
-      <a href="/2023/07/08/test/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            test
-          
-        </div>
-      </a>
-    
-    
-  </nav>
-
   
    
   
