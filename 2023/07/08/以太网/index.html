@@ -641,7 +641,7 @@
 <li><strong>可选字段</strong> ：是数据报中的一个可变长度的可选信息，选项字段以32bit为界，不足时插入值为0的填充字节，保证IP首部始终是32bit的整数倍，没有的话长度可以为 0 。</li>
 </ul>
 <p>　　IP首部校验和的计算方法：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1、将16位检验和字段置为0，然后将IP首部按照16位分成多个单元；</span><br><span class="line">2、对各个单元采用反码加法运算（即高位溢出位会加到低位，通常的补码运算是直接丢掉溢出的高位）；</span><br><span class="line">3、此时仍然可能出现进位的情况，将得到的和再次分成高16位和低16位进行累加；</span><br><span class="line">4、最后将得到的和的反码填入校验和字段。</span><br></pre></td></tr></table></figure>
+<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">1</span>、将<span class="number">16</span>位检验和字段置为<span class="number">0</span>，然后将IP首部按照<span class="number">16</span>位分成多个单元；</span><br><span class="line"><span class="attribute">2</span>、对各个单元采用反码加法运算（即高位溢出位会加到低位，通常的补码运算是直接丢掉溢出的高位）；</span><br><span class="line"><span class="attribute">3</span>、此时仍然可能出现进位的情况，将得到的和再次分成高<span class="number">16</span>位和低<span class="number">16</span>位进行累加；</span><br><span class="line"><span class="attribute">4</span>、最后将得到的和的反码填入校验和字段。</span><br></pre></td></tr></table></figure>
 
 <p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230620232037234.png" alt="image-20230620232037234"></p>
 <h3 id="UDP-数据报格式"><a href="#UDP-数据报格式" class="headerlink" title="UDP 数据报格式"></a>UDP 数据报格式</h3><p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230619233823764.png" alt="image-20230619233823764"></p>
@@ -654,7 +654,7 @@
 <hr>
 <p>数据是可以直接封装在IP协议里而不使用TCP、UDP或者其它上层协议的。然而在网络传输中同一IP服务器需要提供各种不同的服务，各种不同的服务类型是使用端口号来区分的，例如用于浏览网页服务的80端口，用于FTP（文件传输协议）服务的21端口等。TCP和UDP都使用两个字节的端口号，理论上可以表示的范围为0~65535，足够满足各种不同的服务类型。</p>
 <p>TCP协议与UDP协议作为传输层最常用的两种传输协议，这两种协议都是使用IP作为网络层协议进行传输。下面是TCP协议与UDP协议的区别：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">①TCP协议面向连接，是流传输协议，通过连接发送数据，而UDP协议传输不需要连接，是数据报协议；</span><br><span class="line">②TCP为可靠传输协议，而UDP为不可靠传输协议。即TCP协议可以保证数据的完整和有序，而UDP不能保证；</span><br><span class="line">③UDP由于不需要连接，故传输速度比TCP快，且占用资源比TCP少；</span><br><span class="line">④TCP协议常用在对数据文件完整性较高的一些场景中，如文件传输等。</span><br><span class="line"> UDP协议常用于对通讯速度有较高要求或者传输数据较少时，如视频直播和QQ等。</span><br></pre></td></tr></table></figure>
+<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">①TCP协议面向连接，是流传输协议，通过连接发送数据，而UDP协议传输不需要连接，是数据报协议；</span><br><span class="line">②TCP为可靠传输协议，而UDP为不可靠传输协议。即TCP协议可以保证数据的完整和有序，而UDP不能保证；</span><br><span class="line">③UDP由于不需要连接，故传输速度比TCP快，且占用资源比TCP少；</span><br><span class="line">④TCP协议常用在对数据文件完整性较高的一些场景中，如文件传输等。</span><br><span class="line"> UDP协议常用于对通讯速度有较高要求或者传输数据较少时，如视频直播和QQ等。</span><br></pre></td></tr></table></figure>
 
 <p>UDP 协议使用报头中的校验值来保证数据的安全。校验值首先在数据发送方通过特殊的算法 计算得出，在传递到接收方之后，还需要再重新计算。如果某个数据报在传输过程中被第三方篡 改或者由于线路噪音等原因受到损坏，发送和接收方的校验计算值将不会相符，由此 UDP 协议可以检测是否出错。虽然 UDP 提供有错误检测，但检测到错误时，只是简单地把损坏的消息段扔掉，或者给应用程序提供警告信息。</p>
 <h3 id="ICMP-报文"><a href="#ICMP-报文" class="headerlink" title="ICMP 报文"></a>ICMP 报文</h3><h4 id="报文格式"><a href="#报文格式" class="headerlink" title="报文格式"></a>报文格式</h4><p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230620130343446.png" alt="image-20230620130343446"></p>
@@ -899,7 +899,7 @@
 </ol>
 <hr>
 <p>输入命令</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pathping www.bilibili.com</span><br></pre></td></tr></table></figure>
+<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">pathping</span> www.bilibili.com</span><br></pre></td></tr></table></figure>
 
 <p>表示从本计算机访问 “<a target="_blank" rel="noopener" href="http://www.bilibili.com”/">www.bilibili.com”</a> 该网站的服务器，并追踪途经的各个中转路由器</p>
 <p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230620231528107.png" alt="image-20230620231528107"></p>
