@@ -1011,95 +1011,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Modelsim</title>
-    <url>/2023/07/08/Modelsim/</url>
-    <content><![CDATA[<h1 id="Quartus-联合-Modelsim"><a href="#Quartus-联合-Modelsim" class="headerlink" title="Quartus 联合 Modelsim"></a>Quartus 联合 Modelsim</h1><p>​		这里使用的版本是：</p>
-<ul>
-<li><p>Quartus Prime 18.1.0.222 Pro Edition</p>
-</li>
-<li><p>Modelsim - INTEL FPGA STARTER EDITION 10.6d</p>
-<p>由于直接使用quartus安装时自带的modelsim，所以不需要单独进行Altera库的安装，直接新建工程即可仿真</p>
-</li>
-</ul>
-<p>注：quartus pro版本与modelsim目前所知道最简单的仿真方法就是使用quartus安装时下载的modelsim进行独立仿真，操作步骤如下：</p>
-<h2 id="新建工程"><a href="#新建工程" class="headerlink" title="新建工程"></a>新建工程</h2><ol>
-<li>在电脑上新建个文件夹，用来存放modelsim工程</li>
-<li>从windows开始菜单里打开modelsim软件</li>
-</ol>
-<img src="/MD_IMG/Modelsim仿真.assets/image-20211105235512769.png" alt="image-20211105235512769" style="zoom: 80%;" />
-
-<ol start="2">
-<li>更改modelsim目录到新建的文件夹下</li>
-</ol>
-<img alt="20211108000445532" src="/MD_IMG/Modelsim仿真.assets/image-20211108000445532.png"  />
-
-<ol start="3">
-<li>新建工程，点击 Add Existing File（添加所有要仿真的文件）</li>
-</ol>
-<img alt="20211108003308888" src="/MD_IMG/Modelsim仿真.assets/image-20211108003308888.png"  />
-
-<ol start="4">
-<li>编译所有</li>
-</ol>
-<img src="/MD_IMG/Modelsim仿真.assets/image-20211108001002004.png" alt="image-20211108001002004" style="zoom:80%;" />
-
-<ol start="5">
-<li>然后在命令行窗口输入下面语句，其中将 <strong>work.zerodly_data_gen_tb</strong> 改为 <strong>work.+ 你要仿真的文件名</strong></li>
-</ol>
-<figure class="highlight autohotkey"><table><tr><td class="code"><pre><span class="line">vsim -L work   -L cyclone10gx_ver -L alter<span class="built_in">a_ver</span> -L lpm_ver -L sgate_ver -L alter<span class="built_in">a_mf</span>_ver -L alter<span class="built_in">a_lnsim</span>_ver -L twentynm_ver -L twentynm_hssi_ver -L twentynm_hip_ver -t ps -novopt work.top_scaler_tb  -t ns</span><br></pre></td></tr></table></figure>
-
-<ol start="6">
-<li>添加要观察的信号到波形窗口，命令行输入 <strong>view wave</strong>，命令行输入<strong>run 1 ns</strong>，即可观察波形</li>
-<li>每次修改代码，直接compile更改的文件 -&gt; restart -&gt; run</li>
-</ol>
-<img alt="20211108132118081" src="/MD_IMG/Modelsim仿真.assets/image-20211108132118081.png"  />
-
-<ol start="8">
-<li>可以保存波形窗口格式，下次仿真直接加载 <strong>.do文件</strong>，然后restart -&gt; run即可，不用再重新添加信号</li>
-</ol>
-<h2 id="仿真已有工程"><a href="#仿真已有工程" class="headerlink" title="仿真已有工程"></a>仿真已有工程</h2><p><strong>File -&gt; Library -&gt; a map to an existing library -&gt; compile -&gt; 命令行输入 view wave -&gt; load do文件 -&gt; run</strong></p>
-<img alt="20211106000209355" src="/MD_IMG/Modelsim仿真.assets/image-20211106000209355.png"  />
-
-<h1 id="Vivado-联合-Modelsim"><a href="#Vivado-联合-Modelsim" class="headerlink" title="Vivado 联合 Modelsim"></a>Vivado 联合 Modelsim</h1><p>这里使用的版本是：</p>
-<ul>
-<li>Vivado 2019.1</li>
-<li>Modelsim SE-64 2020.4</li>
-</ul>
-<h2 id="Modelsim-安装"><a href="#Modelsim-安装" class="headerlink" title="Modelsim 安装"></a>Modelsim 安装</h2><ol>
-<li>复制MentorKG.exe，mgls64.dll以及patch64_dll.bat这三个文件到Modelsim安装目录的win64文件夹下，如E:\modeltech64_2020.4\win64</li>
-<li>双击win64文件夹内粘贴过去的patch64_dll.bat文件，会生成LICENSE.TXT，另存到安装目录</li>
-<li>设置系统环境变量，变量值为LICENSE.TXT的路径   变量名：LM_LICENSE_FILE   变量值：E:\modeltech64_2020.4\LICENSE.TXT</li>
-<li>完成</li>
-</ol>
-<h2 id="联合-Vivado"><a href="#联合-Vivado" class="headerlink" title="联合 Vivado"></a>联合 Vivado</h2><ol>
-<li><p>生成库文件</p>
-<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624200514627.png" alt="image-20230624200514627"></p>
-</li>
-<li><p>从库文件夹里的 modelsim.ini 文件中复制如下内容</p>
-<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624201226528.png" alt="image-20230624201226528"></p>
-</li>
-<li><p>将 modelsim 根目录下 modelsim.ini 文件属性只读关闭</p>
-</li>
-<li><p>粘贴刚刚复制的内容到该文件的如下位置，然后保存，勾选只读</p>
-<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624201314875.png" alt="image-20230624201314875"></p>
-</li>
-<li><p>Vivado 设置</p>
-<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624201449182-1687608911932-1.png" alt="image-20230624201449182"></p>
-<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624201515411.png" alt="image-20230624201515411"></p>
-</li>
-<li><p>可以仿真了</p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>软件使用</category>
-      </categories>
-      <tags>
-        <tag>软件使用</tag>
-        <tag>Modelsim</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>SCCB</title>
     <url>/2023/07/08/SCCB/</url>
     <content><![CDATA[<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>SCCB（Serial Camera Control Bus，串行摄像头控制总线）是由OV（OmniVision的简称）公司定义和发展的三线式串行总线，该总线控制着摄像头大部分的功能，包括图像数据格式、分辨率以及图像处理参数等。结构框图如下所示:</p>
@@ -1196,67 +1107,92 @@
       </tags>
   </entry>
   <entry>
-    <title>SPI</title>
-    <url>/2023/07/08/SPI/</url>
-    <content><![CDATA[<h2 id="SPI-简介"><a href="#SPI-简介" class="headerlink" title="SPI 简介"></a>SPI 简介</h2><p>SPI（Serial Peripheral Interface）是串行外设接口的缩写，SPI是一种<strong>高速</strong>的、<strong>全双工</strong>、同步的<strong>串行</strong>通信总线；SPI采用<strong>主从方式工作</strong>，一般有一个主设备和一个或多个从设备；SPI需要至少4根线，分别是MISO（主设备输入从设备输出）、MOSI（主设备输出从设备输入）、SCLK（时钟）、CS（片选）。SPI使用引脚较少且布线方便，所以越来越多的芯片集成了这种通信协议；</p>
-<p><img src="/MD_IMG/SPI.assets/image-20220312222125089.png" alt="image-20220312222125089"></p>
-<h2 id="寻址方式"><a href="#寻址方式" class="headerlink" title="寻址方式"></a>寻址方式</h2><p>当主设备要和某个从设备进行通信时，主设备需要先向对应从设备的片选线上发送使能信号（高电平或者低电平，根据从机而定）表示选中该从设备。</p>
-<img src="/MD_IMG/SPI.assets/image-20220312222945829.png" alt="image-20220312222945829" style="zoom:80%;" />
-
-<h2 id="通信过程"><a href="#通信过程" class="headerlink" title="通信过程"></a>通信过程</h2><p>SPI总线在进行数据传送时，<strong>先传送高位，后传送低位</strong>；数据线为高电平表示逻辑‘1’，低电平表示逻辑‘0’；**<u>一个字节传送完成后无需应答即可开始下一个字节的传送</u>**；SPI总线采用同步方式工作，时钟线在上升沿或下降沿时发送器向数据线上发送数据，在紧接着的下降沿或上升沿时接收器从数据线上读取数据，完成一位数据传送，八个时钟周期即可完成一个字节数据的传送；</p>
-<p><img src="/MD_IMG/SPI.assets/image-20220312223353824.png" alt="image-20220312223353824"></p>
-<h2 id="极性和相位"><a href="#极性和相位" class="headerlink" title="极性和相位"></a>极性和相位</h2><p>SPI总线有<strong>四种</strong>不同的<strong>工作模式</strong>，取决于极性（CPOL）和相位（CPHL）这两个因素。</p>
+    <title>Modelsim</title>
+    <url>/2023/07/08/Modelsim/</url>
+    <content><![CDATA[<h1 id="Quartus-联合-Modelsim"><a href="#Quartus-联合-Modelsim" class="headerlink" title="Quartus 联合 Modelsim"></a>Quartus 联合 Modelsim</h1><p>​		这里使用的版本是：</p>
 <ul>
-<li>CPOL表示SCLK空闲时的状态<ul>
-<li>CPOL&#x3D;0，空闲时SCLK为低电平</li>
-<li>CPOL&#x3D;1，空闲时SCLK为高电平</li>
-</ul>
+<li><p>Quartus Prime 18.1.0.222 Pro Edition</p>
 </li>
-<li>CPHA表示采样时刻<ul>
-<li>CPHA&#x3D;0，每个周期的第一个时钟沿采样</li>
-<li>CPHA&#x3D;1，每个周期的第二个时钟沿采样</li>
-</ul>
+<li><p>Modelsim - INTEL FPGA STARTER EDITION 10.6d</p>
+<p>由于直接使用quartus安装时自带的modelsim，所以不需要单独进行Altera库的安装，直接新建工程即可仿真</p>
 </li>
 </ul>
-<ol>
-<li>CPOL &#x3D; 0, CPHA &#x3D; 0</li>
+<p>注：quartus pro版本与modelsim目前所知道最简单的仿真方法就是使用quartus安装时下载的modelsim进行独立仿真，操作步骤如下：</p>
+<h2 id="新建工程"><a href="#新建工程" class="headerlink" title="新建工程"></a>新建工程</h2><ol>
+<li>在电脑上新建个文件夹，用来存放modelsim工程</li>
+<li>从windows开始菜单里打开modelsim软件</li>
 </ol>
-<p><img src="/MD_IMG/SPI.assets/image-20220312224813999.png" alt="image-20220312224813999"></p>
+<img src="/MD_IMG/Modelsim仿真.assets/image-20211105235512769.png" alt="image-20211105235512769" style="zoom: 80%;" />
+
 <ol start="2">
-<li>CPOL &#x3D; 0, CPHA &#x3D; 1</li>
+<li>更改modelsim目录到新建的文件夹下</li>
 </ol>
-<p><img src="/MD_IMG/SPI.assets/image-20220312225005800.png" alt="image-20220312225005800"></p>
+<img alt="20211108000445532" src="/MD_IMG/Modelsim仿真.assets/image-20211108000445532.png"  />
+
 <ol start="3">
-<li>CPOL &#x3D; 1, CPHA &#x3D; 0</li>
+<li>新建工程，点击 Add Existing File（添加所有要仿真的文件）</li>
 </ol>
-<p><img src="/MD_IMG/SPI.assets/image-20220313140407142.png" alt="image-20220313140407142"></p>
-<ol start="3">
-<li>CPOL &#x3D; 1, CPHA &#x3D; 1</li>
+<img alt="20211108003308888" src="/MD_IMG/Modelsim仿真.assets/image-20211108003308888.png"  />
+
+<ol start="4">
+<li>编译所有</li>
 </ol>
-<p><img src="/MD_IMG/SPI.assets/image-20220313140009027.png" alt="image-20220313140009027"></p>
-<p>需要说明的是，对于一个特定的从设备来说，一般在出厂时就会将其设计为某种特定的工作模式；我们在使用该设备时就必须保证主设备的工作模式和该从设备保持力致，否则是无法进行通信的；所以一般我们需要对主设备的CPOL和CPHA进行配置。</p>
-<h2 id="IIC-和-SPI-的异同"><a href="#IIC-和-SPI-的异同" class="headerlink" title="IIC 和 SPI 的异同"></a>IIC 和 SPI 的异同</h2><h3 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h3><ol>
-<li>均采用串行、同步的方式</li>
-<li>均采用TTL电平，传输距离和应用场景类似</li>
-<li>均采用主从方式工作</li>
+<img src="/MD_IMG/Modelsim仿真.assets/image-20211108001002004.png" alt="image-20211108001002004" style="zoom:80%;" />
+
+<ol start="5">
+<li>然后在命令行窗口输入下面语句，其中将 <strong>work.zerodly_data_gen_tb</strong> 改为 <strong>work.+ 你要仿真的文件名</strong></li>
 </ol>
-<h3 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h3><ol>
-<li><p>IIC为半双工， SPI为全双工</p>
+<figure class="highlight autohotkey"><table><tr><td class="code"><pre><span class="line">vsim -L work   -L cyclone10gx_ver -L alter<span class="built_in">a_ver</span> -L lpm_ver -L sgate_ver -L alter<span class="built_in">a_mf</span>_ver -L alter<span class="built_in">a_lnsim</span>_ver -L twentynm_ver -L twentynm_hssi_ver -L twentynm_hip_ver -t ps -novopt work.top_scaler_tb  -t ns</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>添加要观察的信号到波形窗口，命令行输入 <strong>view wave</strong>，命令行输入<strong>run 1 ns</strong>，即可观察波形</li>
+<li>每次修改代码，直接compile更改的文件 -&gt; restart -&gt; run</li>
+</ol>
+<img alt="20211108132118081" src="/MD_IMG/Modelsim仿真.assets/image-20211108132118081.png"  />
+
+<ol start="8">
+<li>可以保存波形窗口格式，下次仿真直接加载 <strong>.do文件</strong>，然后restart -&gt; run即可，不用再重新添加信号</li>
+</ol>
+<h2 id="仿真已有工程"><a href="#仿真已有工程" class="headerlink" title="仿真已有工程"></a>仿真已有工程</h2><p><strong>File -&gt; Library -&gt; a map to an existing library -&gt; compile -&gt; 命令行输入 view wave -&gt; load do文件 -&gt; run</strong></p>
+<img alt="20211106000209355" src="/MD_IMG/Modelsim仿真.assets/image-20211106000209355.png"  />
+
+<h1 id="Vivado-联合-Modelsim"><a href="#Vivado-联合-Modelsim" class="headerlink" title="Vivado 联合 Modelsim"></a>Vivado 联合 Modelsim</h1><p>这里使用的版本是：</p>
+<ul>
+<li>Vivado 2019.1</li>
+<li>Modelsim SE-64 2020.4</li>
+</ul>
+<h2 id="Modelsim-安装"><a href="#Modelsim-安装" class="headerlink" title="Modelsim 安装"></a>Modelsim 安装</h2><ol>
+<li>复制MentorKG.exe，mgls64.dll以及patch64_dll.bat这三个文件到Modelsim安装目录的win64文件夹下，如E:\modeltech64_2020.4\win64</li>
+<li>双击win64文件夹内粘贴过去的patch64_dll.bat文件，会生成LICENSE.TXT，另存到安装目录</li>
+<li>设置系统环境变量，变量值为LICENSE.TXT的路径   变量名：LM_LICENSE_FILE   变量值：E:\modeltech64_2020.4\LICENSE.TXT</li>
+<li>完成</li>
+</ol>
+<h2 id="联合-Vivado"><a href="#联合-Vivado" class="headerlink" title="联合 Vivado"></a>联合 Vivado</h2><ol>
+<li><p>生成库文件</p>
+<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624200514627.png" alt="image-20230624200514627"></p>
 </li>
-<li><p>IIC有应答机制， SPI无应答机制</p>
+<li><p>从库文件夹里的 modelsim.ini 文件中复制如下内容</p>
+<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624201226528.png" alt="image-20230624201226528"></p>
 </li>
-<li><p>IIC通过向总线广播从机地址来寻址， SPI通过向对应从机发送使能信号来寻址</p>
+<li><p>将 modelsim 根目录下 modelsim.ini 文件属性只读关闭</p>
 </li>
-<li><p>IIC的时钟极性和时钟相位固定， SP I的时钟极性和时钟相位可调</p>
+<li><p>粘贴刚刚复制的内容到该文件的如下位置，然后保存，勾选只读</p>
+<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624201314875.png" alt="image-20230624201314875"></p>
+</li>
+<li><p>Vivado 设置</p>
+<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624201449182-1687608911932-1.png" alt="image-20230624201449182"></p>
+<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624201515411.png" alt="image-20230624201515411"></p>
+</li>
+<li><p>可以仿真了</p>
 </li>
 </ol>
 ]]></content>
       <categories>
-        <category>协议</category>
+        <category>软件使用</category>
       </categories>
       <tags>
-        <tag>协议</tag>
-        <tag>SPI</tag>
+        <tag>软件使用</tag>
+        <tag>Modelsim</tag>
       </tags>
   </entry>
   <entry>
@@ -1339,6 +1275,70 @@
       <tags>
         <tag>协议</tag>
         <tag>UART</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>SPI</title>
+    <url>/2023/07/08/SPI/</url>
+    <content><![CDATA[<h2 id="SPI-简介"><a href="#SPI-简介" class="headerlink" title="SPI 简介"></a>SPI 简介</h2><p>SPI（Serial Peripheral Interface）是串行外设接口的缩写，SPI是一种<strong>高速</strong>的、<strong>全双工</strong>、同步的<strong>串行</strong>通信总线；SPI采用<strong>主从方式工作</strong>，一般有一个主设备和一个或多个从设备；SPI需要至少4根线，分别是MISO（主设备输入从设备输出）、MOSI（主设备输出从设备输入）、SCLK（时钟）、CS（片选）。SPI使用引脚较少且布线方便，所以越来越多的芯片集成了这种通信协议；</p>
+<p><img src="/MD_IMG/SPI.assets/image-20220312222125089.png" alt="image-20220312222125089"></p>
+<h2 id="寻址方式"><a href="#寻址方式" class="headerlink" title="寻址方式"></a>寻址方式</h2><p>当主设备要和某个从设备进行通信时，主设备需要先向对应从设备的片选线上发送使能信号（高电平或者低电平，根据从机而定）表示选中该从设备。</p>
+<img src="/MD_IMG/SPI.assets/image-20220312222945829.png" alt="image-20220312222945829" style="zoom:80%;" />
+
+<h2 id="通信过程"><a href="#通信过程" class="headerlink" title="通信过程"></a>通信过程</h2><p>SPI总线在进行数据传送时，<strong>先传送高位，后传送低位</strong>；数据线为高电平表示逻辑‘1’，低电平表示逻辑‘0’；**<u>一个字节传送完成后无需应答即可开始下一个字节的传送</u>**；SPI总线采用同步方式工作，时钟线在上升沿或下降沿时发送器向数据线上发送数据，在紧接着的下降沿或上升沿时接收器从数据线上读取数据，完成一位数据传送，八个时钟周期即可完成一个字节数据的传送；</p>
+<p><img src="/MD_IMG/SPI.assets/image-20220312223353824.png" alt="image-20220312223353824"></p>
+<h2 id="极性和相位"><a href="#极性和相位" class="headerlink" title="极性和相位"></a>极性和相位</h2><p>SPI总线有<strong>四种</strong>不同的<strong>工作模式</strong>，取决于极性（CPOL）和相位（CPHL）这两个因素。</p>
+<ul>
+<li>CPOL表示SCLK空闲时的状态<ul>
+<li>CPOL&#x3D;0，空闲时SCLK为低电平</li>
+<li>CPOL&#x3D;1，空闲时SCLK为高电平</li>
+</ul>
+</li>
+<li>CPHA表示采样时刻<ul>
+<li>CPHA&#x3D;0，每个周期的第一个时钟沿采样</li>
+<li>CPHA&#x3D;1，每个周期的第二个时钟沿采样</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li>CPOL &#x3D; 0, CPHA &#x3D; 0</li>
+</ol>
+<p><img src="/MD_IMG/SPI.assets/image-20220312224813999.png" alt="image-20220312224813999"></p>
+<ol start="2">
+<li>CPOL &#x3D; 0, CPHA &#x3D; 1</li>
+</ol>
+<p><img src="/MD_IMG/SPI.assets/image-20220312225005800.png" alt="image-20220312225005800"></p>
+<ol start="3">
+<li>CPOL &#x3D; 1, CPHA &#x3D; 0</li>
+</ol>
+<p><img src="/MD_IMG/SPI.assets/image-20220313140407142.png" alt="image-20220313140407142"></p>
+<ol start="3">
+<li>CPOL &#x3D; 1, CPHA &#x3D; 1</li>
+</ol>
+<p><img src="/MD_IMG/SPI.assets/image-20220313140009027.png" alt="image-20220313140009027"></p>
+<p>需要说明的是，对于一个特定的从设备来说，一般在出厂时就会将其设计为某种特定的工作模式；我们在使用该设备时就必须保证主设备的工作模式和该从设备保持力致，否则是无法进行通信的；所以一般我们需要对主设备的CPOL和CPHA进行配置。</p>
+<h2 id="IIC-和-SPI-的异同"><a href="#IIC-和-SPI-的异同" class="headerlink" title="IIC 和 SPI 的异同"></a>IIC 和 SPI 的异同</h2><h3 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h3><ol>
+<li>均采用串行、同步的方式</li>
+<li>均采用TTL电平，传输距离和应用场景类似</li>
+<li>均采用主从方式工作</li>
+</ol>
+<h3 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h3><ol>
+<li><p>IIC为半双工， SPI为全双工</p>
+</li>
+<li><p>IIC有应答机制， SPI无应答机制</p>
+</li>
+<li><p>IIC通过向总线广播从机地址来寻址， SPI通过向对应从机发送使能信号来寻址</p>
+</li>
+<li><p>IIC的时钟极性和时钟相位固定， SP I的时钟极性和时钟相位可调</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>协议</category>
+      </categories>
+      <tags>
+        <tag>协议</tag>
+        <tag>SPI</tag>
       </tags>
   </entry>
   <entry>
