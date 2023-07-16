@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>FC-AE-1553 |  Welcome</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+        <style>
+            .outer {
+                margin-left: 15%;
+            }
+        </style>
+      <section class="outer">
+  <article
+  id="post-FC-AE-1553"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  FC-AE-1553
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/08/FC-AE-1553/" class="article-date">
+  <time datetime="2023-07-08T03:42:54.000Z" itemprop="datePublished">2023-07-08</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%8D%8F%E8%AE%AE/">协议</a>
+  </div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="MIL-STD-1553B总线协议"><a href="#MIL-STD-1553B总线协议" class="headerlink" title="MIL-STD-1553B总线协议"></a>MIL-STD-1553B总线协议</h2><h3 id="总线结构"><a href="#总线结构" class="headerlink" title="总线结构"></a>总线结构</h3><p>MIL-STD-1553B总线由BC（总线控制器），RT（远程终端），BM（总线监视器）以及总线自身四部分组成。一个MIL-STD-1553B总线网络中，有且只有一个总线控制器BC在工作，远程终端RT的个数不多于31，而总线监视器BM的数量则可根据需要设置，它并不参与总线通信。总线具备冗余备份能力，能增加MIL-STD-1553B总线网络信息传输的可靠性，当一条总线断开时，网络会自动切换到其他冗余的总线上，保证了消息的传递。</p>
+<ul>
+<li>BC主要管理和控制MIL-STD-1553B总线上消息的传输，网络中只有总线控制器才能发送指令字，它总共包括字控制器、消息控制器和帧控制器三个类型。</li>
+<li>RT的工作主要是响应来自总线控制器的命令，并实施数据的传递。一个MIL-STD-1553B总线网络可以接入多个远程终端，不同的终端通过RT地址来进行区分。</li>
+<li>BM主要监视与记录MIL-STD-1553B总线上传递消息的终端，它能够接收总线控制器的指令而工作，但不参与总线消息的传输。</li>
+</ul>
+<h3 id="字格式"><a href="#字格式" class="headerlink" title="字格式"></a>字格式</h3><p>MIL-STD-1553B总线上消息传输的最小单位为字，它包括命令字、数据字和状态字三种类型，这三种类型的字经过曼彻斯特编码调制组成一条条消息，每条消息由1~32个字组成。每一种类型的字格式都是唯一的，但三种类型的字数据结构是相同的。</p>
+<p>每个字的字长为20比特（bit），其中，有效数据位为16比特（bit）。每个字最前面3比特是同步字头，标志一个新字的开始；第20位是奇偶校验位。可以用同步字段来将命令字和状态字与数据字区分开。</p>
+<img alt="20230408161955722" src="/MD_IMG/FC-AE-1553.assets/image-20230408161955722.png"  />
+
+<hr>
+<p><strong>命令字</strong></p>
+<ul>
+<li><p>RT地址</p>
+<p>即远程终端的地址，指示网络控制器发起的该命令字的目的地址。每个RT的地址是唯一存在的。由于该字段包含5比特，所以总线上一共可以有31个RT地址，当该字段全为1时，表示广播地址。由于总线监控器不具有与RT和BC通信的功能，所以它没有总线地址。</p>
+</li>
+<li><p>T&#x2F;R</p>
+<p>用于指示接收该命令字的远程终端执行接收数据还是发送数据，该位为0，RT发送数据，反之则接收数据。</p>
+</li>
+<li><p>子地址&#x2F;模式</p>
+<ul>
+<li>当该字段的值被设为1-30时，它表示子地址，此时数据字计数&#x2F;模式码中的内容为数据字的计数。子地址用来表示需要交互的数据在内存中的位置。</li>
+<li>当该字段被设为0或31时，它表示模式，此时数据字计数&#x2F;模式码字段中的内容代表模式码，该命令字是模式命令，传输方式属于模式命令传输。</li>
+</ul>
+</li>
+<li><p>数据字计数&#x2F;模式码<br>功能取决于子地址&#x2F;模式字段。一是作为数据字计数使用，该字段的内容表示需要交换的数据字的数量；二是作为模式码使用，该字段的内容则用于区分不同类型的模式命令。</p>
+</li>
+</ul>
+<hr>
+<p><strong>状态字</strong></p>
+<p>状态字包含5bit的RT地址和其他用于指示不同状态的状态位。此处的RT地址和命令字中的RT地址类似，不再累述。状态字段标识发出该状态字的RT的状态信息，包括服务请求、忙、消息错误等。除了消息错误位是必须使用的之外，其他所有状态位都是根据具体需求可以选择的。</p>
+<hr>
+<p><strong>数据字</strong></p>
+<p>数据字除了同步字段和校验字段之外的16bit都用于存放需传送的数据。</p>
+<h3 id="消息传输方式"><a href="#消息传输方式" class="headerlink" title="消息传输方式"></a>消息传输方式</h3><p>MIL-STD-1553B总线的消息传输格式总共有10种，这10种格式又分为非广播传输格式和广播传输格式两大类。</p>
+<hr>
+<p>常用的为非广播传输格式中的三种，即BCtoRT（总线控制器向远程终端发送信息）、RTto BC（远程终端向总线控制器发送信息）、RTtoRT（远程终端向远程终端发送信息）。</p>
+<ol>
+<li>BC to RT：总线控制器BC先发送一个接收命令字给其中一个远程终端RT，告诉RT准备接收数据，然后BC继续发送数据字，RT接收数据后返回一个状态字给BC，以说明数据的接收情况。</li>
+<li>RT to BC：总线控制器BC先发送一个发送命令字给一个远程终端RT，告诉RT发送数据，RT收到发送命令字后返回一个状态字，并按照要求发送数据字给BC。</li>
+<li>RT to RT：总线控制器BC发送一个接收命令字给一个远程终端RT1，让其接收数据。然后，该BC发送一个发送命令字给另一个远程终端RT2，让其发送数据给RT1。接收到发送命令字的RT2向BC返回一个状态字并按要求向RT1发送数据字，RT1接收到数据字后向BC返回一个状态字。</li>
+</ol>
+<img alt="20230408163601520" src="/MD_IMG/FC-AE-1553.assets/image-20230408163601520.png"  />
+
+<hr>
+<ol>
+<li>BC to RTs：总线控制器BC向所有远程终端RT发送一个接收命令字，其后发送一连串数据字给所有的RT。RT收到数据后，不需要向BC发送状态字，只需要把状态字中的第15位设置为1即可。</li>
+<li>RT to RTs：总线控制器BC发送一个接收命令字给各远程终端RTn，让其接收数据，然后发送一个发送命令字给远程终端RT3，让其向各终端RTn发送数据。RT3接收到命令后向BC发送一个状态字，并向各RTn发送指定的数据字。各个RTn收到数据后不需要向BC发送状态字，只需要把状态字中的第15位设置为1即可。</li>
+</ol>
+<img alt="20230408163616912" src="/MD_IMG/FC-AE-1553.assets/image-20230408163616912.png"  />
+
+<h2 id="FC协议"><a href="#FC协议" class="headerlink" title="FC协议"></a>FC协议</h2><h3 id="FC协议栈"><a href="#FC协议栈" class="headerlink" title="FC协议栈"></a>FC协议栈</h3><p>类似OSI七层模型，光纤通道协议也分为五层模型。</p>
+<ul>
+<li>FC-0层定义的是物理接口的相关规范，其中包括物理特性、光学特性、电气特性、传输速率和其他与传输介质相关的接口特性以及发射机和接收机]。</li>
+<li>FC-1层是传输协议层。主要描述8B&#x2F;10B的传输码和传输协议，其中包括串行编码和解码规则、传输和接收错误检测机制、端口操作状态以及特殊字符的检测机制[]。</li>
+<li>FC-2层是信令协议层。它的主要内容有FC帧结构的定义、数据层定义和划分（包括帧、序列和交换）、N端口和F端口、三种拓扑类型、包括Class 1、Class<br>2、Class3、Class4和Class6的五种服务类别、分段重组、链路管理和控制、流量监控、检错与恢复等。</li>
+<li>FC-3层是公共服务层。主要处理多个N端口上的公用业务，如多播、分段管理或查寻组等。</li>
+<li>FC-4层是高层协议映射层。对于FC-AE-1553协议来说，就是在FC协议的FC-4层映射MIL-STD-1553B协议。</li>
+</ul>
+<img src="/MD_IMG/FC-AE-1553.assets/image-20230408164724712.png" alt="image-20230408164724712" style="zoom:50%;" />
+
+<h3 id="拓扑结构"><a href="#拓扑结构" class="headerlink" title="拓扑结构"></a>拓扑结构</h3><p>根据通信性能以及有没有交换机，光纤通道协议一共定义了三种基本拓扑结构：点到点、交换式结构和仲裁环，在不同的运用环境下，根据具体需求来使用不同的拓扑结构。</p>
+<p>根据端口所处的拓扑结构不同，有不同的名称：在网络节点上的端口为N_Port（N端口）；在仲裁环内各个节点的端口为L_Port（L端口）；在交换机上的端口为F_Port（F端口）；在交换机上，并且用来连接两个交换机的端口为E_Port（E端口）；在交换机上，同时隶属于仲裁环的端口为FL_Port（FL端口）；最后，有一种全能端口叫做G_Port（G端口）。</p>
+<hr>
+<p><strong>点到点拓扑结构</strong><br>点到点的拓扑结构是这三种拓扑结构中最简单的一种模式，无须使用交换机，直接将网络上的两个端口（N端口）相连，实现它们之间的通信。其结构图如图2-6所示。在这种简单的结构下，可以实现两网络节点的高速全双工通信，传输带宽极高，但不具备可扩张性。</p>
+<img alt="20230408165631578" src="/MD_IMG/FC-AE-1553.assets/image-20230408165631578.png"  />
+
+<hr>
+<p><strong>交换式拓扑结构</strong><br>交换式拓扑结构通过将接收方N端口的ID作为目的地址植入传输数据的帧头，经过一个交换机来达到向目的N端口发送数据。图2-7展示了多个N端口通过一个交换机互联的结构。交换式拓扑使用方便，可扩展性高，而且网络容量较大，但是交换机的开发成本较为昂贵。</p>
+<img alt="20230408165644418" src="/MD_IMG/FC-AE-1553.assets/image-20230408165644418.png"  />
+
+<hr>
+<p><strong>仲裁环拓扑结构</strong><br>在没有交换机参与的情况下，仲裁环拓扑结构允许三个及其以上的L端口之间进行通信。在该结构里面，同一时刻最多只支持一组点到点的传输，而其他的L端口均处在某种等待状态下。</p>
+<img src="/MD_IMG/FC-AE-1553.assets/image-20230408165822918.png" alt="image-20230408165822918" style="zoom: 67%;" />
+
+<h3 id="服务类型"><a href="#服务类型" class="headerlink" title="服务类型"></a>服务类型</h3><p>根据不同的应用场合和传输环境，光纤通道定义了六种服务类型回来满足各种需求。</p>
+<ul>
+<li>第一类服务：专线连接服务。该服务用于建立专用链路，一旦建立，在规定的时间内该链路将会一直保持并会受到交换机的保护。通过该服务，可以实现两个N端口之间建立高带宽的专线数据通信，传输的信息序列将会被交换机保持原有的顺序从源端口发送到目的端口。如果交换机不存在了，该服务将变成一种特殊的点到点的链接。</li>
+<li>第二类服务：多路复用服务。该服务通过交换机无需建立专门的链路，支持多路复用的功能，使多个端口间可以相互共享带宽。如果交换机不存在，这种服务也变成了一种特殊的点到点的连接。在进行传输的时候，发送机会按照给定的序列顺序来发送数据帧，但是交换机并不能保证数据序列按照原先的顺序抵达接收方。同时，该服务为有确认的服务，即接收方在接收以后要给发送方一个确认帧反馈是否接收正确。</li>
+<li>第三类服务：数据报服务。该服务也是无链路的，同第二类服务类型一样，在没有交换机的时候也可以视为一种特殊的点到点连接。同时，该服务为无需确认的服务，接收N端口在接收到有效的数据时，无需反馈确认信息。在本服务下，有很高的发送效率，而就算目的N端口无法接收数据也无须发送busy或者reject帧给源N端口。</li>
+<li>第四类服务：虚拟连接服务。在该类服务下，不会把所有的带宽像第一类服务一样用于一对端口通信，而是虚拟建立起一个N端口与多个N端口之间的数据链路。</li>
+<li>第五类服务：在最新协议中已被废弃。</li>
+<li>第六类服务：多播服务。在本服务下，允许一个N端口跟多个N端口专用链路，一旦建立成功，在规定的时间内，该链路被交换机保持和保护。在数据传输过程中，数据只能是从源N端口向目的N端口传输，各个目的N端口在接受完成以后都会向多播服务器反馈一个链路响应帧，服务器在把接收到的响应帧整理成一个帧再反馈给源N端口。这种服务必需要有交换机的参与。</li>
+</ul>
+<h3 id="帧-x2F-序列-x2F-交换"><a href="#帧-x2F-序列-x2F-交换" class="headerlink" title="帧&#x2F;序列&#x2F;交换"></a>帧&#x2F;序列&#x2F;交换</h3><p>FC-FS协议中规定光纤通道中传输三个级别的数据结构：交换、序列和帧。在传输的工程中，最基本的单位是帧；一个或者多个帧可以组成一个传输序列；而一个或者多个的传输序列构成了一次交换。它们三者的结构关系如图2-9所示。</p>
+<img src="/MD_IMG/FC-AE-1553.assets/image-20230408170008519.png" alt="image-20230408170008519" style="zoom:50%;" />
+
+<h3 id="FC帧格式"><a href="#FC帧格式" class="headerlink" title="FC帧格式"></a>FC帧格式</h3><p>帧作为传输中最基本的单位，光纤通道标准帧类型有三种：命令帧、数据帧和状态帧，它们拥有相同的结构，包括帧起始标记（SOF）、帧内容和帧结束标记（EOF），其标准的帧结构如图2-10所示。其中帧内容里面包含了帧头、数据区域和CRC校验。帧内容中的最大容量为2140Bytes，其中帧头包含了24Bytes，数据区最大容量为2112Bytes，CRC校验字包含了4Bytes。数据区域又分为了有效载荷和填充字节，有效载荷中包含了纯有效数据，填充字节是为了将最后的发送数据填充为32bit字所用的。</p>
+<img alt="20230408172858523" src="/MD_IMG/FC-AE-1553.assets/image-20230408172858523.png"  />
+
+<img src="/MD_IMG/FC-AE-1553.assets/image-20230408172933432.png" alt="image-20230408172933432" style="zoom: 50%;" />
+
+<ul>
+<li>R_CTL：包含了Routing和Information两个字段，其中Routing区域用于标识当前帧的类型。</li>
+<li>Destination ID：当前帧应该传输到的目的端口的ID。</li>
+<li>CS_CTL：配合F_CTL使用，用于表示当前帧在交换机内是否具有优先转发的级别。</li>
+<li>Source ID：当前帧来源端口的ID。</li>
+<li>Type：用于表示当前顶层映射的协议类型，FC-AE-1553协议此域值为0x48。</li>
+<li>F_CTL：用于对帧的控制，里面包含了与序列交换相关的控制信息。</li>
+<li>SEQ_ID：序列标识符，用于区分识别交换中的各个序列，每个序列拥有唯一的数值。</li>
+<li>DF_CTL：用于对可选帧头的使用进行标识，告知接收方使用了何种可选帧头。</li>
+<li>SEQ_CNT：用于序列计数，随着交换的进行，该值会一直递增，直到完成整个交换。</li>
+<li>OX_ID：表示交换发起端口ID。</li>
+<li>RX_ID：表示交换响应端口ID。</li>
+<li>Parameter Field：参数域。</li>
+</ul>
+<h2 id="FC-AE-1553"><a href="#FC-AE-1553" class="headerlink" title="FC-AE-1553"></a>FC-AE-1553</h2><h3 id="网络构成"><a href="#网络构成" class="headerlink" title="网络构成"></a>网络构成</h3><p>FC-AE-1553的网络主要由网络控制器（Network Controller，NC）、网络终端（Network Terminal，NT）和光纤通道网络组成。当FC-AE-1553需要兼容MIL-STD-1553B总线时，网络中会增加FC-AE-1553协议桥、MIL-STD-1553B总线本身和其终端节点RT。FC-AE-1553的网络结构如图2-5所示。</p>
+<img src="/MD_IMG/FC-AE-1553.assets/image-20230409105926572.png" alt="image-20230409105926572" style="zoom:60%;" />
+
+<hr>
+<p><strong>网络控制器（NC）</strong></p>
+<p>网络控制器是FC-AE-1553网络中发出命令的节点。网络控制器在整个数据交互过程中起相当重要的作用，只有当网络控制器发出命令序列，才能发起一次数据交互，网络控制器也控制着网络中的所有数据传输过程。网络控制器的功能与MIL-STD-1553B中的总线控制器类似，不同的是在MIL-STD-1553B中只能有一个总线控制器存在，但在FC-AE-1553网络中可以存在多个网络控制器。</p>
+<hr>
+<p><strong>网络终端（NT）</strong></p>
+<p>网络终端是接收网络控制器的命令并执行命令的一种终端节点，它一般是连接到FC网络上的传感器接口或其他子系统接口。网络终端的主要功能是按照网络控制器的命令完成相应的数据传送或接收。在FC-AE-1553网络中，网络控制器不再处于活跃期时可以被当成网络终端来使用，即该节点同时具有网络终端和网络控制器的功能。</p>
+<hr>
+<p><strong>协议桥设备</strong></p>
+<p>协议桥是实现MIL-STD-1553B网络与FC-AE-1553网络的设备之间通信的设备。协议桥使得FC-AE-1553中的网络终端能与MIL-STD-1553B总线上的远程终端RT进行数据交互。它主要完成FC-AE-1553的三种帧格式和MIL-STD-1553B的三种字格式之间的相互转换问题。</p>
+<h3 id="帧类型"><a href="#帧类型" class="headerlink" title="帧类型"></a>帧类型</h3><p>FC-AE-1553与MIL-STD-1553B相对应，定义了三种帧格式，分别为命令帧、状态帧和数据帧。</p>
+<h4 id="命令帧"><a href="#命令帧" class="headerlink" title="命令帧"></a>命令帧</h4><p>每个FC-AE-1553交换都是由网络控制器发出的命令序列发起的。在NC发出的命令序列和NT-NT传输模式中发送NT发出的状态序列中可能存在FC-AE-1553的命令头。FC-AE-1553的命令帧头是在6个字的FC帧头的基础上，再扩展了6个字的FC-AE-1553的相关帧头组成了，其中扩展帧头相当于是前面6个字的数据载荷。</p>
+<p>FC-AE-1553的命令帧可以携带数据也可以不携带数据，具体情况根据帧头的相关字段的设置决定。命令帧携带数据时，其数据载荷部分最大为2048个字节，如果需要传送的数据超过2048个字节则需要在命令帧后以数据帧的形式进行传送。</p>
+<img alt="20230409110651051" src="/MD_IMG/FC-AE-1553.assets/image-20230409110651051.png"  />
+
+<ul>
+<li><p><strong>R-CTL（路由控制）字段</strong><br>路由控制字段和TYPE字段一样，被用于归类帧。该字段由两部分组成：一是路由比特子字段，二是信息类比特子字段。</p>
+<ul>
+<li>路由比特为0时代表设备数据，为2时代表扩展链路服务，为8时代表基本链路服务。</li>
+<li>信息类比特为6时代表命令帧，为7时代表状态帧，为1时代表数据帧。</li>
+</ul>
+</li>
+<li><p><strong>D-ID（目的标识符）字段</strong><br>D-ID字段作为目的标识符，其携带的信息指示了目的端口即接收端口的网络终端地址、多播地址以及被熟知的地址，如广播地址0XFFFFFF等。</p>
+</li>
+<li><p><strong>CS_CTL（类型特殊控制）字段</strong></p>
+<p>类型特殊控制字段指示了帧的优先级，帧的优先级是一个7bit的值。优先级的值可以在0到127之间，其中127级最高。当优先级使能被设为0时，不使用优先级，相当于帧的优先级为0级，即CS_CTL的值为0。</p>
+</li>
+<li><p><strong>SID（源标识符）字段</strong><br>源标识符是发出该命令帧的源端口的地址标识，此处就是指发出该命令帧的NC的地址，此地址是唯一存在的。</p>
+</li>
+<li><p><strong>TYPE（数据结构类型）字段</strong><br>该字段是用来区分不同数据结构类型的。对于所有传输中的FC-AE-1553序列来说，此字段的值应该为十六进制的48。</p>
+</li>
+<li><p><strong>参数</strong><br>此字段对于所有FC-AE-1553序列来说是被用来指定相对偏移量的。在命令序列和状态序列中，此字段被设为十六进制的0.</p>
+</li>
+<li><p><strong>NT突发请求</strong><br>该字段只在两种传输模式中被使用：一种是NC-NT模式，在该模式中，此字段在NC发出的命令序列中被设置；另一种是NT-NT模式，此时该字段在发送NT向接收NT发出的命令序列中被设置。NT突发请求字段和延迟NT突发请求字段结合使用，它们不能同时为1，但可以同时为0.当NT突发请求字段为1时，延迟NT突发请求字段须被置0，此时命令序列中不能携带数据，并且数据序列的传输必须等到NT或接收NT传回NT包含其可接收的数据大小信息的状态序列后才能进行。</p>
+</li>
+<li><p><strong>延迟NT突发请求</strong><br>与NT突发请求相对应，该字段也在NC-NT模式中NC发出的命令序列和NT-NT模式中发送NT发出的命令序列中被设置。当延迟NT突发请求字段为1时，命令序列中可以携带小于2048字节的数据，并且随后可接着发送一个数据序列，但后续的数据序列都需要等待相应的状态响应被接收后才能继续发送。</p>
+</li>
+<li><p><strong>接收RDMA和发送RDMA</strong></p>
+<p>接收RDMA或发送RDMA字段的设置和子地址字段以及其他子地址字段的意义解读相关.</p>
+<ul>
+<li>在NC-NT和NT-NC传输模式中，如果接收RDMA或发送RDMA字段的值被设为1，则子地址字段分别指示NT和NC用来存放接收到或需要发送的数据帧的内存起始地址。</li>
+<li>在NT-NT传输模式中，网络控制器发出的命令序列中接收RDMA或发送RDMA字段为1表示其他子地址字段指示的是接收&#x2F;发送NT的内存起始地址，在发送NT发出的命令序列中接收RDMA被置为1则表示该命令序列中的子地址字段指示的是接收NT接收数据帧的内存起始地址。</li>
+<li>在所有的传输模式中，如果接收RDMA或发送为0，子地址字段无意义。</li>
+</ul>
+</li>
+<li><p><strong>状态抑制</strong><br>该字段的设置情况与交互完成后NT是否向NC返回状态响应相关。</p>
+<ul>
+<li>当在NC发出的命令序列中，状态抑制位为1，则表示状态抑制有效，NT在数据交互完成后无需对NC返回状态响应。</li>
+<li>当状态抑制位为0时，状态抑制无效，NT在最后需向NC发出状态序列。</li>
+<li>在NT-NT模式中，网络控制器发出的命令序列和发送NT发出的命令序列对该字段的设置应该一致。</li>
+</ul>
+</li>
+<li><p><strong>NT-NT传输标志</strong><br>此字段指示传输模式是否是NT-NT模式，当该位为1时表示传输模式为NT-NT传输模式，相反为其他传输模式。在NT-NT传输模式中的发送NT发出的命令序列和网络控制器发出的命令序列中，该字段都应该为1.</p>
+</li>
+<li><p><strong>T&#x2F;R</strong>*<br>此字段用来指示数据传输方向。</p>
+<ul>
+<li>为1时表示接受到该命令序列的NT执行发送数据命令</li>
+<li>为0时表示接受到该命令序列的NT执行接受数据命令</li>
+</ul>
+</li>
+<li><p><strong>NT-NT模式的NC监控</strong><br>该字段只在NT-NT或NT-多NT的传输模式中有效。该位置0，NC不对数据交互进行监控，置1，则发送NT在向接收NT发送数据序列的同时也需向NC发送相同的数据序列。</p>
+</li>
+<li><p><strong>多播</strong><br>顾名思义，多播字段指示的是数据交互是否为多播，当该字段为0时，目的标识符字段指示的是目的RT的地址，为1时，目的标识符字段指示的是多播地址。</p>
+</li>
+<li><p><strong>子地址&#x2F;模式</strong><br>该字段与数据大小&#x2F;模式码字段相关联。</p>
+<ul>
+<li>当该字段不为全0或全1时，此字段指示子地址，子地址在不同模式下的意义不同，此时数据大小&#x2F;模式码字段指示的是数据大小。</li>
+<li>当该字段为全1或全0时，该字段表示模式，数据大小&#x2F;模式码字段指示的是模式码，模式码指示不同的模式码命令。</li>
+</ul>
+</li>
+</ul>
+<h4 id="状态帧"><a href="#状态帧" class="headerlink" title="状态帧"></a>状态帧</h4><p>FC-AE-1553状态帧在标准光纤通道帧头的基础上，扩展了两个字的设备头。如果被传输，状态序列始终是NT发送的第一个序列，并且其中可能携带数据信息。FC-AE-1553状态帧帧头如图2-7所示。</p>
+<p>由图2-7可知，状态帧帧头的前6个字和命令帧帧头相同，其意义也相同。字6和字7是扩展的设备头。</p>
+<ul>
+<li>字6表示发起该状态序列的网络终端的状态信息。</li>
+<li>字7有两种解读：<ul>
+<li>当该状态序列是对命令序列或数据序列做出的响应，且该NT处于“闲”状态，要求进行突发大小请求响应时，字7代表的是网络终端接下来可以接收的数据序列的最大字节数；</li>
+<li>当该状态序列是在NT-NT模式中的发送NT发出并传送给NC的状态序列时，字7表示接收NT的状态信息。</li>
+</ul>
+</li>
+</ul>
+<img alt="20230409111751716" src="/MD_IMG/FC-AE-1553.assets/image-20230409111751716.png"  />
+
+<ul>
+<li><p><strong>MIL-STD-1553RT无响应</strong><br>该字段只有在FC-AE-1553网络桥接有MIL-STD-1553B总线时有效。当NT向RT发送数据后，RT未在规定时间内对NT作出相应响应，则BC向网络控制器发出的状态帧中，此字段将被置1，由NC要求NT不再对该RT发送任何数据。<br>相反，若RT有反应，则该字段被置为0.当FC-AE-1553网络不兼容MIL-STD-1553B总线时，该字段始终被置0.</p>
+</li>
+<li><p><strong>MIL-STD-1553格式错误</strong><br>同MIL-STD-1553RT无响应字段类似，在FC-AE-1553网络不兼容MIL-STD-1553B总线时，该字段始终被置0.只有在FC-AE-1553网络桥接有MIL-STD-1553B总线时此字段才有效。若该字段为1表示虽然RT对NT传送的数据作出相应反应但反应不符合协议要求，此时NT仍不能再向该RT发送数据。</p>
+</li>
+<li><p><strong>Burst Size Acknowledge</strong></p>
+<p>该字段是对NC发出的命令序列中的NT突发请求和延迟NT突发请求字段的响应。如果忙字段被置为0，此字段置1，则该状态帧头的字7表示下一个可接收的数据的最大字节数。</p>
+</li>
+<li><p><strong>端口登录要求</strong><br>由于本文中FC-AE-1553协议采用隐式登录，所有登录参数都在软件中设置，所以该位始终设置为0，表示该位不起作用。</p>
+</li>
+<li><p><strong>消息错误</strong><br>此字段用于表示消息是否错误。</p>
+</li>
+<li><p><strong>服务请求</strong><br>服务请求位指示NC是否需要服务请求，如果被置1，则NC必须执行定义好的某种特定操作。</p>
+</li>
+<li><p><strong>广播命令接收</strong><br>此字段用于表示接受到的由总线控制器发出的交换命令是否为广播交换。</p>
+</li>
+<li><p><strong>忙</strong><br>该字段用于指示NT是否在进行其他的数据交互，是否能执行NC所发出的命令。只有当NT有没空闲执行命令时该位为1，其他情况都被置为0.</p>
+</li>
+<li><p><strong>子系统标志</strong><br>子系统标志字段指示子系统是否能正常工作。只有当子系统出现故障时，该位被置1，其他情况都被置为0.</p>
+</li>
+<li><p><strong>动态网络控制</strong><br>因为一个FC-AE-1553网络节点即可做NC也可做NT，动态网络控制位就是用于NT和NC的切换中的。此字段是在NT接受到NC发出的网络控制的模式命令后返回的状态响应，如果该位被置1，表示NT接受模式命令，开始执行NC的功能。其他情况该字段为0.</p>
+</li>
+<li><p><strong>终端标志</strong><br>如果网络终端NT出现故障，该位被置1，其他情况为0。</p>
+</li>
+</ul>
+<h4 id="数据帧"><a href="#数据帧" class="headerlink" title="数据帧"></a>数据帧</h4><p>FC-AE-1553的数据帧的帧头只有6个字，与命令帧和状态帧相比，没有扩展帧头的部分。数据帧的帧头格式与光纤通道的帧头格式相同，如图2-8所示。数据帧帧头的各个字段意义与命令帧头的前6个字的意义相同。</p>
+<img alt="20230409111700661" src="/MD_IMG/FC-AE-1553.assets/image-20230409111700661.png"  />
+
+<h3 id="Information-Units"><a href="#Information-Units" class="headerlink" title="Information Units"></a>Information Units</h3><p>信息单元指FC-AE-1553网络中一次交换NC或NT发送的一个序列。对于不同的交换模式下，FC-AE-1553网络上的不同节点设备所使用的信息单元也有差别。根据协议中的规定，可将信息单元划分为NC系列和NT系列。FC-AE-1553协议定义了NC1-NC7七种NC序列以及NT1-NT7七种NT序列。不同类型的数据单元适用与不同的应用环境，并且有着不同的作用。</p>
+<p>若在命令序列或状态序列后有数据序列，则在命令或状态序列中的字节数必须为4的倍数。如果传输多个数据序列，则除去最后一个序列外，所有数据序列的字节数必须是4的倍数。</p>
+<h4 id="NC1"><a href="#NC1" class="headerlink" title="NC1"></a>NC1</h4><p>NC1：使用NC1信息单元的情况如下：</p>
+<ul>
+<li>NC-to-NT写模式交换中的命令序列，序列中包含最多2048字节数据并将状态抑制位置为0，序列后不能跟随数据序列。</li>
+<li>NC-to-NT写模式交换中的命令序列，不包含数据字节，NT突发位为1且延迟NT突发位为0。</li>
+<li>NT-to-NC读模式及NT-to-NT（s）交换中的交换发起命令，由NC发送。</li>
+<li>NT-to-NT第三者交换模式下由发送NT发送的命令序列，NT突发位为1且延迟NT突发位为0。</li>
+</ul>
+<img alt="20230409141730650" src="/MD_IMG/FC-AE-1553.assets/image-20230409141730650.png"  />
+
+<h4 id="NC2"><a href="#NC2" class="headerlink" title="NC2"></a>NC2</h4><p>NC2：使用NC2序列的情况如下：</p>
+<ul>
+<li>NC-to-NT写模式交换中的命令序列，由帧头及最多2048字节数据组成，序列后由一串数据序列跟随。</li>
+<li>由NC发送的不包含数据的命令序列，NT突发位为1且延迟NT突发位为0。</li>
+<li>NT-to-NT第三方传输模式中发送NT发送的命令序列，用来发起与接收NT间的数据通信。</li>
+<li>NT-to-NT模式中由发送NT发送的不包含数据的NC命令序列。</li>
+</ul>
+<img alt="20230409141852551" src="/MD_IMG/FC-AE-1553.assets/image-20230409141852551.png"  />
+
+<h4 id="NC3-4"><a href="#NC3-4" class="headerlink" title="NC3-4"></a>NC3-4</h4><p>NC3、NC5、NC6、NC7：均为数据序列。</p>
+<p>NC4：使用NC4的情况如下</p>
+<ul>
+<li>NC-to-NTs交换模式下的命令序列，状态抑制位须置为1，序列中包含FC-AE-1553命令帧帧头和命令帧内最多2048字节的数据，序列后不允许有数据序列跟随。</li>
+<li>在NC发起NT-to-NT第三者传输模式交换或者NT-to-NTs传输模式时使用，抑制状态设为1。</li>
+<li>在NT被临时授权执行NC功能时使用，如NT-to-NT交换模式及NT-to-NTs交换模式下的发送NT，抑制状态置1。</li>
+<li>在除广播模式以外的方式代码中使用的NC命令序列，序列中可带数据也可不带数据，抑制状态位置1。</li>
+</ul>
+<img alt="20230409142009812" src="/MD_IMG/FC-AE-1553.assets/image-20230409142009812.png"  />
+
+<h4 id="NC5-7"><a href="#NC5-7" class="headerlink" title="NC5-7"></a>NC5-7</h4><img alt="20230409142048506" src="/MD_IMG/FC-AE-1553.assets/image-20230409142048506.png"  />
+
+<h4 id="NT1-7"><a href="#NT1-7" class="headerlink" title="NT1-7"></a>NT1-7</h4><ul>
+<li><p>NT1：使用状态序列NT1的情况如下：</p>
+<ul>
+<li><p>NC-to-NT写模式交换中，NT用来响应收到的NC命令的状态序列，序列只包含状态帧帧头，不携带任何数据载荷。</p>
+</li>
+<li><p>NT-to-NC读模式交换中NT端用来响应NC的状态序列，序列内可携带最多2048字节数据传输给NC，其后不允许有NT系列数据帧跟随。</p>
+</li>
+<li><p>NT-to-NT第三者传输模式情况下，接收NT用来响应发送NT的状态序列，序列中只由FC-AE-1553状态帧头组成。</p>
+</li>
+<li><p>NT-to-NT第三者传输模式情况下，发送NT用来响应NC的状态序列，序列中只由FC-AE-1553状态帧头组成</p>
+</li>
+<li><p>NT-to-NTs交换模式中收到发送NT发送的命令序列的NITs用来响应的状态序列，序列中不携带任何数据字节。</p>
+</li>
+</ul>
+</li>
+<li><p>NT2：使用情况如下：<br>NT-to-NC读模式交换中，NT用来响应NC的第一个序列，可包含最多2048字节数据，其后可跟随NT系列的数据序列向NC传输数据。</p>
+</li>
+<li><p>NT3：使用情况如下：<br>NT数据序列的最后一个序列，其后不可再有数据序列传输，NT-to-NC写模式数据传输中最后一个数据序列使用NT3。</p>
+</li>
+<li><p>NT4：保留</p>
+</li>
+<li><p>NT5：使用NT5的情况如下：<br>一次交换中只有一个序列组成时NT端可用NT5序列。</p>
+</li>
+<li><p>NT6：使用情况如下：<br>不携带数据字节，用来响应NC或由NC授权的发送NT发送的命令序列。</p>
+</li>
+<li><p>NT7：使用情况如下：<br>作为NT-to-NC读模式交换中除最后一个数据序列外的任意位置的数据序列使用。</p>
+</li>
+</ul>
+<img alt="20230409142239534" src="/MD_IMG/FC-AE-1553.assets/image-20230409142239534.png"  />
+
+
+
+
+
+<h3 id="传输模式"><a href="#传输模式" class="headerlink" title="传输模式"></a>传输模式</h3><ul>
+<li>在所有情况下，NT在接收到它确定为无效的任何命令序列、数据序列或状态序列后，不回复状态序列。</li>
+<li>如果NC或者发送NT检测到交换无效或超时，可以停止发送以终止交换，并忽略从NT接收到的所有数据和状态，此外，NC也可以调用ABTS-LS基本链接服务</li>
+<li>如果NT（非发送NT）检测到交换无效或超时，NT不回复任何状态序列，并终止交换。</li>
+</ul>
+<p>与MIL-STD-1553B相对应，FC-AE-1553总线协议也规定了数据的十种传输模式，分别是：</p>
+<ol>
+<li>网络控制器到网络终端（NC-NT）</li>
+<li>网络终端到网络控制器（NT-NC）</li>
+<li>网络终端到网络终端（NT-NT）</li>
+<li>无数据字的模式命令传输</li>
+<li>带数据字的模式命令传输，命令网络终端发送数据</li>
+<li>带数据字的模式命令传输，命令网络终端接收数据</li>
+<li>网络控制器到多个网络终端的广播或多播模式（NC-NTs）</li>
+<li>网络终端到多个网络终端（NT-NTS）</li>
+<li>发送到多个网络终端的没有数据字的模式命令</li>
+<li>发送到多个网络终端的带有数据字的模式命令传输，命令接收数据</li>
+</ol>
+<img alt="20230409114202440" src="/MD_IMG/FC-AE-1553.assets/image-20230409114202440.png"  />
+
+<p>下面选择几种常见的模式进行介绍。</p>
+<h4 id="1-NC-NT"><a href="#1-NC-NT" class="headerlink" title="1. NC-NT"></a>1. NC-NT</h4><ul>
+<li><p><strong>NT突发请求&#x3D;0，延迟NT突发请求&#x3D;0</strong></p>
+<p>在这种传输模式中，NC首先发送一个命令序列用来发起此次数据交互。该命令序列中可能携带数据信息，最多可携带2048个字节的数据。根据其后是否跟随数据序列以及状态抑制位的设定，NC发出的命令序列可能是以下三种信息单元：NC1，不跟随数据序列，且状态抑制位置0；NC2，跟随数据序列；NC4，不跟随数据序列，且状态抑制位置1。</p>
+<p>若需要发送的数据信息大于2048个字节，则NC还需向NT发送一定的数据序列，此处NC发出的信息单元可能是NC6（不是最后一个数据序列）、NC3（最后一个数据序列且状态抑制位置0）或NC5（最后一个数据序列且状态抑制位置1）。数据发送完成后，NT根据状态抑制位的设置选择是否向NC发出状态序列。</p>
+<img alt="20230409154745106" src="/MD_IMG/FC-AE-1553.assets/image-20230409154745106.png"  />
+
+<ul>
+<li>NT应在NT_C&#x2F;S_TOV时间内向NC发送一个状态序列(NT1)并终止交换。</li>
+<li>命令序列结束与第一个数据序列开始之间的最长时间，以及数据序列之间的最长时间，为C&#x2F;S_D_TX_TOV。</li>
+</ul>
+</li>
+<li><p><strong>NT突发请求&#x3D;1，延迟NT突发请求&#x3D;0</strong></p>
+<p>NC依然首先发出一个命令序列来开始此次数据交互，该命令序列属于NC1信息单元。NT收到命令序列后向NC回复信息单元为NT6的携带可接收数据字节数的状态序列。此后，NC开始发送数据序列，这些数据序列可能的信息单元是：NC3（不为最后一个数据序列，或最后一个数据序列但状态抑制位置0）；NC5（最后一个数据序列且状态抑制位置1）。最后NT根据状态抑制位的设置决定是否回复状态序列。</p>
+<img alt="20230409155847398" src="/MD_IMG/FC-AE-1553.assets/image-20230409155847398.png"  />
+</li>
+<li><p>NT 突发请求&#x3D;0，延迟NT突发请求&#x3D;1</p>
+<p>在这种传输模式中，NC在发出命令序列后，无需等待NT回复状态序列，在一定时间间隔后可随后向NT发送数据序列，但除第一个数据序列之外，后续需要发送的数据序列都需要根据NT回复的状态序列中指示的可接受数据字节数来设置数据大小。各中序列的信息单元与当NT突发请求为1时的情况相同。</p>
+<img alt="20230409160855594" src="/MD_IMG/FC-AE-1553.assets/image-20230409160855594.png"  /></li>
+</ul>
+<h4 id="2-NT-NC"><a href="#2-NT-NC" class="headerlink" title="2. NT-NC"></a>2. NT-NC</h4><p>在这种传输模式中，NC发送一个命令序列要求NT向NC传输数据。NT接收到命令序列后在规定时间间隔内向NC回应一个状态序列，此状态序列可能的信息单元为：NT1（不携带数据）；NT2（携带数据信息）。如果需要传送的数据大小大于状态序列中携带的数据字节数，则NT还会向NC发送信息单元为NT3的数据序列，直到数据发送完成。</p>
+<img alt="20230409160942745" src="/MD_IMG/FC-AE-1553.assets/image-20230409160942745.png"  />
+
+<h4 id="3-NT-NT"><a href="#3-NT-NT" class="headerlink" title="3. NT-NT"></a>3. NT-NT</h4><p>和NC-NT传输模式一样，NT-NT传输模式也和NT突发请求和延迟NT突发请求字段相关。此外，由于FC-AE-1553的网络节点即可以作为NC使用又可以作为NT使用，所以在NT-NT模式中向发送NT发出命令序列的NC可以当作接收NT使用。下面只介绍NC作为接收NT使用的情况。</p>
+<hr>
+<ul>
+<li><p>NC作为接收NT使用时，且NT突发请求置1，延迟NT突发请求置0</p>
+<p>如图2-13所示，NC首先作为网络控制器向发送NT发出一个发送命令序列，此后NC就作为接收NT使用。发送NT向接收NT发出一个接收命令序列，该命令序列不携带数据，接收NT根据自己的状态和可接收的数据大小返回状态序列。发送NT开始向接收NT发送数据，接收NT再返回状态，以此类推，直到最后一个数据发送完成。数据发送完成后接收NT根据状态抑制位的设置决定是否向发送NT返回状态。最后接收NT又作为NC使用，发送NT根据状态抑制位的设置决定是否向NC返回状态。</p>
+</li>
+</ul>
+<img alt="20230409161048503" src="/MD_IMG/FC-AE-1553.assets/image-20230409161048503.png"  />
+
+<hr>
+<ul>
+<li><p>NC作为接收NT使用，且延迟NT突发请求置1，NT突发请求置0</p>
+<p>如图2-14所示，这种情况和当NT突发请求置1的情况类似，只是此时的接收命令序列中可能携带数据，如果数据并没有在命令序列中全部发送，则发送NT直接在接收命令之后直接发出第一个数据序列而无需等到接收NT返回状态序列后再发送，其后的传输过程都与第二种情况一样。</p>
+</li>
+</ul>
+<img alt="20230409161132989" src="/MD_IMG/FC-AE-1553.assets/image-20230409161132989.png"  />
+
+<hr>
+<img alt="20230409161259232" src="/MD_IMG/FC-AE-1553.assets/image-20230409161259232.png"  />
+
+<img alt="20230409161316065" src="/MD_IMG/FC-AE-1553.assets/image-20230409161316065.png"  />
+
+<img alt="20230409161338692" src="/MD_IMG/FC-AE-1553.assets/image-20230409161338692.png"  />
+
+<h4 id="4-无数据字的模式命令"><a href="#4-无数据字的模式命令" class="headerlink" title="4. 无数据字的模式命令"></a>4. 无数据字的模式命令</h4><p>这种传输模式比较简单，在这种模式下，NC发出的是一个模式命令，命令序列中的模式码字段规定了具体的模式命令。NT收到该模式命令后执行该命令并根据状态抑制位的设置决定是否向NC返回状态序列。</p>
+<img alt="20230409161404843" src="/MD_IMG/FC-AE-1553.assets/image-20230409161404843.png"  />
+
+<h4 id="5-带数据字的发送模式命令"><a href="#5-带数据字的发送模式命令" class="headerlink" title="5. 带数据字的发送模式命令"></a>5. 带数据字的发送模式命令</h4><p>NC在这种传输模式下发出一个模式命令，该模式命令除了模式码字段中规定的具体命令之外还要求NT返回数据，所以无论状态抑制位如何设置，NT在收到NC发出的模式命令后都要向NC发出一个写带数据字的状态序列。</p>
+<img alt="20230409161415399" src="/MD_IMG/FC-AE-1553.assets/image-20230409161415399.png"  />
+
+<h4 id="6-带数据字的接收模式命令"><a href="#6-带数据字的接收模式命令" class="headerlink" title="6. 带数据字的接收模式命令"></a>6. 带数据字的接收模式命令</h4><p>与数据发送的模式命令相似，此时模式命令不仅要求NT执行相关的命令请求，还要求NT接收一定的数据字，这些数据字被携带与命令序列中，最后NT根据状态抑制位的设置决定是否向NC返回状态序列。</p>
+<img alt="20230409161605821" src="/MD_IMG/FC-AE-1553.assets/image-20230409161605821.png"  />
+
+<h4 id="7-NC-NTs"><a href="#7-NC-NTs" class="headerlink" title="7. NC-NTs"></a>7. NC-NTs</h4><img alt="20230409213959940" src="/MD_IMG/FC-AE-1553.assets/image-20230409213959940.png"  />
+
+<h4 id="8-NT-NTs"><a href="#8-NT-NTs" class="headerlink" title="8. NT-NTs"></a>8. NT-NTs</h4><img alt="20230409214017097" src="/MD_IMG/FC-AE-1553.assets/image-20230409214017097.png"  />
+
+<h4 id="9-无数据字的多NT模式命令"><a href="#9-无数据字的多NT模式命令" class="headerlink" title="9. 无数据字的多NT模式命令"></a>9. 无数据字的多NT模式命令</h4><img alt="20230409214105000" src="/MD_IMG/FC-AE-1553.assets/image-20230409214105000-16810476661691-16810476663083.png"  />
+
+<h4 id="10-带数据字的多NT接收模式命令"><a href="#10-带数据字的多NT接收模式命令" class="headerlink" title="10. 带数据字的多NT接收模式命令"></a>10. 带数据字的多NT接收模式命令</h4><img alt="20230409214128344" src="/MD_IMG/FC-AE-1553.assets/image-20230409214128344.png"  />
+
+<h3 id="定时器"><a href="#定时器" class="headerlink" title="定时器"></a>定时器</h3><img alt="20230409215732363" src="/MD_IMG/FC-AE-1553.assets/image-20230409215732363.png"  />
+
+
+
+<h2 id="MIL-STD-1553B-与FC-AE-1553比较"><a href="#MIL-STD-1553B-与FC-AE-1553比较" class="headerlink" title="MIL-STD-1553B 与FC-AE-1553比较"></a>MIL-STD-1553B 与FC-AE-1553比较</h2><table>
+<thead>
+<tr>
+<th align="center">项目</th>
+<th align="center">MIL-STD-1553B</th>
+<th align="center">FC-AE-1553</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">术语</td>
+<td align="center">Bus Controller(BC)</td>
+<td align="center">Network Controler(NC)</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">Remote Terminal (RT)</td>
+<td align="center">Network Terminal(NT)</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">RT Address</td>
+<td align="center">Network Terminal Address</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">RT Subaddress</td>
+<td align="center">NT Subaddress(NT_SA)</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">MIL-STD-1553 Message</td>
+<td align="center">FC-AE-1553 Exchange</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">Command Word</td>
+<td align="center">Command Sequence</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">Status Word</td>
+<td align="center">Status Sequence</td>
+</tr>
+<tr>
+<td align="center">位宽</td>
+<td align="center">RT Address (5 bits)</td>
+<td align="center">NT Address(D_ID&#x2F;S_ID)(24 bits)</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">Subaddress (5 bits)</td>
+<td align="center">NT Subaddress(NT_SA)(32 bits)</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center">Word Count&#x2F;Mode Code (5 bits)</td>
+<td align="center">Byte Count&#x2F;Mode Code(32 bits)</td>
+</tr>
+<tr>
+<td align="center">拓扑结构</td>
+<td align="center">总线型</td>
+<td align="center">点对点、仲裁环路、交换</td>
+</tr>
+<tr>
+<td align="center">允许的BC&#x2F;NC个数</td>
+<td align="center">有且仅有1个</td>
+<td align="center">有1个或多个</td>
+</tr>
+<tr>
+<td align="center">允许的RT&#x2F;NT个数</td>
+<td align="center">不多余2^5^ 个</td>
+<td align="center">不多余2^24^ 个</td>
+</tr>
+<tr>
+<td align="center">允许的子地址数</td>
+<td align="center">小于2^5^ 个</td>
+<td align="center">小于2^32^ 个</td>
+</tr>
+<tr>
+<td align="center">消息字计数</td>
+<td align="center">小于2^5^ 个</td>
+<td align="center">小于2^32^ 个</td>
+</tr>
+<tr>
+<td align="center">字宽度</td>
+<td align="center">16bit</td>
+<td align="center">32bit</td>
+</tr>
+<tr>
+<td align="center">传输编码方式</td>
+<td align="center">曼切斯特码</td>
+<td align="center">8b&#x2F;10b编码</td>
+</tr>
+<tr>
+<td align="center">传输介质</td>
+<td align="center">双绞屏蔽电缆</td>
+<td align="center">光纤</td>
+</tr>
+<tr>
+<td align="center">传输速率</td>
+<td align="center">1Mb&#x2F;s</td>
+<td align="center">大于1Gb&#x2F;s</td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+<tr>
+<td align="center"></td>
+<td align="center"></td>
+<td align="center"></td>
+</tr>
+</tbody></table>
+ 
+      <!-- reward -->
+      
+        <div id="reword-out" style="border-top-width: 20px;padding-top: 30px;">
+            <div id="reward-btn" style="
+                margin-bottom: 0px;
+                margin-top: 0px;
+                ">Donate
+            </div>
+        </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/FC-AE-1553/" rel="tag">FC-AE-1553</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%8F%E8%AE%AE/" rel="tag">协议</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/08/IIC/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            IIC
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/08/Matlab/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Matlab</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+   
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+        <li style="
+            padding-bottom: 0px;
+            width: 30px;
+            padding-right: 5px;
+        ">
+        <img src="/images/favicon.ico">
+      </li>
+      <li>
+        &copy;
+        2023
+        <!-- <i class="ri-heart-fill heart_icon"></i> Arlen -->
+        , 
+        Arlen
+        .
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle">
+    <style>
+        .navbar-toggle {
+            background-color: rgba(0,0,0,.05);
+        }
+    </style>
+</button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer.png" alt="Welcome"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      <a class="nav-item-link" target="_blank" href="https://github.com/hjh0920">
+        <i class="ri-github-fill"></i>
+        <!-- <i class="ri-github-line"></i> -->
+      </a>
+    </li>
+  </ul>
+  <style>
+    .navbar .nav .nav-item-link {
+        display: block;
+        padding: 1rem;
+        color: #918888;
+        text-decoration: none;
+        cursor: pointer;
+    }
+  </style>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+      <style>
+        .sidebar {
+          background-color: rgba(0,0,0,.1);
+        }
+      </style>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    // Where to render the table of contents.
+    tocSelector: ".tocbot",
+    // Where to grab the headings to build the table of contents.
+    contentSelector: ".article-entry",
+    // Which headings to grab inside of the contentSelector element.
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    // For headings inside relative or absolute positioned containers within content.
+    hasInnerContainers: true,
+    // Smooth scrolling enabled.
+    scrollSmooth: true,
+    // If there is a fixed article scroll container, set to calculate titles' offset
+    scrollContainer: "main",
+    // Element to add the positionFixedClass to.
+    positionFixedSelector: ".tocbot",
+    // Fixed position class to add to make sidebar fixed after scrolling
+    // down past the fixedSidebarOffset.
+    positionFixedClass: "is-position-fixed",
+    // fixedSidebarOffset can be any number but by default is set
+    // to auto which sets the fixedSidebarOffset to the sidebar
+    // element's offsetTop from the top of the document on init.
+    fixedSidebarOffset: "auto",
+    // How many heading levels should not be collpased.
+    // For example, number 6 will show everything since
+    // there are only 6 heading levels and number 0 will collpase them all.
+    // The sections that are hidden will open
+    // and close as you scroll to headings within them.
+    // collapseDepth: "is-collapsed",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+ 
+<script src="/js/clickLove.js"></script>
+ 
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>

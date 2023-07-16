@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>UART |  Welcome</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+        <style>
+            .outer {
+                margin-left: 15%;
+            }
+        </style>
+      <section class="outer">
+  <article
+  id="post-UART"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  UART
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/07/08/UART/" class="article-date">
+  <time datetime="2023-07-08T03:42:54.000Z" itemprop="datePublished">2023-07-08</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/%E5%8D%8F%E8%AE%AE/">协议</a>
+  </div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="1-UART-协议原理与编程"><a href="#1-UART-协议原理与编程" class="headerlink" title="1. UART 协议原理与编程"></a>1. UART 协议原理与编程</h2><h3 id="1-1-UART-简介"><a href="#1-1-UART-简介" class="headerlink" title="1.1 UART 简介"></a>1.1 UART 简介</h3><p><strong>UART</strong>，<strong>U</strong>niversal <strong>A</strong>synchronous <strong>R</strong>eceiver <strong>T</strong>ransmitter 即<strong>通用异步收发器</strong>，是一种通用的<strong>串行</strong>、<strong>异步</strong>通信总线该<strong>总线有两条数据线</strong>，可以实现<strong>全双工的发送和接收</strong>在嵌入式系统中常用于主机与辅助设备之间的通信。 </p>
+<p><strong>比特率</strong>：每秒传输的比特的数量</p>
+<p><strong>波特率</strong>：每秒发送的符号（baund）数量</p>
+<p>当一个符号只包含两种可能，即一个事件两种可能，那么此时的波特率等于比特率。</p>
+<ul>
+<li>确定收到几位数据是通过波特率来数的</li>
+<li>串口发送不允许一次发送多个字节， 为了防止累计误差的出现，一旦出现一位错误，后续全错</li>
+</ul>
+<h3 id="1-2-UART-帧格式"><a href="#1-2-UART-帧格式" class="headerlink" title="1.2 UART 帧格式"></a>1.2 UART 帧格式</h3><p><img src="/MD_IMG/UART.assets/image-20220313170242990.png" alt="image-20220313170242990"></p>
+<ul>
+<li><strong>起始位</strong>：发送1位逻辑0（低电平），开始传输数据。</li>
+<li><strong>数据位</strong>：可以是5-8位的数据，先发低位，再发高位，一般常见的就是8位（1个字节），其他的如7位的ASCII码。</li>
+<li><strong>校验位</strong>：奇偶校验，将数据位加上校验位，1的位数为偶数（偶校验） ，1的位数为奇数（奇校<br>验）。</li>
+<li><strong>停止位</strong>：停止位是数据传输结束的标志，可以是1&#x2F;1.5&#x2F;2位的逻辑1（高电平）。</li>
+<li><strong>空闲位</strong>：空闲时数据线为高电平状态，代表无数据传输。</li>
+</ul>
+<h3 id="1-3-UART-缺点"><a href="#1-3-UART-缺点" class="headerlink" title="1.3 UART 缺点"></a>1.3 UART 缺点</h3><ol>
+<li><p>电气接口不统一</p>
+<ul>
+<li><p>UART只是对<strong>信号的时序</strong>进行了定义，而未定义接口的<strong>电气特性</strong>；</p>
+</li>
+<li><p>UART通信时一般直接使用<strong>处理器使用的电平，即TTL电平，</strong>但不同的处理器使用的电平存在差异，所以不同的处理器使用UART通信时一般不能直接相连；</p>
+</li>
+<li><p>UART没有规定不同器件连接时连接器的标准，所以不同器件之间通过UART通信时连接很不方便；</p>
+</li>
+</ul>
+</li>
+<li><p>抗干扰能力差</p>
+<p>UART一般直接使用TTL信号来表示0和1，但TTL信号的抗干扰能力较差，数据在传输过程中很容易出错</p>
+</li>
+<li><p>通信距离极短</p>
+<p>因为TTL信号的抗干扰能力较差，所以其通信距离也很短，一般只能用于一个电路板上的两个不芯片之间的通信</p>
+</li>
+</ol>
+<h3 id="1-4-Verilog-代码"><a href="#1-4-Verilog-代码" class="headerlink" title="1.4 Verilog 代码"></a>1.4 Verilog 代码</h3><p>常用的波特率标准有：</p>
+<ul>
+<li>1200 bps</li>
+<li>9600 bps (常用)</li>
+<li>38400 bps</li>
+<li>115200 bps (常用，而且通常情况下能用的最快的波特率)</li>
+</ul>
+<p>波特率为115200bps 时，每个bit需要 (1&#x2F;115200)&#x3D;8.7us，在不考虑奇偶校验位的情况下，发送一个字节还需要发送额外的1个起始位和1个停止位，所以发送1个字节实际所需要的最少时间是10*8.7us&#x3D;87us，这意味着1s（1000000us）中能发送的字节数为 (1000000&#x2F;87)&#x3D;11494，所以在波特率为115200bps的情况下，串口传输数据的速率约为11.5KB&#x2F;S。而有些电脑的串口有时候需要一个更长的停止位，比如1.5位或2位的停止位，那么发送一个字节所需要的时间比只有一个比特停止位的情况所耗费的时间更长，在这种情况下，串口的传输速率会低于10.5KB&#x2F;S。</p>
+<p>通过上面一系列的总结以后，可以得出FPGA与PC之间的串口通信主要包括三个模块<strong>：波特率产生模块、发射模块和接收模块</strong>。</p>
+<h2 id="2-RS232、RS485-协议原理"><a href="#2-RS232、RS485-协议原理" class="headerlink" title="2. RS232、RS485 协议原理"></a>2. RS232、RS485 协议原理</h2><p>RS232 和 RS485 协议是基于串口，收发时序和串口一样，只是在电气上加以规定，让传输距离更远，抗干扰能力更强。</p>
+<h3 id="2-1-RS232-协议简介"><a href="#2-1-RS232-协议简介" class="headerlink" title="2.1 RS232 协议简介"></a>2.1 RS232 协议简介</h3><p><strong>RS232协议是</strong>在1970年由美国电子工业协会（EIA）联合贝尔系统、调制解调器厂家、计算机终端生产厂家共同制定的<strong>用于串行通讯的标准</strong>；该标准规定采用一个<strong>标准的连接器</strong>，标准中对连接器的<strong>每个引脚的作用加以规定</strong>，还对信号的<strong>电平加以规定</strong>；</p>
+<h4 id="2-1-1-RS232-接口"><a href="#2-1-1-RS232-接口" class="headerlink" title="2.1.1 RS232 接口"></a>2.1.1 RS232 接口</h4><p>该<u>标准规定采用一个25引脚的DB-25连接器</u>，标准中对连接器的每个引脚的信号内容加以规定，还对各种信号的电平加以规定；后来<u>IBM的PC机将RS232简化成了<strong>DB-9连接器</strong></u>，后来成为事实标准；现在工业控制的<strong>RS-232接口一般只使用RXD(PIN2)、TXD(PIN3)、GND(PIN5)三条线</strong>；</p>
+<p><img src="/MD_IMG/UART.assets/1426240-20180908161719368-241377247.jpg" alt="img"></p>
+<h4 id="2-1-2-RS232-信号"><a href="#2-1-2-RS232-信号" class="headerlink" title="2.1.2 RS232 信号"></a>2.1.2 RS232 信号</h4><p>该标准规定<strong>逻辑 “1” 的电平为 -5v 到 -15v，逻辑 “0” 的电平为 +5v 到 +15v</strong>，选用该电气标准的目的在于提高抗干扰能力，增大通信距离，其传送距离一般可达15m；</p>
+<ul>
+<li>电平转换：虽然很多处理器中都会集成UART控制器，但处理器产生的信号一般都是TTL信号并不是符合RS232标准的信号，所以一般我们还需要在处理器外部去添加电路对信号的电平进行转换；</li>
+</ul>
+<h4 id="2-1-3-RS232-缺点"><a href="#2-1-3-RS232-缺点" class="headerlink" title="2.1.3 RS232 缺点"></a>2.1.3 RS232 缺点</h4><ul>
+<li>接口的信号电平值较高，易损坏接口电路的芯片，又因为与TTL电平不兼容，所以需要使用电平转换芯片才能与TTL电路连接</li>
+<li>通信速度较低</li>
+<li>易产生共模干扰，抗噪声干扰性弱</li>
+<li>传输距离较短（15m）</li>
+</ul>
+<h3 id="2-2-RS485"><a href="#2-2-RS485" class="headerlink" title="2.2 RS485"></a>2.2 RS485</h3><h4 id="2-2-1-RS485协议简介"><a href="#2-2-1-RS485协议简介" class="headerlink" title="2.2.1 RS485协议简介"></a>2.2.1 RS485协议简介</h4><p>该标准由电信行业协会和电子工业联盟定义；使用该标准的通信网络能在<strong>远距离条件下以及电子噪声大的环境下有效传输信号</strong>；该标准<strong>允许连接多个收发器</strong>，即具有多站能力，这样可以利用单一的RS485接口方便地建立起一个设备网络。 </p>
+<h4 id="2-2-2-RS458-信号"><a href="#2-2-2-RS458-信号" class="headerlink" title="2.2.2 RS458 信号"></a>2.2.2 RS458 信号</h4><p><strong>RS485标准规定采用差分信号进行数据传输，两线间的电压差为 +2v 到 +6v 表示逻辑 “1”，两线间的电压差为 -2v 到 -6v 表示逻辑 “0”</strong> ；使用差分信号能有效地减少噪声信号的干扰，延长通信距离， RS485的通信距离可以达到1500m； RS485接口信号的电平比RS232降低了，所以不易损坏接口电路的芯片，且该电平与TTL电平兼容，可方便地与TTL电路连接。</p>
+<h4 id="2-2-3-RS458-接口"><a href="#2-2-3-RS458-接口" class="headerlink" title="2.2.3 RS458 接口"></a>2.2.3 RS458 接口</h4><p><strong>RS485采用两线制</strong>，这种接线方式为总线式拓扑结构，在同一总线上可以同时存在多个节点；<br>因为采用两线制，数据的发送和接收都要使用这对差分信号线，发送和接收不能同时进行，所以<strong>只能采用半双工的方式工作</strong>，编程时也需要加以处理</p>
+<ul>
+<li>电平转换：虽然很多处理器中都会集成UART控制器，但处理器产生的信号一般都是TTL信号并不是符合RS485标准的信号，所以一般我们还需要在处理器外部去添加电路将TTL信号转换成差分信号；</li>
+</ul>
+<h4 id="2-2-4-RS485-优点"><a href="#2-2-4-RS485-优点" class="headerlink" title="2.2.4 RS485 优点"></a>2.2.4 RS485 优点</h4><ul>
+<li>接口的信号电平值较低，不易损坏接口电路的芯片，且与TTL电平兼容，可方便地与TTL电路连接;</li>
+<li>通信速度快;</li>
+<li>抗噪声干扰性强;</li>
+<li>传输距离较远（1500m）;</li>
+<li>可实现多节点组网.</li>
+</ul>
+ 
+      <!-- reward -->
+      
+        <div id="reword-out" style="border-top-width: 20px;padding-top: 30px;">
+            <div id="reward-btn" style="
+                margin-bottom: 0px;
+                margin-top: 0px;
+                ">Donate
+            </div>
+        </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/UART/" rel="tag">UART</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%8F%E8%AE%AE/" rel="tag">协议</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+      <a href="/2023/07/08/VHDL/" class="article-nav-link">
+        <strong class="article-nav-caption">上一篇</strong>
+        <div class="article-nav-title">
+          
+            VHDL
+          
+        </div>
+      </a>
+    
+    
+      <a href="/2023/07/08/Vivado/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">Vivado</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+   
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+        <li style="
+            padding-bottom: 0px;
+            width: 30px;
+            padding-right: 5px;
+        ">
+        <img src="/images/favicon.ico">
+      </li>
+      <li>
+        &copy;
+        2023
+        <!-- <i class="ri-heart-fill heart_icon"></i> Arlen -->
+        , 
+        Arlen
+        .
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle">
+    <style>
+        .navbar-toggle {
+            background-color: rgba(0,0,0,.05);
+        }
+    </style>
+</button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer.png" alt="Welcome"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      <a class="nav-item-link" target="_blank" href="https://github.com/hjh0920">
+        <i class="ri-github-fill"></i>
+        <!-- <i class="ri-github-line"></i> -->
+      </a>
+    </li>
+  </ul>
+  <style>
+    .navbar .nav .nav-item-link {
+        display: block;
+        padding: 1rem;
+        color: #918888;
+        text-decoration: none;
+        cursor: pointer;
+    }
+  </style>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+      <style>
+        .sidebar {
+          background-color: rgba(0,0,0,.1);
+        }
+      </style>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    // Where to render the table of contents.
+    tocSelector: ".tocbot",
+    // Where to grab the headings to build the table of contents.
+    contentSelector: ".article-entry",
+    // Which headings to grab inside of the contentSelector element.
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    // For headings inside relative or absolute positioned containers within content.
+    hasInnerContainers: true,
+    // Smooth scrolling enabled.
+    scrollSmooth: true,
+    // If there is a fixed article scroll container, set to calculate titles' offset
+    scrollContainer: "main",
+    // Element to add the positionFixedClass to.
+    positionFixedSelector: ".tocbot",
+    // Fixed position class to add to make sidebar fixed after scrolling
+    // down past the fixedSidebarOffset.
+    positionFixedClass: "is-position-fixed",
+    // fixedSidebarOffset can be any number but by default is set
+    // to auto which sets the fixedSidebarOffset to the sidebar
+    // element's offsetTop from the top of the document on init.
+    fixedSidebarOffset: "auto",
+    // How many heading levels should not be collpased.
+    // For example, number 6 will show everything since
+    // there are only 6 heading levels and number 0 will collpase them all.
+    // The sections that are hidden will open
+    // and close as you scroll to headings within them.
+    // collapseDepth: "is-collapsed",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+ 
+<script src="/js/clickLove.js"></script>
+ 
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>
