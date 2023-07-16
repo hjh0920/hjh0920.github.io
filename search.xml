@@ -1196,6 +1196,70 @@
       </tags>
   </entry>
   <entry>
+    <title>SPI</title>
+    <url>/2023/07/08/SPI/</url>
+    <content><![CDATA[<h2 id="SPI-简介"><a href="#SPI-简介" class="headerlink" title="SPI 简介"></a>SPI 简介</h2><p>SPI（Serial Peripheral Interface）是串行外设接口的缩写，SPI是一种<strong>高速</strong>的、<strong>全双工</strong>、同步的<strong>串行</strong>通信总线；SPI采用<strong>主从方式工作</strong>，一般有一个主设备和一个或多个从设备；SPI需要至少4根线，分别是MISO（主设备输入从设备输出）、MOSI（主设备输出从设备输入）、SCLK（时钟）、CS（片选）。SPI使用引脚较少且布线方便，所以越来越多的芯片集成了这种通信协议；</p>
+<p><img src="/MD_IMG/SPI.assets/image-20220312222125089.png" alt="image-20220312222125089"></p>
+<h2 id="寻址方式"><a href="#寻址方式" class="headerlink" title="寻址方式"></a>寻址方式</h2><p>当主设备要和某个从设备进行通信时，主设备需要先向对应从设备的片选线上发送使能信号（高电平或者低电平，根据从机而定）表示选中该从设备。</p>
+<img src="/MD_IMG/SPI.assets/image-20220312222945829.png" alt="image-20220312222945829" style="zoom:80%;" />
+
+<h2 id="通信过程"><a href="#通信过程" class="headerlink" title="通信过程"></a>通信过程</h2><p>SPI总线在进行数据传送时，<strong>先传送高位，后传送低位</strong>；数据线为高电平表示逻辑‘1’，低电平表示逻辑‘0’；**<u>一个字节传送完成后无需应答即可开始下一个字节的传送</u>**；SPI总线采用同步方式工作，时钟线在上升沿或下降沿时发送器向数据线上发送数据，在紧接着的下降沿或上升沿时接收器从数据线上读取数据，完成一位数据传送，八个时钟周期即可完成一个字节数据的传送；</p>
+<p><img src="/MD_IMG/SPI.assets/image-20220312223353824.png" alt="image-20220312223353824"></p>
+<h2 id="极性和相位"><a href="#极性和相位" class="headerlink" title="极性和相位"></a>极性和相位</h2><p>SPI总线有<strong>四种</strong>不同的<strong>工作模式</strong>，取决于极性（CPOL）和相位（CPHL）这两个因素。</p>
+<ul>
+<li>CPOL表示SCLK空闲时的状态<ul>
+<li>CPOL&#x3D;0，空闲时SCLK为低电平</li>
+<li>CPOL&#x3D;1，空闲时SCLK为高电平</li>
+</ul>
+</li>
+<li>CPHA表示采样时刻<ul>
+<li>CPHA&#x3D;0，每个周期的第一个时钟沿采样</li>
+<li>CPHA&#x3D;1，每个周期的第二个时钟沿采样</li>
+</ul>
+</li>
+</ul>
+<ol>
+<li>CPOL &#x3D; 0, CPHA &#x3D; 0</li>
+</ol>
+<p><img src="/MD_IMG/SPI.assets/image-20220312224813999.png" alt="image-20220312224813999"></p>
+<ol start="2">
+<li>CPOL &#x3D; 0, CPHA &#x3D; 1</li>
+</ol>
+<p><img src="/MD_IMG/SPI.assets/image-20220312225005800.png" alt="image-20220312225005800"></p>
+<ol start="3">
+<li>CPOL &#x3D; 1, CPHA &#x3D; 0</li>
+</ol>
+<p><img src="/MD_IMG/SPI.assets/image-20220313140407142.png" alt="image-20220313140407142"></p>
+<ol start="3">
+<li>CPOL &#x3D; 1, CPHA &#x3D; 1</li>
+</ol>
+<p><img src="/MD_IMG/SPI.assets/image-20220313140009027.png" alt="image-20220313140009027"></p>
+<p>需要说明的是，对于一个特定的从设备来说，一般在出厂时就会将其设计为某种特定的工作模式；我们在使用该设备时就必须保证主设备的工作模式和该从设备保持力致，否则是无法进行通信的；所以一般我们需要对主设备的CPOL和CPHA进行配置。</p>
+<h2 id="IIC-和-SPI-的异同"><a href="#IIC-和-SPI-的异同" class="headerlink" title="IIC 和 SPI 的异同"></a>IIC 和 SPI 的异同</h2><h3 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h3><ol>
+<li>均采用串行、同步的方式</li>
+<li>均采用TTL电平，传输距离和应用场景类似</li>
+<li>均采用主从方式工作</li>
+</ol>
+<h3 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h3><ol>
+<li><p>IIC为半双工， SPI为全双工</p>
+</li>
+<li><p>IIC有应答机制， SPI无应答机制</p>
+</li>
+<li><p>IIC通过向总线广播从机地址来寻址， SPI通过向对应从机发送使能信号来寻址</p>
+</li>
+<li><p>IIC的时钟极性和时钟相位固定， SP I的时钟极性和时钟相位可调</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>协议</category>
+      </categories>
+      <tags>
+        <tag>协议</tag>
+        <tag>SPI</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>UART</title>
     <url>/2023/07/08/UART/</url>
     <content><![CDATA[<h2 id="1-UART-协议原理与编程"><a href="#1-UART-协议原理与编程" class="headerlink" title="1. UART 协议原理与编程"></a>1. UART 协议原理与编程</h2><h3 id="1-1-UART-简介"><a href="#1-1-UART-简介" class="headerlink" title="1.1 UART 简介"></a>1.1 UART 简介</h3><p><strong>UART</strong>，<strong>U</strong>niversal <strong>A</strong>synchronous <strong>R</strong>eceiver <strong>T</strong>ransmitter 即<strong>通用异步收发器</strong>，是一种通用的<strong>串行</strong>、<strong>异步</strong>通信总线该<strong>总线有两条数据线</strong>，可以实现<strong>全双工的发送和接收</strong>在嵌入式系统中常用于主机与辅助设备之间的通信。 </p>
@@ -1275,70 +1339,6 @@
       <tags>
         <tag>协议</tag>
         <tag>UART</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>SPI</title>
-    <url>/2023/07/08/SPI/</url>
-    <content><![CDATA[<h2 id="SPI-简介"><a href="#SPI-简介" class="headerlink" title="SPI 简介"></a>SPI 简介</h2><p>SPI（Serial Peripheral Interface）是串行外设接口的缩写，SPI是一种<strong>高速</strong>的、<strong>全双工</strong>、同步的<strong>串行</strong>通信总线；SPI采用<strong>主从方式工作</strong>，一般有一个主设备和一个或多个从设备；SPI需要至少4根线，分别是MISO（主设备输入从设备输出）、MOSI（主设备输出从设备输入）、SCLK（时钟）、CS（片选）。SPI使用引脚较少且布线方便，所以越来越多的芯片集成了这种通信协议；</p>
-<p><img src="/MD_IMG/SPI.assets/image-20220312222125089.png" alt="image-20220312222125089"></p>
-<h2 id="寻址方式"><a href="#寻址方式" class="headerlink" title="寻址方式"></a>寻址方式</h2><p>当主设备要和某个从设备进行通信时，主设备需要先向对应从设备的片选线上发送使能信号（高电平或者低电平，根据从机而定）表示选中该从设备。</p>
-<img src="/MD_IMG/SPI.assets/image-20220312222945829.png" alt="image-20220312222945829" style="zoom:80%;" />
-
-<h2 id="通信过程"><a href="#通信过程" class="headerlink" title="通信过程"></a>通信过程</h2><p>SPI总线在进行数据传送时，<strong>先传送高位，后传送低位</strong>；数据线为高电平表示逻辑‘1’，低电平表示逻辑‘0’；**<u>一个字节传送完成后无需应答即可开始下一个字节的传送</u>**；SPI总线采用同步方式工作，时钟线在上升沿或下降沿时发送器向数据线上发送数据，在紧接着的下降沿或上升沿时接收器从数据线上读取数据，完成一位数据传送，八个时钟周期即可完成一个字节数据的传送；</p>
-<p><img src="/MD_IMG/SPI.assets/image-20220312223353824.png" alt="image-20220312223353824"></p>
-<h2 id="极性和相位"><a href="#极性和相位" class="headerlink" title="极性和相位"></a>极性和相位</h2><p>SPI总线有<strong>四种</strong>不同的<strong>工作模式</strong>，取决于极性（CPOL）和相位（CPHL）这两个因素。</p>
-<ul>
-<li>CPOL表示SCLK空闲时的状态<ul>
-<li>CPOL&#x3D;0，空闲时SCLK为低电平</li>
-<li>CPOL&#x3D;1，空闲时SCLK为高电平</li>
-</ul>
-</li>
-<li>CPHA表示采样时刻<ul>
-<li>CPHA&#x3D;0，每个周期的第一个时钟沿采样</li>
-<li>CPHA&#x3D;1，每个周期的第二个时钟沿采样</li>
-</ul>
-</li>
-</ul>
-<ol>
-<li>CPOL &#x3D; 0, CPHA &#x3D; 0</li>
-</ol>
-<p><img src="/MD_IMG/SPI.assets/image-20220312224813999.png" alt="image-20220312224813999"></p>
-<ol start="2">
-<li>CPOL &#x3D; 0, CPHA &#x3D; 1</li>
-</ol>
-<p><img src="/MD_IMG/SPI.assets/image-20220312225005800.png" alt="image-20220312225005800"></p>
-<ol start="3">
-<li>CPOL &#x3D; 1, CPHA &#x3D; 0</li>
-</ol>
-<p><img src="/MD_IMG/SPI.assets/image-20220313140407142.png" alt="image-20220313140407142"></p>
-<ol start="3">
-<li>CPOL &#x3D; 1, CPHA &#x3D; 1</li>
-</ol>
-<p><img src="/MD_IMG/SPI.assets/image-20220313140009027.png" alt="image-20220313140009027"></p>
-<p>需要说明的是，对于一个特定的从设备来说，一般在出厂时就会将其设计为某种特定的工作模式；我们在使用该设备时就必须保证主设备的工作模式和该从设备保持力致，否则是无法进行通信的；所以一般我们需要对主设备的CPOL和CPHA进行配置。</p>
-<h2 id="IIC-和-SPI-的异同"><a href="#IIC-和-SPI-的异同" class="headerlink" title="IIC 和 SPI 的异同"></a>IIC 和 SPI 的异同</h2><h3 id="相同点"><a href="#相同点" class="headerlink" title="相同点"></a>相同点</h3><ol>
-<li>均采用串行、同步的方式</li>
-<li>均采用TTL电平，传输距离和应用场景类似</li>
-<li>均采用主从方式工作</li>
-</ol>
-<h3 id="不同点"><a href="#不同点" class="headerlink" title="不同点"></a>不同点</h3><ol>
-<li><p>IIC为半双工， SPI为全双工</p>
-</li>
-<li><p>IIC有应答机制， SPI无应答机制</p>
-</li>
-<li><p>IIC通过向总线广播从机地址来寻址， SPI通过向对应从机发送使能信号来寻址</p>
-</li>
-<li><p>IIC的时钟极性和时钟相位固定， SP I的时钟极性和时钟相位可调</p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>协议</category>
-      </categories>
-      <tags>
-        <tag>协议</tag>
-        <tag>SPI</tag>
       </tags>
   </entry>
   <entry>
@@ -2558,82 +2558,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Vivado</title>
-    <url>/2023/07/08/Vivado/</url>
-    <content><![CDATA[<h2 id="如何修改工程名称"><a href="#如何修改工程名称" class="headerlink" title="如何修改工程名称"></a>如何修改工程名称</h2><p>主要将 xxx.xpr文件和工程子文件夹名称修改</p>
-<p><img src="/MD_IMG/Vivado%E8%BD%AF%E4%BB%B6.assets/image-20230624225427709.png" alt="image-20230624225427709"></p>
-<img src="/MD_IMG/Vivado软件.assets/image-20230624225516561.png" alt="image-20230624225516561" style="zoom: 80%;" />
-
-<h2 id="如何保存-x2F-恢复时序报告（-rpx"><a href="#如何保存-x2F-恢复时序报告（-rpx" class="headerlink" title="如何保存&#x2F;恢复时序报告（.rpx)"></a>如何保存&#x2F;恢复时序报告（.rpx)</h2><h2 id="如何生成网表"><a href="#如何生成网表" class="headerlink" title="如何生成网表"></a>如何生成网表</h2><ol>
-<li><p>打开所要封装网表的工程，点击 Tool-&gt;Settings</p>
-</li>
-<li><p>点击 Synthesis，修改 Options 中的内容</p>
-</li>
-<li><p>-flatten_hierarchy 下拉框，改为 full</p>
-</li>
-<li><p>More Options 中输入 -mode out_of_context</p>
-</li>
-<li><p>将带封装文件设置为Top层</p>
-</li>
-<li><p>点击 Run Synthesis 进行文件综合，综合完成后打开综合</p>
-</li>
-<li><p>若生成 Verilog 文件</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_verilog -mode synth_stub E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.v</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>若生成 VHDL 文件</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_vhdl -mode synth_stub E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.vhd</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>生成网表文件</p>
-<ul>
-<li><p>若要封装的文件中未使用 xilinx 官方的IP，网表生成指令如下：</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_edif all E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.edf</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>若要封装的文件中使用 xilinx官方的IP，网表生成指令如下：</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_edif -security_mode all E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.edf</span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-</ol>
-<h2 id="Modelsim覆盖率分析"><a href="#Modelsim覆盖率分析" class="headerlink" title="Modelsim覆盖率分析"></a>Modelsim覆盖率分析</h2><p><img src="/MD_IMG/Vivado%E8%BD%AF%E4%BB%B6.assets/image-20230119154330256.png" alt="image-20230119154330256"></p>
-<h2 id="Debug信号（VHDL）"><a href="#Debug信号（VHDL）" class="headerlink" title="Debug信号（VHDL）"></a>Debug信号（VHDL）</h2><figure class="highlight vhdl"><table><tr><td class="code"><pre><span class="line"><span class="keyword">attribute</span> MARK_DEBUG : <span class="built_in">string</span>;</span><br><span class="line"><span class="keyword">attribute</span> MARK_DEBUG : <span class="keyword">signal</span> <span class="keyword">is</span> <span class="string">&quot;TRUE&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Force-Up-to-Data-功能"><a href="#Force-Up-to-Data-功能" class="headerlink" title="Force Up-to-Data 功能"></a>Force Up-to-Data 功能</h2><p>当只加了注释，或修改了代码格式，并没有进行功能上的更改时，不需要重新运行综合&#x2F;实现来浪费时间，可以强制更新为Complete</p>
-<h2 id="不建Vivado工程，也能看Device视图"><a href="#不建Vivado工程，也能看Device视图" class="headerlink" title="不建Vivado工程，也能看Device视图"></a>不建Vivado工程，也能看Device视图</h2><p>在FPGA设计与开发中，Device视图和Package视图发挥着重要的作用。</p>
-<p>在Device视图下：</p>
-<ul>
-<li><strong>可以查看FPGA芯片可用资源</strong></li>
-</ul>
-<p>例如：LUT、FF、BRAM、DSP、URAM等的个数；</p>
-<ul>
-<li><strong>可以查看关键资源的分布情况</strong></li>
-</ul>
-<p>例如：PCIE的位置，高速收发器的位置，因为这些位置直接影响到PCB设计以及FPGA内部的数据流。</p>
-<ul>
-<li><strong>可用查看MMCM等时钟资源的位置</strong></li>
-</ul>
-<p>时钟的拓扑结构的质量直接影响到设计后期的时序收敛，在多die芯片中，这一点尤为重要。例如：某个芯片是3个die，设计中的一个时钟要给这3个die使用，那么最好将该时钟分配在中间那个die上，这样跨die次数最小，比较时钟跨die会增加Clock Skew。</p>
-<p>那么如何打开Device视图呢？一种可行的方法是创建Vivado I&#x2F;O工程，但这仍然显得繁琐。这里我们介绍一种更为直接的方法，就是使用Tcl命令link_design。打开Vivado，在Tcl Console中直接输入如下图所示命令：</p>
-<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">link_design -part xc7a100tfgg676<span class="number">-2</span></span><br></pre></td></tr></table></figure>
-
-<p>此时，该命令后只需跟随一个选项，即-part，-part用于指明具体的芯片型号。这样就打开了Vivado，之后选择Window，点击Device即可打开Device视图，点击Package即可打开Package视图。</p>
-<img src="/MD_IMG/Vivado软件.assets/image-20211223092634079-16800652291141.png" alt="image-20211223092634079" style="zoom: 60%;" />
-
-<img src="/MD_IMG/Vivado软件.assets/image-20211223092705263-16800652291162.png" alt="image-20211223092705263" style="zoom:60%;" />
-
-<h2 id="联合VScode"><a href="#联合VScode" class="headerlink" title="联合VScode"></a>联合VScode</h2><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">C:/Softwares/VS Code/Code.<span class="keyword">exe</span> -g [<span class="keyword">file</span> name]:[<span class="built_in">line</span> <span class="keyword">number</span>]</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="联合-Modelsim"><a href="#联合-Modelsim" class="headerlink" title="联合 Modelsim"></a>联合 Modelsim</h2><p>见文件链接 <a href="./Modelsim%E4%BB%BF%E7%9C%9F.md">Modelsim仿真</a></p>
-]]></content>
-      <categories>
-        <category>软件使用</category>
-      </categories>
-      <tags>
-        <tag>软件使用</tag>
-        <tag>Vivado</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>axi_quad_spi</title>
     <url>/2023/07/08/axi_quad_spi/</url>
     <content><![CDATA[<h2 id="系统框图"><a href="#系统框图" class="headerlink" title="系统框图"></a>系统框图</h2><h3 id="正常模式"><a href="#正常模式" class="headerlink" title="正常模式"></a>正常模式</h3><p><img src="/MD_IMG/axi_quad_spi.assets/image-20230603224844537.png" alt="image-20230603224844537"></p>
@@ -2770,6 +2694,82 @@
       <tags>
         <tag>Xilinx IP</tag>
         <tag>axi_quad_spi</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vivado</title>
+    <url>/2023/07/08/Vivado/</url>
+    <content><![CDATA[<h2 id="如何修改工程名称"><a href="#如何修改工程名称" class="headerlink" title="如何修改工程名称"></a>如何修改工程名称</h2><p>主要将 xxx.xpr文件和工程子文件夹名称修改</p>
+<p><img src="/MD_IMG/Vivado%E8%BD%AF%E4%BB%B6.assets/image-20230624225427709.png" alt="image-20230624225427709"></p>
+<img src="/MD_IMG/Vivado软件.assets/image-20230624225516561.png" alt="image-20230624225516561" style="zoom: 80%;" />
+
+<h2 id="如何保存-x2F-恢复时序报告（-rpx"><a href="#如何保存-x2F-恢复时序报告（-rpx" class="headerlink" title="如何保存&#x2F;恢复时序报告（.rpx)"></a>如何保存&#x2F;恢复时序报告（.rpx)</h2><h2 id="如何生成网表"><a href="#如何生成网表" class="headerlink" title="如何生成网表"></a>如何生成网表</h2><ol>
+<li><p>打开所要封装网表的工程，点击 Tool-&gt;Settings</p>
+</li>
+<li><p>点击 Synthesis，修改 Options 中的内容</p>
+</li>
+<li><p>-flatten_hierarchy 下拉框，改为 full</p>
+</li>
+<li><p>More Options 中输入 -mode out_of_context</p>
+</li>
+<li><p>将带封装文件设置为Top层</p>
+</li>
+<li><p>点击 Run Synthesis 进行文件综合，综合完成后打开综合</p>
+</li>
+<li><p>若生成 Verilog 文件</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_verilog -mode synth_stub E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.v</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>若生成 VHDL 文件</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_vhdl -mode synth_stub E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.vhd</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成网表文件</p>
+<ul>
+<li><p>若要封装的文件中未使用 xilinx 官方的IP，网表生成指令如下：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_edif all E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.edf</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>若要封装的文件中使用 xilinx官方的IP，网表生成指令如下：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_edif -security_mode all E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.edf</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<h2 id="Modelsim覆盖率分析"><a href="#Modelsim覆盖率分析" class="headerlink" title="Modelsim覆盖率分析"></a>Modelsim覆盖率分析</h2><p><img src="/MD_IMG/Vivado%E8%BD%AF%E4%BB%B6.assets/image-20230119154330256.png" alt="image-20230119154330256"></p>
+<h2 id="Debug信号（VHDL）"><a href="#Debug信号（VHDL）" class="headerlink" title="Debug信号（VHDL）"></a>Debug信号（VHDL）</h2><figure class="highlight vhdl"><table><tr><td class="code"><pre><span class="line"><span class="keyword">attribute</span> MARK_DEBUG : <span class="built_in">string</span>;</span><br><span class="line"><span class="keyword">attribute</span> MARK_DEBUG : <span class="keyword">signal</span> <span class="keyword">is</span> <span class="string">&quot;TRUE&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Force-Up-to-Data-功能"><a href="#Force-Up-to-Data-功能" class="headerlink" title="Force Up-to-Data 功能"></a>Force Up-to-Data 功能</h2><p>当只加了注释，或修改了代码格式，并没有进行功能上的更改时，不需要重新运行综合&#x2F;实现来浪费时间，可以强制更新为Complete</p>
+<h2 id="不建Vivado工程，也能看Device视图"><a href="#不建Vivado工程，也能看Device视图" class="headerlink" title="不建Vivado工程，也能看Device视图"></a>不建Vivado工程，也能看Device视图</h2><p>在FPGA设计与开发中，Device视图和Package视图发挥着重要的作用。</p>
+<p>在Device视图下：</p>
+<ul>
+<li><strong>可以查看FPGA芯片可用资源</strong></li>
+</ul>
+<p>例如：LUT、FF、BRAM、DSP、URAM等的个数；</p>
+<ul>
+<li><strong>可以查看关键资源的分布情况</strong></li>
+</ul>
+<p>例如：PCIE的位置，高速收发器的位置，因为这些位置直接影响到PCB设计以及FPGA内部的数据流。</p>
+<ul>
+<li><strong>可用查看MMCM等时钟资源的位置</strong></li>
+</ul>
+<p>时钟的拓扑结构的质量直接影响到设计后期的时序收敛，在多die芯片中，这一点尤为重要。例如：某个芯片是3个die，设计中的一个时钟要给这3个die使用，那么最好将该时钟分配在中间那个die上，这样跨die次数最小，比较时钟跨die会增加Clock Skew。</p>
+<p>那么如何打开Device视图呢？一种可行的方法是创建Vivado I&#x2F;O工程，但这仍然显得繁琐。这里我们介绍一种更为直接的方法，就是使用Tcl命令link_design。打开Vivado，在Tcl Console中直接输入如下图所示命令：</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">link_design -part xc7a100tfgg676<span class="number">-2</span></span><br></pre></td></tr></table></figure>
+
+<p>此时，该命令后只需跟随一个选项，即-part，-part用于指明具体的芯片型号。这样就打开了Vivado，之后选择Window，点击Device即可打开Device视图，点击Package即可打开Package视图。</p>
+<img src="/MD_IMG/Vivado软件.assets/image-20211223092634079-16800652291141.png" alt="image-20211223092634079" style="zoom: 60%;" />
+
+<img src="/MD_IMG/Vivado软件.assets/image-20211223092705263-16800652291162.png" alt="image-20211223092705263" style="zoom:60%;" />
+
+<h2 id="联合VScode"><a href="#联合VScode" class="headerlink" title="联合VScode"></a>联合VScode</h2><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">C:/Softwares/VS Code/Code.<span class="keyword">exe</span> -g [<span class="keyword">file</span> name]:[<span class="built_in">line</span> <span class="keyword">number</span>]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="联合-Modelsim"><a href="#联合-Modelsim" class="headerlink" title="联合 Modelsim"></a>联合 Modelsim</h2><p>见文件链接 <a href="./Modelsim%E4%BB%BF%E7%9C%9F.md">Modelsim仿真</a></p>
+]]></content>
+      <categories>
+        <category>软件使用</category>
+      </categories>
+      <tags>
+        <tag>软件使用</tag>
+        <tag>Vivado</tag>
       </tags>
   </entry>
   <entry>
