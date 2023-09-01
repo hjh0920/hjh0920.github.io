@@ -1,6 +1,389 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>AMBA 总线架构和协议</title>
+    <url>/2023/07/08/AMBA%E6%80%BB%E7%BA%BF/</url>
+    <content><![CDATA[<h2 id="1-了解AMBA-总线架构和协议"><a href="#1-了解AMBA-总线架构和协议" class="headerlink" title="1. 了解AMBA 总线架构和协议"></a>1. 了解AMBA 总线架构和协议</h2><h3 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1 概述"></a>1.1 概述</h3><p>高级微控制器总线体系结构（英语：Advanced Microcontroller Bus Architecture, AMBA）是用于连接和管理片上系统（SoC）设计中功能块的开放标准片上互连规范。从本质上说，AMBA 协议定义功能块如何互相进行通信。</p>
+<img alt="20220611145550312" src="/MD_IMG/AMBA总线.assets/image-20220611145550312.png"  />
+
+<p>现在，AMBA广泛用在各种ASIC和SoC部件中，包括在IoT子系统、智能电话和联网SoC等设备中使用的应用程序处理器，使用AMBA 有许多优势：</p>
+<ul>
+<li><p>AMBA可实现有效的IP重用，IP重用在降低SoC开发成本和缩短开发时间方面发挥着至关重要的作用。AMBA规范提供了可实现IP重用的接口标准。正因为如此，数以千计的SoC和IP产品都在使用AMBA接口；</p>
+</li>
+<li><p>AMBA还能够灵活地使用多种SoC，IP重用需要一个通用标准，同时支持具有不同能耗、性能和区域要求的多种SoC，Arm 还可提供一系列针对不同要求进行优化的接口规范；</p>
+</li>
+<li><p>标准接口规范（如AMBA）可使来自不同设计团队或供应商的IP组件之间互相兼容，</p>
+</li>
+<li><p>AMBA得到很好的支持，它在整个半导体行业中得到广泛的实施和支持，其中包括来自第三方IP产品和工具的支持，包括AMBA在内的各种总线接口标准的差别，体现在它们能够实现的性能上。</p>
+<p><strong>总线接口性能</strong>有两个主要特性，第一个是<strong>带宽</strong>（带宽是指通过接口驱动数据所能达到的速率）。在同步系统中，最大带宽受时钟速度与数据总线宽度之乘积的限制；第二个重要特性是<strong>延迟</strong>，这是事务启动与完成之间的延迟，但在基于突发事务的系统中，延迟数字通常指的是完成第一次传输而不是突发事务，具体取决于系统的重要性，接口的效率将取决于它以零延迟获得最大带宽的程度。</p>
+</li>
+</ul>
+<hr>
+<h3 id="1-2-AMBA-发展历程"><a href="#1-2-AMBA-发展历程" class="headerlink" title="1.2 AMBA 发展历程"></a>1.2 AMBA 发展历程</h3><p>1996年，Arm 引入AMBA，最初的AMBA总线是高级系统总线（<strong>ASB</strong>）和高级外设总线（<strong>APB</strong>），<strong>APB 是为低带宽控制访问而设计的。</strong>例如，在系统外设上注册接口，此总线具有简单的地址和数据阶段，信号列表的复杂程度很低；</p>
+<p>1999年，推出AMBA 2，Arm 添加了AMBA高性能总线（<strong>AHB</strong>），这是一个单边时钟协议，AHB中的一个简单事务，由一个地址阶段和一个后续数据阶段组成，这与APB 协议相似，对目标设备的访问通过MUX来控制，从而<strong>允许总线一次访问一个总线主接口</strong>，而且，<strong>与APB相比，AHB具有更大的总线带宽</strong>（64&#x2F;128位）；</p>
+<p>2003年，推出AMBA 3，其中包括高级跟踪总线（<strong>ATB</strong>），这是Coresight片上调试和跟踪解决方案的一部分，<strong>AHB-Lite</strong>是AHB 的子集，该子集可简化具有单个主接口的总线的设计，<strong>AXI</strong>是在AMBA 3规范中定义的第三代AMBA接口，它的目标是<strong>实现高性能、高时钟频率的系统设计</strong>，并且还包括使其能够实现高速亚微米互连的功能。</p>
+<p>2010年，从AMBA 4 <strong>AXI4</strong>开始引入了AMBA 4规范。</p>
+<p>2011年，引入了 AMBA 4 <strong>ACE</strong>，ACE 通过附加的信号引入了系统范围的一致性，从而对AXI进行了扩展，该系统范围的一致性<strong>允许多个处理器共享内存</strong>，并可启用类似Arm 的big.LITTLE处理之类的技术，同时，<strong>ACE-Lite</strong>协议还可实现单向一致性，例如，一个网络接口可从完全一致的ACE处理器的缓存中读取数据，<strong>AXI4-Stream</strong> 协议适用于<strong>从主接口到从属接口的单向数据传输，这也被称为点对点传输，该协议可降低信号路由开销</strong>，因此是在FPGA中实现传输的理想选择。</p>
+<p>2014年，引入了AMBA 5 <strong>CHI</strong>（一致性集线器接口）规范，<strong>重新设计的高速传输层和功能专门用于减少阻塞</strong>。</p>
+<p>2016年，AHB协议被更新至<strong>AHB5</strong>，这是对ARMv8-M体系结构的补充，可扩展从处理器到系统的TrustZone安全基础，</p>
+<img alt="20220611152053770" src="/MD_IMG/AMBA总线.assets/image-20220611152053770.png"  />
+
+<h3 id="1-3-协议介绍"><a href="#1-3-协议介绍" class="headerlink" title="1.3 协议介绍"></a>1.3 协议介绍</h3><p>1、APB：高级外围设备总线（APB）用于连接低带宽的外围设备。它是一个简单的非流水线协议。读写操作共享同一组信号，不支持burst数据传输。是最容易学习的AMBA协议。<br>2、AHB：高级高性能总线（AHB）用于连接共享总线上需要更高带宽的组件。这些slave组件可以是内部内存或外部内存接口、DMA、DSP等。AHB可以通过burst数据传输来获得更高的带宽。<br>3，AHB-lite协议是AHB的一个简化版本。简化后<strong>只支持一个主设计</strong>，这消除了对任何仲裁、重试、分割事务等的需求。<br>4、高级可扩展接口（AXI）适合于高带宽和低延迟互连。这是一个点对点的互连，并克服了AHB、APB等共享总线协议在可连接的代理数量方面的限制性。该协议支持多个outstanding 的数据传输、burst数据传输、单独的读写通道和支持不同的总线宽度。<br>5，AXI-lite协议是AXI的简化版本，简化后不支持突发数据传输。<br>6，AXI-stream 协议是AXI协议的另一种风格，它只支持数据流从master 流到slave。与完整的AXI或AXI-lite不同，AXI-stream协议中没有单独的读&#x2F;写通道，因为其目的是只在一个方向上流。<br>7，ACE-AXI协议是AXI4协议的扩展，应用于在一个芯片上集成多个CPU核心与一致性cache的场景。ACE协议扩展了AXI读写数据通道，同时引入了单独的snoop地址、snoop数据和snoop响应通道。这些额外的通道提供了实现基于snoop的一致性协议的机制。<br>8，ACE-Lite-对于没有自己cache的agents，但仍属于可共享一致性域的一部分，如DMA或网络接口agent，使用ACE-lite协议实现这种”单向”一致性。<br>9，CHI-ACE协议作为AXI的扩展而开发，以支持一致性互连。ACE协议使用了master&#x2F;slave之间的信号电平通信，因此互连需要大量的线和增加的通道来进行snoops和响应。这对于具有2&#x2F;4核移动SOC的小一致性clusters非常有效。随着SOC上集成越来越多的一致性clusters——AMBA5修订版引入了CHI协议。CHI协议使用基于分层分组的通信协议，具有协议、链路层和物理层实现，还支持基于QoS的流控制和重试机制。</p>
+<h2 id="2-APB"><a href="#2-APB" class="headerlink" title="2. APB"></a>2. APB</h2><h3 id="2-1-简介"><a href="#2-1-简介" class="headerlink" title="2.1 简介"></a>2.1 简介</h3><ul>
+<li>APB（Advanced Peripheral Bus）是AMBA总线的一部分，从1998年第一版至今共有3个版本。</li>
+</ul>
+<figure class="highlight smali"><table><tr><td class="code"><pre><span class="line">AMBA2 APB：定义最基本的信号 interface, 读写 transfer, APB<span class="keyword"> bridge</span>, APB slave.</span><br><span class="line"></span><br><span class="line">AMBA3 APB：增加定义信号 PREADY, PSLVERR 来支持 wait state  和 Error reporting  的功能。</span><br><span class="line"></span><br><span class="line">AMBA4 APB：增加定义信号 PPROT, PSTRB  来支持 transaction protection 和<span class="built_in"> sparse </span>data transfer 的功能。</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>APB 是非流水线协议，用于连接低带宽和不需要高性能总线的外围设备，信号传输发生在时钟上升沿，每次传输至少需要两个时钟周期。</p>
+</li>
+<li><p>APB 可以同 AHB、AHB-Lite、AXI、AXI4-Lite互连。</p>
+</li>
+</ul>
+<h3 id="2-2-信号"><a href="#2-2-信号" class="headerlink" title="2.2 信号"></a>2.2 信号</h3><table>
+<thead>
+<tr>
+<th>Signal</th>
+<th>Source</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PCLK</td>
+<td>Clock source</td>
+<td>时钟，上升沿有效</td>
+</tr>
+<tr>
+<td>PRESETn</td>
+<td>System bus equivalent</td>
+<td>复位，低有效（通常直连系统总线复位信号）</td>
+</tr>
+<tr>
+<td>PADDR</td>
+<td>APB bridge</td>
+<td>地址，位宽最高可达32 bits</td>
+</tr>
+<tr>
+<td>PPROT</td>
+<td>APB bridge</td>
+<td>保护类型。该信号指示事务的正常、特权或安全保护级别，以及该事务是数据访问还是指令访问。（Protection type. This signal indicates the normal, privileged, or secure protection level of the transaction and whether the transaction is a data access or an instruction access.）</td>
+</tr>
+<tr>
+<td>PSELx</td>
+<td>APB bridge</td>
+<td>片选信号，由APB bridge 产生对每个外围从设备的片选信号</td>
+</tr>
+<tr>
+<td>PENABLE</td>
+<td>APB bridge</td>
+<td>使能信号，标记传输开始</td>
+</tr>
+<tr>
+<td>PWRITE</td>
+<td>APB bridge</td>
+<td>读&#x2F;写控制信号，高为写操作，低为读操作</td>
+</tr>
+<tr>
+<td>PWDATA</td>
+<td>APB bridge</td>
+<td>写数据，位宽最高可达32 bits</td>
+</tr>
+<tr>
+<td>PSTRB</td>
+<td>APB bridge</td>
+<td>Write strobes. This signal indicates which byte lanes to update during a write transfer. There is one write strobe for each eight bits of the write data bus. Therefore, PSTRB[n] corresponds to PWDATA[(8n + 7):(8n)]. Write strobes must not be active during a read transfer.</td>
+</tr>
+<tr>
+<td>PREADY</td>
+<td>Slave interface</td>
+<td>标记从机是否已将数据发送到总线，高有效</td>
+</tr>
+<tr>
+<td>PRDATA</td>
+<td>Slave interface</td>
+<td>读数据，位宽最高可达32 bits</td>
+</tr>
+<tr>
+<td>PSLVERR</td>
+<td>Slave interface</td>
+<td>传输错误指示。非必须，如果外设不包含该引脚，输入APB bridge默认为低</td>
+</tr>
+</tbody></table>
+<p><strong>由于APB 协议 读写数据总线不包含握手信号，所以不支持同时读写</strong></p>
+<h3 id="2-3-传输时序"><a href="#2-3-传输时序" class="headerlink" title="2.3 传输时序"></a>2.3 传输时序</h3><h4 id="2-3-1-Write"><a href="#2-3-1-Write" class="headerlink" title="2.3.1 Write"></a>2.3.1 Write</h4><p>分无等待和等待两种情况</p>
+<p><strong>① With no wait states</strong></p>
+<img alt="20220611180246529" src="/MD_IMG/AMBA总线.assets/image-20220611180246529.png"  />
+
+<ul>
+<li>T1 时刻， APB 将地址信息 PADDR 和写的数据 PWDATA 准备好，拉高 PWRITE 表示进入写，同时拉高 PSEL，从 IDLE 进入 SETUP</li>
+<li>T2 时刻，拉高 PENABLE，使得状态进入 ACCESS</li>
+<li>T3 时刻，检测到 PREADY 被拉高，也就是说 Slave 已经正确接收到数据，传输完成；PENABLE 拉低，PSEL 拉低</li>
+</ul>
+<p><strong>② With wait states</strong></p>
+<img alt="20220611181656041" src="/MD_IMG/AMBA总线.assets/image-20220611181656041.png"  />
+
+<ul>
+<li>T3时刻检测到PREADY为0，也就是说Slave还没有接收完数据，所以在此刻，下面信号必须保持，以便Slave能够继续采样；直到PREADY为1 ，说明Slave已正确接收到数据，传输完成，PENABLE 拉低，PSEL 拉低</li>
+</ul>
+<p><strong>注意：即使传输结束，也不要立即改变 address 和 data 信号，直到下一次传输才更新地址和数据。这样可以减少功耗</strong></p>
+<h4 id="2-3-2-Write-stobes"><a href="#2-3-2-Write-stobes" class="headerlink" title="2.3.2 Write stobes"></a>2.3.2 Write stobes</h4><p>PSTRB信号，用于指示写数据中哪些字节有效，PSTRB[n]  对应 PWDATA[(8n + 7):8n]，高有效</p>
+<img alt="20220611182723163" src="/MD_IMG/AMBA总线.assets/image-20220611182723163.png"  />
+
+<p><strong>注意：在读操作过程中，所有PSTRB信号要保持低电平</strong></p>
+<h4 id="2-3-3-Read"><a href="#2-3-3-Read" class="headerlink" title="2.3.3 Read"></a>2.3.3 Read</h4><p>读操作与写操作时序差不多</p>
+<p><strong>① With no wait states</strong></p>
+<img alt="20220611183023346" src="/MD_IMG/AMBA总线.assets/image-20220611183023346.png"  />
+
+<ul>
+<li>T1时刻APB将地址信息PADDR准备好，拉低PWRITE表示进入读，同时拉高PSEL，从IDLE 进入SETUP </li>
+<li>T2时刻也就是下一个时钟周期拉高PENABLE，使得状态进入ACCESS </li>
+<li>T3时刻检测到PREADY 被拉高，也就是说Slave已经完成收据发送，PRDATA上就是来自Slave的数据，传输完成；PENABLE拉低，PSEL拉低</li>
+</ul>
+<p><strong>② With wait states</strong></p>
+<img alt="20220611183111743" src="/MD_IMG/AMBA总线.assets/image-20220611183111743.png"  />
+
+<h4 id="2-3-3-Error-response"><a href="#2-3-3-Error-response" class="headerlink" title="2.3.3 Error response"></a>2.3.3 Error response</h4><ul>
+<li><p>在读和写的过程，可能出现错误，错误通过PSLVERR信号来指明；</p>
+</li>
+<li><p>APB外围设备不要求必须支持PSLVERR引脚，当不使用该引脚时，应被置低；</p>
+</li>
+<li><p><strong>PSLVERR 只有在传输的最后一个周期有效，且此时 PSEL、PENABLE、PREADY均为高。</strong></p>
+</li>
+</ul>
+<h5 id="2-3-3-1-Write-transfer"><a href="#2-3-3-1-Write-transfer" class="headerlink" title="2.3.3.1 Write transfer"></a>2.3.3.1 Write transfer</h5><img alt="20220611184302886" src="/MD_IMG/AMBA总线.assets/image-20220611184302886.png"  /> 
+
+<h5 id="2-3-3-2-Read-transfer"><a href="#2-3-3-2-Read-transfer" class="headerlink" title="2.3.3.2 Read transfer"></a>2.3.3.2 Read transfer</h5><img alt="20220611184319719" src="/MD_IMG/AMBA总线.assets/image-20220611184319719.png"  />
+
+<h5 id="2-3-3-3-Mapping-of-PSLVERR"><a href="#2-3-3-3-Mapping-of-PSLVERR" class="headerlink" title="2.3.3.3 Mapping of PSLVERR"></a>2.3.3.3 Mapping of PSLVERR</h5><img alt="20220611184702117" src="/MD_IMG/AMBA总线.assets/image-20220611184702117.png"  />
+
+<h4 id="2-3-4-Protection-unit-support"><a href="#2-3-4-Protection-unit-support" class="headerlink" title="2.3.4 Protection unit support"></a>2.3.4 Protection unit support</h4><p>为了支持复杂的系统设计，互连和系统中的其他设备通常都需要提供防止非法交易的保护。对于APB接口，这种保护是由PPROT[2:0]信号提供的。</p>
+<img alt="20220611193858821" src="/MD_IMG/AMBA总线.assets/image-20220611193858821.png"  />
+
+<img alt="20220611193916347" src="/MD_IMG/AMBA总线.assets/image-20220611193916347.png"  />
+
+<h3 id="2-4-状态机"><a href="#2-4-状态机" class="headerlink" title="2.4 状态机"></a>2.4 状态机</h3><img alt="20220611194240094" src="/MD_IMG/AMBA总线.assets/image-20220611194240094.png"  />
+
+<ul>
+<li><strong>IDLE</strong>：这个是APB的默认状态，也就是没有传输时候的状态；</li>
+<li><strong>SETUP</strong>：当需要进行一个传输的时候，APB 首先进入这个状态；PSELx信号首先拉高；总线仅仅在SETUP状态停留一个时钟周期，然后接着在下一个时钟的上升沿进入ACCESS状态；</li>
+<li><strong>ACESS</strong>：<ul>
+<li>在SETUP状态转换到ACCESS，PENABLE 信号被拉高；在SETUP状态转换到ACCESS状态这段时间里，address，write，select 和 write data 信号必须保持稳定；</li>
+<li>处于ACESS状态下，如果PREADY为0，会让其继续处于ACCESS状态；否则，PREADY为1，如果还有传输则再次进入，SETUP-&gt; ACCESS，如果没有传输，直接回到IDLE；</li>
+</ul>
+</li>
+</ul>
+<h2 id="3-AHB"><a href="#3-AHB" class="headerlink" title="3. AHB"></a>3. AHB</h2><h3 id="3-1-简介"><a href="#3-1-简介" class="headerlink" title="3.1 简介"></a>3.1 简介</h3><ul>
+<li>AHB（Advanced High-performance Bus）是一种适合高性能综合设计的总线接口。它定义了组件之间的接口，如 masters, interconnects, and slaves。</li>
+<li>AHB 从设备一般是内部存储设备、外部存储接口和高带宽外设，低带宽外设一般是通过APB总线，使用AHB2APB 桥接到APB总线。</li>
+</ul>
+<h3 id="3-2-信号"><a href="#3-2-信号" class="headerlink" title="3.2 信号"></a>3.2 信号</h3><table>
+<thead>
+<tr>
+<th>Signals</th>
+<th>Name</th>
+<th>Source</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Global</strong></td>
+<td>HCLK</td>
+<td>Clock source</td>
+<td>时钟，上升沿有效</td>
+</tr>
+<tr>
+<td></td>
+<td>HRESETn</td>
+<td>Reset controller</td>
+<td>复位，低有效，复位整个系统和总线</td>
+</tr>
+<tr>
+<td><strong>Master</strong></td>
+<td>HADDR[31:0]</td>
+<td>Slave and decoder</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>HBURST[2:0]</td>
+<td>Slave</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>HMASTLOCK</td>
+<td>Slave</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>HPROT[3:0]</td>
+<td>Slave</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>HPROT[6:4]</td>
+<td>Slave</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>HSIZE[2:0]</td>
+<td>Slave</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>HNONSEC</td>
+<td>Slave and decoder</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>HEXCL</td>
+<td>Exclusive Access Monitor</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>HMASTER[3:0]</td>
+<td>Exclusive Access Monitor and slave</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>HTRANS[1:0]</td>
+<td>Slave</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>HWDATA[31:0]</td>
+<td>Slave</td>
+<td>最小位宽32bit</td>
+</tr>
+<tr>
+<td></td>
+<td>HWRITE</td>
+<td>Slave</td>
+<td>读&#x2F;写控制信号，高为写操作，低为读操作（时序同地址信号，在一个突发内维持不变）</td>
+</tr>
+<tr>
+<td><strong>Slave</strong></td>
+<td>HRDATA[31:0]</td>
+<td>Multiplexor</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>HREADYOUT</td>
+<td>Multiplexor</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>HRESP</td>
+<td>Multiplexor</td>
+<td>告知mastar传输状态，低为OKAY，高为ERROR</td>
+</tr>
+<tr>
+<td></td>
+<td>HEXOKAY</td>
+<td>Multiplexor</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Decoder</strong></td>
+<td>HSELx</td>
+<td>Slave</td>
+<td></td>
+</tr>
+<tr>
+<td><strong>Multiplexor</strong></td>
+<td>HRDATA[31:0]</td>
+<td>Master</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td>HREADY</td>
+<td>Master and slave</td>
+<td>高为前一个传输完成</td>
+</tr>
+<tr>
+<td></td>
+<td>HRESP</td>
+<td>Master</td>
+<td>Transfer response, selected by the decoder.</td>
+</tr>
+<tr>
+<td></td>
+<td>HEXOKAY</td>
+<td>Master</td>
+<td>Exclusive okay, selected by the decoder</td>
+</tr>
+</tbody></table>
+<h3 id="3-3-传输时序"><a href="#3-3-传输时序" class="headerlink" title="3.3 传输时序"></a>3.3 传输时序</h3><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><h2 id="PS-与-PL"><a href="#PS-与-PL" class="headerlink" title="PS 与 PL"></a><strong>PS 与 PL</strong></h2><ul>
+<li>PS：处理系统（Processing System），就是与FPGA无关的ARM是SoC的部分。</li>
+<li>PL：可编程逻辑（Programmable Logic）,就是FPGA部分。</li>
+</ul>
+<h2 id="AXI"><a href="#AXI" class="headerlink" title="AXI"></a><strong>AXI</strong></h2><h3 id="简介-1"><a href="#简介-1" class="headerlink" title="简介"></a>简介</h3><ul>
+<li>AXI 全称 “Advanced Extensible Interface ”，主要描述主设备和从设备之间的数据传输方式。AXI 是 ARM 公司提出的 AMBA（Advanced Microcontroller Bus Architecture）的一部分，是一种高性能、高带宽、低延迟的片内总线，也用来替代以前的 AHB 和 APB 总线。</li>
+<li>第一个版本的 AXI（AXI3）包含在 2003年发布的 AMBA3.0 中， AXI 的第二个版本 AXI （AXI4）包含在 2010 年发布的 AMBA 4.0 之中。</li>
+</ul>
+<h3 id="AXI-协议"><a href="#AXI-协议" class="headerlink" title="AXI 协议"></a><strong>AXI 协议</strong></h3><p>​		主设备和从设备之间通过握手信号建立连接。当从设备准备好接收数据时，会发出 Ready 信号。当主设备的数据准备好时，会发出和维持 Valid 信号，表示数据有效。数据只有在 Valid 和 Ready 信号都有效的时候才开始传输。当这两个信号持续保持有效，主设备会继续传输下一个数据。主设备可以撤销 Valid 信号，或者从设备撤销 Ready 信 号终止传输。 AXI 的协议如图， T2 时，从设备的 Ready 信号有效， T3 时主设备的 Valid 信号有效，数据传输开始。</p>
+<img alt="20211227205856922" src="/MD_IMG/AMBA总线.assets/image-20211227205856922.png"  />
+
+<p>​		在 ZYNQ 中，支持 AXI-Lite，AXI4 和 AXI-Stream 三种总线，下表介绍这三种 AXI 接口的特性。</p>
+<table>
+<thead>
+<tr>
+<th align="center">接口协议</th>
+<th align="center">特性</th>
+<th align="center">应用场合</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">AXI4-Lite</td>
+<td align="center">地址&#x2F;单数据传输</td>
+<td align="center">低速外设或控制</td>
+</tr>
+<tr>
+<td align="center">AXI4</td>
+<td align="center">地址&#x2F;突发数据传输</td>
+<td align="center">地址的批量传输</td>
+</tr>
+<tr>
+<td align="center">AXI4-Stream</td>
+<td align="center">仅传输数据，突发传输</td>
+<td align="center">数据流和媒体流传输</td>
+</tr>
+</tbody></table>
+<ul>
+<li><p>AXI4-Lite：</p>
+<p>具有轻量级、结构简单的特点，适合小批量数据、简单控制场合。不支持批量传输，读写时一次只能读写一个字（32 bit）。主要用于访问一些低速外设和外设的控制。</p>
+</li>
+<li><p>AXI4：</p>
+<p>相比 AXI4-Lite ，增加了批量传输功能，可以连续对一片地址进行一次性读写。也就是说具有数据读写的 burst 功能。</p>
+</li>
+</ul>
+<p>​       上面两种均采用内存映射控制方式，即 ARM 将用户自定义 IP 编入某一地址进行访问，读写时就像在读写自己的片内 RAM ，编程也很方便，开发难度较低。代价就是资源占用过多需要额外的读地址线、写地址线、读数据线、写数据线、写应答线这些信号线。</p>
+<ul>
+<li><p>AXI4-Stream：</p>
+<p>这是一种连续流接口，不需要地址线（很像 FIFO ，一直读或一直写就行）。对于这类 IP ，ARM 不能通过上面的内存映射方式控制（ FIFO 根本没有地址的概念），必须有一个转换装置，例如 AXI DMA 模块来实现内存映射到流式接口的转换。 AXI Stream 适用的场合有很多：视频流处理；通信协议转换；数字信号处理；无线通信等。其本质都是针对数据流构建的数据通路，从信源（例如 ARM 内存、 DMA 、无线接收前端等）到信宿（例如 HDMI 显示器、高速 AD 音频输出，等）构建起连续的数据流。<strong>这种接口适合做实时信号处理</strong>。</p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>协议</category>
+      </categories>
+      <tags>
+        <tag>协议</tag>
+        <tag>AMBA</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>FC-AE-1553</title>
     <url>/2023/07/08/FC-AE-1553/</url>
     <content><![CDATA[<h2 id="MIL-STD-1553B总线协议"><a href="#MIL-STD-1553B总线协议" class="headerlink" title="MIL-STD-1553B总线协议"></a>MIL-STD-1553B总线协议</h2><h3 id="总线结构"><a href="#总线结构" class="headerlink" title="总线结构"></a>总线结构</h3><p>MIL-STD-1553B总线由BC（总线控制器），RT（远程终端），BM（总线监视器）以及总线自身四部分组成。一个MIL-STD-1553B总线网络中，有且只有一个总线控制器BC在工作，远程终端RT的个数不多于31，而总线监视器BM的数量则可根据需要设置，它并不参与总线通信。总线具备冗余备份能力，能增加MIL-STD-1553B总线网络信息传输的可靠性，当一条总线断开时，网络会自动切换到其他冗余的总线上，保证了消息的传递。</p>
@@ -500,389 +883,6 @@
       </tags>
   </entry>
   <entry>
-    <title>AMBA 总线架构和协议</title>
-    <url>/2023/07/08/AMBA%E6%80%BB%E7%BA%BF/</url>
-    <content><![CDATA[<h2 id="1-了解AMBA-总线架构和协议"><a href="#1-了解AMBA-总线架构和协议" class="headerlink" title="1. 了解AMBA 总线架构和协议"></a>1. 了解AMBA 总线架构和协议</h2><h3 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1 概述"></a>1.1 概述</h3><p>高级微控制器总线体系结构（英语：Advanced Microcontroller Bus Architecture, AMBA）是用于连接和管理片上系统（SoC）设计中功能块的开放标准片上互连规范。从本质上说，AMBA 协议定义功能块如何互相进行通信。</p>
-<img alt="20220611145550312" src="/MD_IMG/AMBA总线.assets/image-20220611145550312.png"  />
-
-<p>现在，AMBA广泛用在各种ASIC和SoC部件中，包括在IoT子系统、智能电话和联网SoC等设备中使用的应用程序处理器，使用AMBA 有许多优势：</p>
-<ul>
-<li><p>AMBA可实现有效的IP重用，IP重用在降低SoC开发成本和缩短开发时间方面发挥着至关重要的作用。AMBA规范提供了可实现IP重用的接口标准。正因为如此，数以千计的SoC和IP产品都在使用AMBA接口；</p>
-</li>
-<li><p>AMBA还能够灵活地使用多种SoC，IP重用需要一个通用标准，同时支持具有不同能耗、性能和区域要求的多种SoC，Arm 还可提供一系列针对不同要求进行优化的接口规范；</p>
-</li>
-<li><p>标准接口规范（如AMBA）可使来自不同设计团队或供应商的IP组件之间互相兼容，</p>
-</li>
-<li><p>AMBA得到很好的支持，它在整个半导体行业中得到广泛的实施和支持，其中包括来自第三方IP产品和工具的支持，包括AMBA在内的各种总线接口标准的差别，体现在它们能够实现的性能上。</p>
-<p><strong>总线接口性能</strong>有两个主要特性，第一个是<strong>带宽</strong>（带宽是指通过接口驱动数据所能达到的速率）。在同步系统中，最大带宽受时钟速度与数据总线宽度之乘积的限制；第二个重要特性是<strong>延迟</strong>，这是事务启动与完成之间的延迟，但在基于突发事务的系统中，延迟数字通常指的是完成第一次传输而不是突发事务，具体取决于系统的重要性，接口的效率将取决于它以零延迟获得最大带宽的程度。</p>
-</li>
-</ul>
-<hr>
-<h3 id="1-2-AMBA-发展历程"><a href="#1-2-AMBA-发展历程" class="headerlink" title="1.2 AMBA 发展历程"></a>1.2 AMBA 发展历程</h3><p>1996年，Arm 引入AMBA，最初的AMBA总线是高级系统总线（<strong>ASB</strong>）和高级外设总线（<strong>APB</strong>），<strong>APB 是为低带宽控制访问而设计的。</strong>例如，在系统外设上注册接口，此总线具有简单的地址和数据阶段，信号列表的复杂程度很低；</p>
-<p>1999年，推出AMBA 2，Arm 添加了AMBA高性能总线（<strong>AHB</strong>），这是一个单边时钟协议，AHB中的一个简单事务，由一个地址阶段和一个后续数据阶段组成，这与APB 协议相似，对目标设备的访问通过MUX来控制，从而<strong>允许总线一次访问一个总线主接口</strong>，而且，<strong>与APB相比，AHB具有更大的总线带宽</strong>（64&#x2F;128位）；</p>
-<p>2003年，推出AMBA 3，其中包括高级跟踪总线（<strong>ATB</strong>），这是Coresight片上调试和跟踪解决方案的一部分，<strong>AHB-Lite</strong>是AHB 的子集，该子集可简化具有单个主接口的总线的设计，<strong>AXI</strong>是在AMBA 3规范中定义的第三代AMBA接口，它的目标是<strong>实现高性能、高时钟频率的系统设计</strong>，并且还包括使其能够实现高速亚微米互连的功能。</p>
-<p>2010年，从AMBA 4 <strong>AXI4</strong>开始引入了AMBA 4规范。</p>
-<p>2011年，引入了 AMBA 4 <strong>ACE</strong>，ACE 通过附加的信号引入了系统范围的一致性，从而对AXI进行了扩展，该系统范围的一致性<strong>允许多个处理器共享内存</strong>，并可启用类似Arm 的big.LITTLE处理之类的技术，同时，<strong>ACE-Lite</strong>协议还可实现单向一致性，例如，一个网络接口可从完全一致的ACE处理器的缓存中读取数据，<strong>AXI4-Stream</strong> 协议适用于<strong>从主接口到从属接口的单向数据传输，这也被称为点对点传输，该协议可降低信号路由开销</strong>，因此是在FPGA中实现传输的理想选择。</p>
-<p>2014年，引入了AMBA 5 <strong>CHI</strong>（一致性集线器接口）规范，<strong>重新设计的高速传输层和功能专门用于减少阻塞</strong>。</p>
-<p>2016年，AHB协议被更新至<strong>AHB5</strong>，这是对ARMv8-M体系结构的补充，可扩展从处理器到系统的TrustZone安全基础，</p>
-<img alt="20220611152053770" src="/MD_IMG/AMBA总线.assets/image-20220611152053770.png"  />
-
-<h3 id="1-3-协议介绍"><a href="#1-3-协议介绍" class="headerlink" title="1.3 协议介绍"></a>1.3 协议介绍</h3><p>1、APB：高级外围设备总线（APB）用于连接低带宽的外围设备。它是一个简单的非流水线协议。读写操作共享同一组信号，不支持burst数据传输。是最容易学习的AMBA协议。<br>2、AHB：高级高性能总线（AHB）用于连接共享总线上需要更高带宽的组件。这些slave组件可以是内部内存或外部内存接口、DMA、DSP等。AHB可以通过burst数据传输来获得更高的带宽。<br>3，AHB-lite协议是AHB的一个简化版本。简化后<strong>只支持一个主设计</strong>，这消除了对任何仲裁、重试、分割事务等的需求。<br>4、高级可扩展接口（AXI）适合于高带宽和低延迟互连。这是一个点对点的互连，并克服了AHB、APB等共享总线协议在可连接的代理数量方面的限制性。该协议支持多个outstanding 的数据传输、burst数据传输、单独的读写通道和支持不同的总线宽度。<br>5，AXI-lite协议是AXI的简化版本，简化后不支持突发数据传输。<br>6，AXI-stream 协议是AXI协议的另一种风格，它只支持数据流从master 流到slave。与完整的AXI或AXI-lite不同，AXI-stream协议中没有单独的读&#x2F;写通道，因为其目的是只在一个方向上流。<br>7，ACE-AXI协议是AXI4协议的扩展，应用于在一个芯片上集成多个CPU核心与一致性cache的场景。ACE协议扩展了AXI读写数据通道，同时引入了单独的snoop地址、snoop数据和snoop响应通道。这些额外的通道提供了实现基于snoop的一致性协议的机制。<br>8，ACE-Lite-对于没有自己cache的agents，但仍属于可共享一致性域的一部分，如DMA或网络接口agent，使用ACE-lite协议实现这种”单向”一致性。<br>9，CHI-ACE协议作为AXI的扩展而开发，以支持一致性互连。ACE协议使用了master&#x2F;slave之间的信号电平通信，因此互连需要大量的线和增加的通道来进行snoops和响应。这对于具有2&#x2F;4核移动SOC的小一致性clusters非常有效。随着SOC上集成越来越多的一致性clusters——AMBA5修订版引入了CHI协议。CHI协议使用基于分层分组的通信协议，具有协议、链路层和物理层实现，还支持基于QoS的流控制和重试机制。</p>
-<h2 id="2-APB"><a href="#2-APB" class="headerlink" title="2. APB"></a>2. APB</h2><h3 id="2-1-简介"><a href="#2-1-简介" class="headerlink" title="2.1 简介"></a>2.1 简介</h3><ul>
-<li>APB（Advanced Peripheral Bus）是AMBA总线的一部分，从1998年第一版至今共有3个版本。</li>
-</ul>
-<figure class="highlight smali"><table><tr><td class="code"><pre><span class="line">AMBA2 APB：定义最基本的信号 interface, 读写 transfer, APB<span class="keyword"> bridge</span>, APB slave.</span><br><span class="line"></span><br><span class="line">AMBA3 APB：增加定义信号 PREADY, PSLVERR 来支持 wait state  和 Error reporting  的功能。</span><br><span class="line"></span><br><span class="line">AMBA4 APB：增加定义信号 PPROT, PSTRB  来支持 transaction protection 和<span class="built_in"> sparse </span>data transfer 的功能。</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><p>APB 是非流水线协议，用于连接低带宽和不需要高性能总线的外围设备，信号传输发生在时钟上升沿，每次传输至少需要两个时钟周期。</p>
-</li>
-<li><p>APB 可以同 AHB、AHB-Lite、AXI、AXI4-Lite互连。</p>
-</li>
-</ul>
-<h3 id="2-2-信号"><a href="#2-2-信号" class="headerlink" title="2.2 信号"></a>2.2 信号</h3><table>
-<thead>
-<tr>
-<th>Signal</th>
-<th>Source</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>PCLK</td>
-<td>Clock source</td>
-<td>时钟，上升沿有效</td>
-</tr>
-<tr>
-<td>PRESETn</td>
-<td>System bus equivalent</td>
-<td>复位，低有效（通常直连系统总线复位信号）</td>
-</tr>
-<tr>
-<td>PADDR</td>
-<td>APB bridge</td>
-<td>地址，位宽最高可达32 bits</td>
-</tr>
-<tr>
-<td>PPROT</td>
-<td>APB bridge</td>
-<td>保护类型。该信号指示事务的正常、特权或安全保护级别，以及该事务是数据访问还是指令访问。（Protection type. This signal indicates the normal, privileged, or secure protection level of the transaction and whether the transaction is a data access or an instruction access.）</td>
-</tr>
-<tr>
-<td>PSELx</td>
-<td>APB bridge</td>
-<td>片选信号，由APB bridge 产生对每个外围从设备的片选信号</td>
-</tr>
-<tr>
-<td>PENABLE</td>
-<td>APB bridge</td>
-<td>使能信号，标记传输开始</td>
-</tr>
-<tr>
-<td>PWRITE</td>
-<td>APB bridge</td>
-<td>读&#x2F;写控制信号，高为写操作，低为读操作</td>
-</tr>
-<tr>
-<td>PWDATA</td>
-<td>APB bridge</td>
-<td>写数据，位宽最高可达32 bits</td>
-</tr>
-<tr>
-<td>PSTRB</td>
-<td>APB bridge</td>
-<td>Write strobes. This signal indicates which byte lanes to update during a write transfer. There is one write strobe for each eight bits of the write data bus. Therefore, PSTRB[n] corresponds to PWDATA[(8n + 7):(8n)]. Write strobes must not be active during a read transfer.</td>
-</tr>
-<tr>
-<td>PREADY</td>
-<td>Slave interface</td>
-<td>标记从机是否已将数据发送到总线，高有效</td>
-</tr>
-<tr>
-<td>PRDATA</td>
-<td>Slave interface</td>
-<td>读数据，位宽最高可达32 bits</td>
-</tr>
-<tr>
-<td>PSLVERR</td>
-<td>Slave interface</td>
-<td>传输错误指示。非必须，如果外设不包含该引脚，输入APB bridge默认为低</td>
-</tr>
-</tbody></table>
-<p><strong>由于APB 协议 读写数据总线不包含握手信号，所以不支持同时读写</strong></p>
-<h3 id="2-3-传输时序"><a href="#2-3-传输时序" class="headerlink" title="2.3 传输时序"></a>2.3 传输时序</h3><h4 id="2-3-1-Write"><a href="#2-3-1-Write" class="headerlink" title="2.3.1 Write"></a>2.3.1 Write</h4><p>分无等待和等待两种情况</p>
-<p><strong>① With no wait states</strong></p>
-<img alt="20220611180246529" src="/MD_IMG/AMBA总线.assets/image-20220611180246529.png"  />
-
-<ul>
-<li>T1 时刻， APB 将地址信息 PADDR 和写的数据 PWDATA 准备好，拉高 PWRITE 表示进入写，同时拉高 PSEL，从 IDLE 进入 SETUP</li>
-<li>T2 时刻，拉高 PENABLE，使得状态进入 ACCESS</li>
-<li>T3 时刻，检测到 PREADY 被拉高，也就是说 Slave 已经正确接收到数据，传输完成；PENABLE 拉低，PSEL 拉低</li>
-</ul>
-<p><strong>② With wait states</strong></p>
-<img alt="20220611181656041" src="/MD_IMG/AMBA总线.assets/image-20220611181656041.png"  />
-
-<ul>
-<li>T3时刻检测到PREADY为0，也就是说Slave还没有接收完数据，所以在此刻，下面信号必须保持，以便Slave能够继续采样；直到PREADY为1 ，说明Slave已正确接收到数据，传输完成，PENABLE 拉低，PSEL 拉低</li>
-</ul>
-<p><strong>注意：即使传输结束，也不要立即改变 address 和 data 信号，直到下一次传输才更新地址和数据。这样可以减少功耗</strong></p>
-<h4 id="2-3-2-Write-stobes"><a href="#2-3-2-Write-stobes" class="headerlink" title="2.3.2 Write stobes"></a>2.3.2 Write stobes</h4><p>PSTRB信号，用于指示写数据中哪些字节有效，PSTRB[n]  对应 PWDATA[(8n + 7):8n]，高有效</p>
-<img alt="20220611182723163" src="/MD_IMG/AMBA总线.assets/image-20220611182723163.png"  />
-
-<p><strong>注意：在读操作过程中，所有PSTRB信号要保持低电平</strong></p>
-<h4 id="2-3-3-Read"><a href="#2-3-3-Read" class="headerlink" title="2.3.3 Read"></a>2.3.3 Read</h4><p>读操作与写操作时序差不多</p>
-<p><strong>① With no wait states</strong></p>
-<img alt="20220611183023346" src="/MD_IMG/AMBA总线.assets/image-20220611183023346.png"  />
-
-<ul>
-<li>T1时刻APB将地址信息PADDR准备好，拉低PWRITE表示进入读，同时拉高PSEL，从IDLE 进入SETUP </li>
-<li>T2时刻也就是下一个时钟周期拉高PENABLE，使得状态进入ACCESS </li>
-<li>T3时刻检测到PREADY 被拉高，也就是说Slave已经完成收据发送，PRDATA上就是来自Slave的数据，传输完成；PENABLE拉低，PSEL拉低</li>
-</ul>
-<p><strong>② With wait states</strong></p>
-<img alt="20220611183111743" src="/MD_IMG/AMBA总线.assets/image-20220611183111743.png"  />
-
-<h4 id="2-3-3-Error-response"><a href="#2-3-3-Error-response" class="headerlink" title="2.3.3 Error response"></a>2.3.3 Error response</h4><ul>
-<li><p>在读和写的过程，可能出现错误，错误通过PSLVERR信号来指明；</p>
-</li>
-<li><p>APB外围设备不要求必须支持PSLVERR引脚，当不使用该引脚时，应被置低；</p>
-</li>
-<li><p><strong>PSLVERR 只有在传输的最后一个周期有效，且此时 PSEL、PENABLE、PREADY均为高。</strong></p>
-</li>
-</ul>
-<h5 id="2-3-3-1-Write-transfer"><a href="#2-3-3-1-Write-transfer" class="headerlink" title="2.3.3.1 Write transfer"></a>2.3.3.1 Write transfer</h5><img alt="20220611184302886" src="/MD_IMG/AMBA总线.assets/image-20220611184302886.png"  /> 
-
-<h5 id="2-3-3-2-Read-transfer"><a href="#2-3-3-2-Read-transfer" class="headerlink" title="2.3.3.2 Read transfer"></a>2.3.3.2 Read transfer</h5><img alt="20220611184319719" src="/MD_IMG/AMBA总线.assets/image-20220611184319719.png"  />
-
-<h5 id="2-3-3-3-Mapping-of-PSLVERR"><a href="#2-3-3-3-Mapping-of-PSLVERR" class="headerlink" title="2.3.3.3 Mapping of PSLVERR"></a>2.3.3.3 Mapping of PSLVERR</h5><img alt="20220611184702117" src="/MD_IMG/AMBA总线.assets/image-20220611184702117.png"  />
-
-<h4 id="2-3-4-Protection-unit-support"><a href="#2-3-4-Protection-unit-support" class="headerlink" title="2.3.4 Protection unit support"></a>2.3.4 Protection unit support</h4><p>为了支持复杂的系统设计，互连和系统中的其他设备通常都需要提供防止非法交易的保护。对于APB接口，这种保护是由PPROT[2:0]信号提供的。</p>
-<img alt="20220611193858821" src="/MD_IMG/AMBA总线.assets/image-20220611193858821.png"  />
-
-<img alt="20220611193916347" src="/MD_IMG/AMBA总线.assets/image-20220611193916347.png"  />
-
-<h3 id="2-4-状态机"><a href="#2-4-状态机" class="headerlink" title="2.4 状态机"></a>2.4 状态机</h3><img alt="20220611194240094" src="/MD_IMG/AMBA总线.assets/image-20220611194240094.png"  />
-
-<ul>
-<li><strong>IDLE</strong>：这个是APB的默认状态，也就是没有传输时候的状态；</li>
-<li><strong>SETUP</strong>：当需要进行一个传输的时候，APB 首先进入这个状态；PSELx信号首先拉高；总线仅仅在SETUP状态停留一个时钟周期，然后接着在下一个时钟的上升沿进入ACCESS状态；</li>
-<li><strong>ACESS</strong>：<ul>
-<li>在SETUP状态转换到ACCESS，PENABLE 信号被拉高；在SETUP状态转换到ACCESS状态这段时间里，address，write，select 和 write data 信号必须保持稳定；</li>
-<li>处于ACESS状态下，如果PREADY为0，会让其继续处于ACCESS状态；否则，PREADY为1，如果还有传输则再次进入，SETUP-&gt; ACCESS，如果没有传输，直接回到IDLE；</li>
-</ul>
-</li>
-</ul>
-<h2 id="3-AHB"><a href="#3-AHB" class="headerlink" title="3. AHB"></a>3. AHB</h2><h3 id="3-1-简介"><a href="#3-1-简介" class="headerlink" title="3.1 简介"></a>3.1 简介</h3><ul>
-<li>AHB（Advanced High-performance Bus）是一种适合高性能综合设计的总线接口。它定义了组件之间的接口，如 masters, interconnects, and slaves。</li>
-<li>AHB 从设备一般是内部存储设备、外部存储接口和高带宽外设，低带宽外设一般是通过APB总线，使用AHB2APB 桥接到APB总线。</li>
-</ul>
-<h3 id="3-2-信号"><a href="#3-2-信号" class="headerlink" title="3.2 信号"></a>3.2 信号</h3><table>
-<thead>
-<tr>
-<th>Signals</th>
-<th>Name</th>
-<th>Source</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>Global</strong></td>
-<td>HCLK</td>
-<td>Clock source</td>
-<td>时钟，上升沿有效</td>
-</tr>
-<tr>
-<td></td>
-<td>HRESETn</td>
-<td>Reset controller</td>
-<td>复位，低有效，复位整个系统和总线</td>
-</tr>
-<tr>
-<td><strong>Master</strong></td>
-<td>HADDR[31:0]</td>
-<td>Slave and decoder</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>HBURST[2:0]</td>
-<td>Slave</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>HMASTLOCK</td>
-<td>Slave</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>HPROT[3:0]</td>
-<td>Slave</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>HPROT[6:4]</td>
-<td>Slave</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>HSIZE[2:0]</td>
-<td>Slave</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>HNONSEC</td>
-<td>Slave and decoder</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>HEXCL</td>
-<td>Exclusive Access Monitor</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>HMASTER[3:0]</td>
-<td>Exclusive Access Monitor and slave</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>HTRANS[1:0]</td>
-<td>Slave</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>HWDATA[31:0]</td>
-<td>Slave</td>
-<td>最小位宽32bit</td>
-</tr>
-<tr>
-<td></td>
-<td>HWRITE</td>
-<td>Slave</td>
-<td>读&#x2F;写控制信号，高为写操作，低为读操作（时序同地址信号，在一个突发内维持不变）</td>
-</tr>
-<tr>
-<td><strong>Slave</strong></td>
-<td>HRDATA[31:0]</td>
-<td>Multiplexor</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>HREADYOUT</td>
-<td>Multiplexor</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>HRESP</td>
-<td>Multiplexor</td>
-<td>告知mastar传输状态，低为OKAY，高为ERROR</td>
-</tr>
-<tr>
-<td></td>
-<td>HEXOKAY</td>
-<td>Multiplexor</td>
-<td></td>
-</tr>
-<tr>
-<td><strong>Decoder</strong></td>
-<td>HSELx</td>
-<td>Slave</td>
-<td></td>
-</tr>
-<tr>
-<td><strong>Multiplexor</strong></td>
-<td>HRDATA[31:0]</td>
-<td>Master</td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>HREADY</td>
-<td>Master and slave</td>
-<td>高为前一个传输完成</td>
-</tr>
-<tr>
-<td></td>
-<td>HRESP</td>
-<td>Master</td>
-<td>Transfer response, selected by the decoder.</td>
-</tr>
-<tr>
-<td></td>
-<td>HEXOKAY</td>
-<td>Master</td>
-<td>Exclusive okay, selected by the decoder</td>
-</tr>
-</tbody></table>
-<h3 id="3-3-传输时序"><a href="#3-3-传输时序" class="headerlink" title="3.3 传输时序"></a>3.3 传输时序</h3><h1 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h1><h2 id="PS-与-PL"><a href="#PS-与-PL" class="headerlink" title="PS 与 PL"></a><strong>PS 与 PL</strong></h2><ul>
-<li>PS：处理系统（Processing System），就是与FPGA无关的ARM是SoC的部分。</li>
-<li>PL：可编程逻辑（Programmable Logic）,就是FPGA部分。</li>
-</ul>
-<h2 id="AXI"><a href="#AXI" class="headerlink" title="AXI"></a><strong>AXI</strong></h2><h3 id="简介-1"><a href="#简介-1" class="headerlink" title="简介"></a>简介</h3><ul>
-<li>AXI 全称 “Advanced Extensible Interface ”，主要描述主设备和从设备之间的数据传输方式。AXI 是 ARM 公司提出的 AMBA（Advanced Microcontroller Bus Architecture）的一部分，是一种高性能、高带宽、低延迟的片内总线，也用来替代以前的 AHB 和 APB 总线。</li>
-<li>第一个版本的 AXI（AXI3）包含在 2003年发布的 AMBA3.0 中， AXI 的第二个版本 AXI （AXI4）包含在 2010 年发布的 AMBA 4.0 之中。</li>
-</ul>
-<h3 id="AXI-协议"><a href="#AXI-协议" class="headerlink" title="AXI 协议"></a><strong>AXI 协议</strong></h3><p>​		主设备和从设备之间通过握手信号建立连接。当从设备准备好接收数据时，会发出 Ready 信号。当主设备的数据准备好时，会发出和维持 Valid 信号，表示数据有效。数据只有在 Valid 和 Ready 信号都有效的时候才开始传输。当这两个信号持续保持有效，主设备会继续传输下一个数据。主设备可以撤销 Valid 信号，或者从设备撤销 Ready 信 号终止传输。 AXI 的协议如图， T2 时，从设备的 Ready 信号有效， T3 时主设备的 Valid 信号有效，数据传输开始。</p>
-<img alt="20211227205856922" src="/MD_IMG/AMBA总线.assets/image-20211227205856922.png"  />
-
-<p>​		在 ZYNQ 中，支持 AXI-Lite，AXI4 和 AXI-Stream 三种总线，下表介绍这三种 AXI 接口的特性。</p>
-<table>
-<thead>
-<tr>
-<th align="center">接口协议</th>
-<th align="center">特性</th>
-<th align="center">应用场合</th>
-</tr>
-</thead>
-<tbody><tr>
-<td align="center">AXI4-Lite</td>
-<td align="center">地址&#x2F;单数据传输</td>
-<td align="center">低速外设或控制</td>
-</tr>
-<tr>
-<td align="center">AXI4</td>
-<td align="center">地址&#x2F;突发数据传输</td>
-<td align="center">地址的批量传输</td>
-</tr>
-<tr>
-<td align="center">AXI4-Stream</td>
-<td align="center">仅传输数据，突发传输</td>
-<td align="center">数据流和媒体流传输</td>
-</tr>
-</tbody></table>
-<ul>
-<li><p>AXI4-Lite：</p>
-<p>具有轻量级、结构简单的特点，适合小批量数据、简单控制场合。不支持批量传输，读写时一次只能读写一个字（32 bit）。主要用于访问一些低速外设和外设的控制。</p>
-</li>
-<li><p>AXI4：</p>
-<p>相比 AXI4-Lite ，增加了批量传输功能，可以连续对一片地址进行一次性读写。也就是说具有数据读写的 burst 功能。</p>
-</li>
-</ul>
-<p>​       上面两种均采用内存映射控制方式，即 ARM 将用户自定义 IP 编入某一地址进行访问，读写时就像在读写自己的片内 RAM ，编程也很方便，开发难度较低。代价就是资源占用过多需要额外的读地址线、写地址线、读数据线、写数据线、写应答线这些信号线。</p>
-<ul>
-<li><p>AXI4-Stream：</p>
-<p>这是一种连续流接口，不需要地址线（很像 FIFO ，一直读或一直写就行）。对于这类 IP ，ARM 不能通过上面的内存映射方式控制（ FIFO 根本没有地址的概念），必须有一个转换装置，例如 AXI DMA 模块来实现内存映射到流式接口的转换。 AXI Stream 适用的场合有很多：视频流处理；通信协议转换；数字信号处理；无线通信等。其本质都是针对数据流构建的数据通路，从信源（例如 ARM 内存、 DMA 、无线接收前端等）到信宿（例如 HDMI 显示器、高速 AD 音频输出，等）构建起连续的数据流。<strong>这种接口适合做实时信号处理</strong>。</p>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>协议</category>
-      </categories>
-      <tags>
-        <tag>协议</tag>
-        <tag>AMBA</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>IIC</title>
     <url>/2023/07/08/IIC/</url>
     <content><![CDATA[<h3 id="IIC总线概述"><a href="#IIC总线概述" class="headerlink" title="IIC总线概述"></a>IIC总线概述</h3><h4 id="IIC总线简介"><a href="#IIC总线简介" class="headerlink" title="IIC总线简介"></a>IIC总线简介</h4><p>IIC总线是Philips公司在八十年代初推出的<strong>一种串行、半双工总线，主要用于近距离、低速的芯片之间的通信</strong>；IIC总线有两根双向的信号线<strong>一根数据线 SDA 用于收发数据，一根时钟线 SCL 用于通信双方时钟的同步</strong>；IIC总线硬件结构简单，成本较低，因此在各个领域得到了广泛的应用。</p>
@@ -1011,6 +1011,95 @@
       </tags>
   </entry>
   <entry>
+    <title>Modelsim</title>
+    <url>/2023/07/08/Modelsim/</url>
+    <content><![CDATA[<h1 id="Quartus-联合-Modelsim"><a href="#Quartus-联合-Modelsim" class="headerlink" title="Quartus 联合 Modelsim"></a>Quartus 联合 Modelsim</h1><p>​		这里使用的版本是：</p>
+<ul>
+<li><p>Quartus Prime 18.1.0.222 Pro Edition</p>
+</li>
+<li><p>Modelsim - INTEL FPGA STARTER EDITION 10.6d</p>
+<p>由于直接使用quartus安装时自带的modelsim，所以不需要单独进行Altera库的安装，直接新建工程即可仿真</p>
+</li>
+</ul>
+<p>注：quartus pro版本与modelsim目前所知道最简单的仿真方法就是使用quartus安装时下载的modelsim进行独立仿真，操作步骤如下：</p>
+<h2 id="新建工程"><a href="#新建工程" class="headerlink" title="新建工程"></a>新建工程</h2><ol>
+<li>在电脑上新建个文件夹，用来存放modelsim工程</li>
+<li>从windows开始菜单里打开modelsim软件</li>
+</ol>
+<img src="/MD_IMG/Modelsim仿真.assets/image-20211105235512769.png" alt="image-20211105235512769" style="zoom: 80%;" />
+
+<ol start="2">
+<li>更改modelsim目录到新建的文件夹下</li>
+</ol>
+<img alt="20211108000445532" src="/MD_IMG/Modelsim仿真.assets/image-20211108000445532.png"  />
+
+<ol start="3">
+<li>新建工程，点击 Add Existing File（添加所有要仿真的文件）</li>
+</ol>
+<img alt="20211108003308888" src="/MD_IMG/Modelsim仿真.assets/image-20211108003308888.png"  />
+
+<ol start="4">
+<li>编译所有</li>
+</ol>
+<img src="/MD_IMG/Modelsim仿真.assets/image-20211108001002004.png" alt="image-20211108001002004" style="zoom:80%;" />
+
+<ol start="5">
+<li>然后在命令行窗口输入下面语句，其中将 <strong>work.zerodly_data_gen_tb</strong> 改为 <strong>work.+ 你要仿真的文件名</strong></li>
+</ol>
+<figure class="highlight autohotkey"><table><tr><td class="code"><pre><span class="line">vsim -L work   -L cyclone10gx_ver -L alter<span class="built_in">a_ver</span> -L lpm_ver -L sgate_ver -L alter<span class="built_in">a_mf</span>_ver -L alter<span class="built_in">a_lnsim</span>_ver -L twentynm_ver -L twentynm_hssi_ver -L twentynm_hip_ver -t ps -novopt work.top_scaler_tb  -t ns</span><br></pre></td></tr></table></figure>
+
+<ol start="6">
+<li>添加要观察的信号到波形窗口，命令行输入 <strong>view wave</strong>，命令行输入<strong>run 1 ns</strong>，即可观察波形</li>
+<li>每次修改代码，直接compile更改的文件 -&gt; restart -&gt; run</li>
+</ol>
+<img alt="20211108132118081" src="/MD_IMG/Modelsim仿真.assets/image-20211108132118081.png"  />
+
+<ol start="8">
+<li>可以保存波形窗口格式，下次仿真直接加载 <strong>.do文件</strong>，然后restart -&gt; run即可，不用再重新添加信号</li>
+</ol>
+<h2 id="仿真已有工程"><a href="#仿真已有工程" class="headerlink" title="仿真已有工程"></a>仿真已有工程</h2><p><strong>File -&gt; Library -&gt; a map to an existing library -&gt; compile -&gt; 命令行输入 view wave -&gt; load do文件 -&gt; run</strong></p>
+<img alt="20211106000209355" src="/MD_IMG/Modelsim仿真.assets/image-20211106000209355.png"  />
+
+<h1 id="Vivado-联合-Modelsim"><a href="#Vivado-联合-Modelsim" class="headerlink" title="Vivado 联合 Modelsim"></a>Vivado 联合 Modelsim</h1><p>这里使用的版本是：</p>
+<ul>
+<li>Vivado 2019.1</li>
+<li>Modelsim SE-64 2020.4</li>
+</ul>
+<h2 id="Modelsim-安装"><a href="#Modelsim-安装" class="headerlink" title="Modelsim 安装"></a>Modelsim 安装</h2><ol>
+<li>复制MentorKG.exe，mgls64.dll以及patch64_dll.bat这三个文件到Modelsim安装目录的win64文件夹下，如E:\modeltech64_2020.4\win64</li>
+<li>双击win64文件夹内粘贴过去的patch64_dll.bat文件，会生成LICENSE.TXT，另存到安装目录</li>
+<li>设置系统环境变量，变量值为LICENSE.TXT的路径   变量名：LM_LICENSE_FILE   变量值：E:\modeltech64_2020.4\LICENSE.TXT</li>
+<li>完成</li>
+</ol>
+<h2 id="联合-Vivado"><a href="#联合-Vivado" class="headerlink" title="联合 Vivado"></a>联合 Vivado</h2><ol>
+<li><p>生成库文件</p>
+<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624200514627.png" alt="image-20230624200514627"></p>
+</li>
+<li><p>从库文件夹里的 modelsim.ini 文件中复制如下内容</p>
+<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624201226528.png" alt="image-20230624201226528"></p>
+</li>
+<li><p>将 modelsim 根目录下 modelsim.ini 文件属性只读关闭</p>
+</li>
+<li><p>粘贴刚刚复制的内容到该文件的如下位置，然后保存，勾选只读</p>
+<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624201314875.png" alt="image-20230624201314875"></p>
+</li>
+<li><p>Vivado 设置</p>
+<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624201449182-1687608911932-1.png" alt="image-20230624201449182"></p>
+<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624201515411.png" alt="image-20230624201515411"></p>
+</li>
+<li><p>可以仿真了</p>
+</li>
+</ol>
+]]></content>
+      <categories>
+        <category>软件使用</category>
+      </categories>
+      <tags>
+        <tag>软件使用</tag>
+        <tag>Modelsim</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>SCCB</title>
     <url>/2023/07/08/SCCB/</url>
     <content><![CDATA[<h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>SCCB（Serial Camera Control Bus，串行摄像头控制总线）是由OV（OmniVision的简称）公司定义和发展的三线式串行总线，该总线控制着摄像头大部分的功能，包括图像数据格式、分辨率以及图像处理参数等。结构框图如下所示:</p>
@@ -1104,95 +1193,6 @@
       <tags>
         <tag>协议</tag>
         <tag>SCCB</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Modelsim</title>
-    <url>/2023/07/08/Modelsim/</url>
-    <content><![CDATA[<h1 id="Quartus-联合-Modelsim"><a href="#Quartus-联合-Modelsim" class="headerlink" title="Quartus 联合 Modelsim"></a>Quartus 联合 Modelsim</h1><p>​		这里使用的版本是：</p>
-<ul>
-<li><p>Quartus Prime 18.1.0.222 Pro Edition</p>
-</li>
-<li><p>Modelsim - INTEL FPGA STARTER EDITION 10.6d</p>
-<p>由于直接使用quartus安装时自带的modelsim，所以不需要单独进行Altera库的安装，直接新建工程即可仿真</p>
-</li>
-</ul>
-<p>注：quartus pro版本与modelsim目前所知道最简单的仿真方法就是使用quartus安装时下载的modelsim进行独立仿真，操作步骤如下：</p>
-<h2 id="新建工程"><a href="#新建工程" class="headerlink" title="新建工程"></a>新建工程</h2><ol>
-<li>在电脑上新建个文件夹，用来存放modelsim工程</li>
-<li>从windows开始菜单里打开modelsim软件</li>
-</ol>
-<img src="/MD_IMG/Modelsim仿真.assets/image-20211105235512769.png" alt="image-20211105235512769" style="zoom: 80%;" />
-
-<ol start="2">
-<li>更改modelsim目录到新建的文件夹下</li>
-</ol>
-<img alt="20211108000445532" src="/MD_IMG/Modelsim仿真.assets/image-20211108000445532.png"  />
-
-<ol start="3">
-<li>新建工程，点击 Add Existing File（添加所有要仿真的文件）</li>
-</ol>
-<img alt="20211108003308888" src="/MD_IMG/Modelsim仿真.assets/image-20211108003308888.png"  />
-
-<ol start="4">
-<li>编译所有</li>
-</ol>
-<img src="/MD_IMG/Modelsim仿真.assets/image-20211108001002004.png" alt="image-20211108001002004" style="zoom:80%;" />
-
-<ol start="5">
-<li>然后在命令行窗口输入下面语句，其中将 <strong>work.zerodly_data_gen_tb</strong> 改为 <strong>work.+ 你要仿真的文件名</strong></li>
-</ol>
-<figure class="highlight autohotkey"><table><tr><td class="code"><pre><span class="line">vsim -L work   -L cyclone10gx_ver -L alter<span class="built_in">a_ver</span> -L lpm_ver -L sgate_ver -L alter<span class="built_in">a_mf</span>_ver -L alter<span class="built_in">a_lnsim</span>_ver -L twentynm_ver -L twentynm_hssi_ver -L twentynm_hip_ver -t ps -novopt work.top_scaler_tb  -t ns</span><br></pre></td></tr></table></figure>
-
-<ol start="6">
-<li>添加要观察的信号到波形窗口，命令行输入 <strong>view wave</strong>，命令行输入<strong>run 1 ns</strong>，即可观察波形</li>
-<li>每次修改代码，直接compile更改的文件 -&gt; restart -&gt; run</li>
-</ol>
-<img alt="20211108132118081" src="/MD_IMG/Modelsim仿真.assets/image-20211108132118081.png"  />
-
-<ol start="8">
-<li>可以保存波形窗口格式，下次仿真直接加载 <strong>.do文件</strong>，然后restart -&gt; run即可，不用再重新添加信号</li>
-</ol>
-<h2 id="仿真已有工程"><a href="#仿真已有工程" class="headerlink" title="仿真已有工程"></a>仿真已有工程</h2><p><strong>File -&gt; Library -&gt; a map to an existing library -&gt; compile -&gt; 命令行输入 view wave -&gt; load do文件 -&gt; run</strong></p>
-<img alt="20211106000209355" src="/MD_IMG/Modelsim仿真.assets/image-20211106000209355.png"  />
-
-<h1 id="Vivado-联合-Modelsim"><a href="#Vivado-联合-Modelsim" class="headerlink" title="Vivado 联合 Modelsim"></a>Vivado 联合 Modelsim</h1><p>这里使用的版本是：</p>
-<ul>
-<li>Vivado 2019.1</li>
-<li>Modelsim SE-64 2020.4</li>
-</ul>
-<h2 id="Modelsim-安装"><a href="#Modelsim-安装" class="headerlink" title="Modelsim 安装"></a>Modelsim 安装</h2><ol>
-<li>复制MentorKG.exe，mgls64.dll以及patch64_dll.bat这三个文件到Modelsim安装目录的win64文件夹下，如E:\modeltech64_2020.4\win64</li>
-<li>双击win64文件夹内粘贴过去的patch64_dll.bat文件，会生成LICENSE.TXT，另存到安装目录</li>
-<li>设置系统环境变量，变量值为LICENSE.TXT的路径   变量名：LM_LICENSE_FILE   变量值：E:\modeltech64_2020.4\LICENSE.TXT</li>
-<li>完成</li>
-</ol>
-<h2 id="联合-Vivado"><a href="#联合-Vivado" class="headerlink" title="联合 Vivado"></a>联合 Vivado</h2><ol>
-<li><p>生成库文件</p>
-<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624200514627.png" alt="image-20230624200514627"></p>
-</li>
-<li><p>从库文件夹里的 modelsim.ini 文件中复制如下内容</p>
-<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624201226528.png" alt="image-20230624201226528"></p>
-</li>
-<li><p>将 modelsim 根目录下 modelsim.ini 文件属性只读关闭</p>
-</li>
-<li><p>粘贴刚刚复制的内容到该文件的如下位置，然后保存，勾选只读</p>
-<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624201314875.png" alt="image-20230624201314875"></p>
-</li>
-<li><p>Vivado 设置</p>
-<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624201449182-1687608911932-1.png" alt="image-20230624201449182"></p>
-<p><img src="/MD_IMG/Modelsim%E4%BB%BF%E7%9C%9F.assets/image-20230624201515411.png" alt="image-20230624201515411"></p>
-</li>
-<li><p>可以仿真了</p>
-</li>
-</ol>
-]]></content>
-      <categories>
-        <category>软件使用</category>
-      </categories>
-      <tags>
-        <tag>软件使用</tag>
-        <tag>Modelsim</tag>
       </tags>
   </entry>
   <entry>
@@ -2558,6 +2558,134 @@
       </tags>
   </entry>
   <entry>
+    <title>Vivado</title>
+    <url>/2023/07/08/Vivado/</url>
+    <content><![CDATA[<h2 id="如何修改工程名称"><a href="#如何修改工程名称" class="headerlink" title="如何修改工程名称"></a>如何修改工程名称</h2><p>主要将 xxx.xpr文件和工程子文件夹名称修改</p>
+<p><img src="/MD_IMG/Vivado%E8%BD%AF%E4%BB%B6.assets/image-20230624225427709.png" alt="image-20230624225427709"></p>
+<img src="/MD_IMG/Vivado软件.assets/image-20230624225516561.png" alt="image-20230624225516561" style="zoom: 80%;" />
+
+<h2 id="如何保存-x2F-恢复时序报告（-rpx"><a href="#如何保存-x2F-恢复时序报告（-rpx" class="headerlink" title="如何保存&#x2F;恢复时序报告（.rpx)"></a>如何保存&#x2F;恢复时序报告（.rpx)</h2><h2 id="如何生成网表"><a href="#如何生成网表" class="headerlink" title="如何生成网表"></a>如何生成网表</h2><ol>
+<li><p>打开所要封装网表的工程，点击 Tool-&gt;Settings</p>
+</li>
+<li><p>点击 Synthesis，修改 Options 中的内容</p>
+</li>
+<li><p>-flatten_hierarchy 下拉框，改为 full</p>
+</li>
+<li><p>More Options 中输入 -mode out_of_context</p>
+</li>
+<li><p>将带封装文件设置为Top层</p>
+</li>
+<li><p>点击 Run Synthesis 进行文件综合，综合完成后打开综合</p>
+</li>
+<li><p>若生成 Verilog 文件</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_verilog -mode synth_stub E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.v</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>若生成 VHDL 文件</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_vhdl -mode synth_stub E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.vhd</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成网表文件</p>
+<ul>
+<li><p>若要封装的文件中未使用 xilinx 官方的IP，网表生成指令如下：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_edif all E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.edf</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>若要封装的文件中使用 xilinx官方的IP，网表生成指令如下：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_edif -security_mode all E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.edf</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<h2 id="Modelsim覆盖率分析"><a href="#Modelsim覆盖率分析" class="headerlink" title="Modelsim覆盖率分析"></a>Modelsim覆盖率分析</h2><p><img src="/MD_IMG/Vivado%E8%BD%AF%E4%BB%B6.assets/image-20230119154330256.png" alt="image-20230119154330256"></p>
+<h2 id="Debug信号（VHDL）"><a href="#Debug信号（VHDL）" class="headerlink" title="Debug信号（VHDL）"></a>Debug信号（VHDL）</h2><figure class="highlight vhdl"><table><tr><td class="code"><pre><span class="line"><span class="keyword">attribute</span> MARK_DEBUG : <span class="built_in">string</span>;</span><br><span class="line"><span class="keyword">attribute</span> MARK_DEBUG : <span class="keyword">signal</span> <span class="keyword">is</span> <span class="string">&quot;TRUE&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Force-Up-to-Data-功能"><a href="#Force-Up-to-Data-功能" class="headerlink" title="Force Up-to-Data 功能"></a>Force Up-to-Data 功能</h2><p>当只加了注释，或修改了代码格式，并没有进行功能上的更改时，不需要重新运行综合&#x2F;实现来浪费时间，可以强制更新为Complete</p>
+<h2 id="不建Vivado工程，也能看Device视图"><a href="#不建Vivado工程，也能看Device视图" class="headerlink" title="不建Vivado工程，也能看Device视图"></a>不建Vivado工程，也能看Device视图</h2><p>在FPGA设计与开发中，Device视图和Package视图发挥着重要的作用。</p>
+<p>在Device视图下：</p>
+<ul>
+<li><strong>可以查看FPGA芯片可用资源</strong></li>
+</ul>
+<p>例如：LUT、FF、BRAM、DSP、URAM等的个数；</p>
+<ul>
+<li><strong>可以查看关键资源的分布情况</strong></li>
+</ul>
+<p>例如：PCIE的位置，高速收发器的位置，因为这些位置直接影响到PCB设计以及FPGA内部的数据流。</p>
+<ul>
+<li><strong>可用查看MMCM等时钟资源的位置</strong></li>
+</ul>
+<p>时钟的拓扑结构的质量直接影响到设计后期的时序收敛，在多die芯片中，这一点尤为重要。例如：某个芯片是3个die，设计中的一个时钟要给这3个die使用，那么最好将该时钟分配在中间那个die上，这样跨die次数最小，比较时钟跨die会增加Clock Skew。</p>
+<p>那么如何打开Device视图呢？一种可行的方法是创建Vivado I&#x2F;O工程，但这仍然显得繁琐。这里我们介绍一种更为直接的方法，就是使用Tcl命令link_design。打开Vivado，在Tcl Console中直接输入如下图所示命令：</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">link_design -part xc7a100tfgg676<span class="number">-2</span></span><br></pre></td></tr></table></figure>
+
+<p>此时，该命令后只需跟随一个选项，即-part，-part用于指明具体的芯片型号。这样就打开了Vivado，之后选择Window，点击Device即可打开Device视图，点击Package即可打开Package视图。</p>
+<img src="/MD_IMG/Vivado软件.assets/image-20211223092634079-16800652291141.png" alt="image-20211223092634079" style="zoom: 60%;" />
+
+<img src="/MD_IMG/Vivado软件.assets/image-20211223092705263-16800652291162.png" alt="image-20211223092705263" style="zoom:60%;" />
+
+<h2 id="联合VScode"><a href="#联合VScode" class="headerlink" title="联合VScode"></a>联合VScode</h2><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">C:/Softwares/VS Code/Code.<span class="keyword">exe</span> -g [<span class="keyword">file</span> name]:[<span class="built_in">line</span> <span class="keyword">number</span>]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="联合-Modelsim"><a href="#联合-Modelsim" class="headerlink" title="联合 Modelsim"></a>联合 Modelsim</h2><p>见文件链接 <a href="./Modelsim%E4%BB%BF%E7%9C%9F.md">Modelsim仿真</a></p>
+]]></content>
+      <categories>
+        <category>软件使用</category>
+      </categories>
+      <tags>
+        <tag>软件使用</tag>
+        <tag>Vivado</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Office</title>
+    <url>/2023/07/08/office%E8%BD%AF%E4%BB%B6/</url>
+    <content><![CDATA[<h2 id="Word"><a href="#Word" class="headerlink" title="Word"></a>Word</h2><h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><h4 id="1-目录编号与文字的间距设置"><a href="#1-目录编号与文字的间距设置" class="headerlink" title="1.目录编号与文字的间距设置"></a>1.目录编号与文字的间距设置</h4><p>重新设置正文标题编号，右击编号，“调整列表缩进量”，在“编号之后”选择“空格”，不要选择“制表符”。</p>
+<h4 id="2-目录编号缩进设置"><a href="#2-目录编号缩进设置" class="headerlink" title="2. 目录编号缩进设置"></a>2. 目录编号缩进设置</h4><img src="/MD_IMG/Office软件.assets/image-20211110162456380.png" alt="image-20211110162456380" style="zoom: 60%;" />
+
+<p>设置步骤如下：</p>
+<ol>
+<li><p>找到引用，目录，点击小箭头，进入到标题设置页面</p>
+<img alt="20211110162944229](./MD_IMG/Office软件.assets/image-20211110162944229.png"  />
+</li>
+<li><p>点击修改按钮，再点击修改按钮</p>
+<img src="/MD_IMG/Office软件.assets/image-20211110163453823.png" alt="image-20211110163453823" style="zoom:80%;" />
+</li>
+<li><p>弹出修改样式框选择段落</p>
+</li>
+</ol>
+   <img src="/MD_IMG/Office软件.assets/image-20211110163641785.png" alt="image-20211110163641785" style="zoom:80%;" />
+
+<ol start="4">
+<li><p>设置各级目录对应的缩进字符</p>
+<img src="/MD_IMG/Office软件.assets/image-20211110164005630.png" alt="image-20211110164005630" style="zoom:80%;" /></li>
+</ol>
+<h2 id="Excel"><a href="#Excel" class="headerlink" title="Excel"></a>Excel</h2><h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><h4 id="MID（提取字符）"><a href="#MID（提取字符）" class="headerlink" title="MID（提取字符）"></a>MID（提取字符）</h4><ol>
+<li>作用：MID 返回文本字符串中从指定位置开始的特定数目的字符，该数目由用户指定。</li>
+<li>语法：MID(text,start_num,num_chars)<ul>
+<li>text表示指定的字符串，一般为引用的单元格；</li>
+<li>start_num表示指定位置</li>
+<li>num_chars表示指定个数</li>
+</ul>
+</li>
+<li>例子：<img src="/MD_IMG/Office软件.assets/image-20211111095827260.png" alt="image-20211111095827260" style="zoom:80%;" /></li>
+</ol>
+<h4 id="CONCAT（组合字符串）"><a href="#CONCAT（组合字符串）" class="headerlink" title="CONCAT（组合字符串）"></a>CONCAT（组合字符串）</h4><ol>
+<li>作用：CONCAT 函数将多个范围和&#x2F;或字符串中的文本组合在一起，但不提供分隔符或 IgnoreEmpty 参数。 </li>
+<li>语法：CONCAT(text1, [text2],…)</li>
+<li>例子：<img src="/MD_IMG/Office软件.assets/image-20211111100539686.png" alt="image-20211111100539686" style="zoom:80%;" /></li>
+</ol>
+<h4 id="EXACT（比较字符串）"><a href="#EXACT（比较字符串）" class="headerlink" title="EXACT（比较字符串）"></a>EXACT（比较字符串）</h4><ol>
+<li>作用：比较两个文本字符串，如果它们完全相同，则返回 TRUE，否则返回 FALSE。 函数 EXACT 区分大小写，但忽略格式上的差异。 使用 EXACT 可以检验在文档中输入的文本。</li>
+<li>语法：EXACT(text1, text2)</li>
+<li>例子：<img src="/MD_IMG/Office软件.assets/image-20211111101325595.png" alt="image-20211111101325595" style="zoom:80%;" /></li>
+</ol>
+<h2 id="PowerPoint"><a href="#PowerPoint" class="headerlink" title="PowerPoint"></a>PowerPoint</h2>]]></content>
+      <categories>
+        <category>软件使用</category>
+      </categories>
+      <tags>
+        <tag>软件使用</tag>
+        <tag>Office</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>axi_quad_spi</title>
     <url>/2023/07/08/axi_quad_spi/</url>
     <content><![CDATA[<h2 id="系统框图"><a href="#系统框图" class="headerlink" title="系统框图"></a>系统框图</h2><h3 id="正常模式"><a href="#正常模式" class="headerlink" title="正常模式"></a>正常模式</h3><p><img src="/MD_IMG/axi_quad_spi.assets/image-20230603224844537.png" alt="image-20230603224844537"></p>
@@ -2694,134 +2822,6 @@
       <tags>
         <tag>Xilinx IP</tag>
         <tag>axi_quad_spi</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Vivado</title>
-    <url>/2023/07/08/Vivado/</url>
-    <content><![CDATA[<h2 id="如何修改工程名称"><a href="#如何修改工程名称" class="headerlink" title="如何修改工程名称"></a>如何修改工程名称</h2><p>主要将 xxx.xpr文件和工程子文件夹名称修改</p>
-<p><img src="/MD_IMG/Vivado%E8%BD%AF%E4%BB%B6.assets/image-20230624225427709.png" alt="image-20230624225427709"></p>
-<img src="/MD_IMG/Vivado软件.assets/image-20230624225516561.png" alt="image-20230624225516561" style="zoom: 80%;" />
-
-<h2 id="如何保存-x2F-恢复时序报告（-rpx"><a href="#如何保存-x2F-恢复时序报告（-rpx" class="headerlink" title="如何保存&#x2F;恢复时序报告（.rpx)"></a>如何保存&#x2F;恢复时序报告（.rpx)</h2><h2 id="如何生成网表"><a href="#如何生成网表" class="headerlink" title="如何生成网表"></a>如何生成网表</h2><ol>
-<li><p>打开所要封装网表的工程，点击 Tool-&gt;Settings</p>
-</li>
-<li><p>点击 Synthesis，修改 Options 中的内容</p>
-</li>
-<li><p>-flatten_hierarchy 下拉框，改为 full</p>
-</li>
-<li><p>More Options 中输入 -mode out_of_context</p>
-</li>
-<li><p>将带封装文件设置为Top层</p>
-</li>
-<li><p>点击 Run Synthesis 进行文件综合，综合完成后打开综合</p>
-</li>
-<li><p>若生成 Verilog 文件</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_verilog -mode synth_stub E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.v</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>若生成 VHDL 文件</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_vhdl -mode synth_stub E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.vhd</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>生成网表文件</p>
-<ul>
-<li><p>若要封装的文件中未使用 xilinx 官方的IP，网表生成指令如下：</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_edif all E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.edf</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>若要封装的文件中使用 xilinx官方的IP，网表生成指令如下：</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_edif -security_mode all E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.edf</span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-</ol>
-<h2 id="Modelsim覆盖率分析"><a href="#Modelsim覆盖率分析" class="headerlink" title="Modelsim覆盖率分析"></a>Modelsim覆盖率分析</h2><p><img src="/MD_IMG/Vivado%E8%BD%AF%E4%BB%B6.assets/image-20230119154330256.png" alt="image-20230119154330256"></p>
-<h2 id="Debug信号（VHDL）"><a href="#Debug信号（VHDL）" class="headerlink" title="Debug信号（VHDL）"></a>Debug信号（VHDL）</h2><figure class="highlight vhdl"><table><tr><td class="code"><pre><span class="line"><span class="keyword">attribute</span> MARK_DEBUG : <span class="built_in">string</span>;</span><br><span class="line"><span class="keyword">attribute</span> MARK_DEBUG : <span class="keyword">signal</span> <span class="keyword">is</span> <span class="string">&quot;TRUE&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Force-Up-to-Data-功能"><a href="#Force-Up-to-Data-功能" class="headerlink" title="Force Up-to-Data 功能"></a>Force Up-to-Data 功能</h2><p>当只加了注释，或修改了代码格式，并没有进行功能上的更改时，不需要重新运行综合&#x2F;实现来浪费时间，可以强制更新为Complete</p>
-<h2 id="不建Vivado工程，也能看Device视图"><a href="#不建Vivado工程，也能看Device视图" class="headerlink" title="不建Vivado工程，也能看Device视图"></a>不建Vivado工程，也能看Device视图</h2><p>在FPGA设计与开发中，Device视图和Package视图发挥着重要的作用。</p>
-<p>在Device视图下：</p>
-<ul>
-<li><strong>可以查看FPGA芯片可用资源</strong></li>
-</ul>
-<p>例如：LUT、FF、BRAM、DSP、URAM等的个数；</p>
-<ul>
-<li><strong>可以查看关键资源的分布情况</strong></li>
-</ul>
-<p>例如：PCIE的位置，高速收发器的位置，因为这些位置直接影响到PCB设计以及FPGA内部的数据流。</p>
-<ul>
-<li><strong>可用查看MMCM等时钟资源的位置</strong></li>
-</ul>
-<p>时钟的拓扑结构的质量直接影响到设计后期的时序收敛，在多die芯片中，这一点尤为重要。例如：某个芯片是3个die，设计中的一个时钟要给这3个die使用，那么最好将该时钟分配在中间那个die上，这样跨die次数最小，比较时钟跨die会增加Clock Skew。</p>
-<p>那么如何打开Device视图呢？一种可行的方法是创建Vivado I&#x2F;O工程，但这仍然显得繁琐。这里我们介绍一种更为直接的方法，就是使用Tcl命令link_design。打开Vivado，在Tcl Console中直接输入如下图所示命令：</p>
-<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">link_design -part xc7a100tfgg676<span class="number">-2</span></span><br></pre></td></tr></table></figure>
-
-<p>此时，该命令后只需跟随一个选项，即-part，-part用于指明具体的芯片型号。这样就打开了Vivado，之后选择Window，点击Device即可打开Device视图，点击Package即可打开Package视图。</p>
-<img src="/MD_IMG/Vivado软件.assets/image-20211223092634079-16800652291141.png" alt="image-20211223092634079" style="zoom: 60%;" />
-
-<img src="/MD_IMG/Vivado软件.assets/image-20211223092705263-16800652291162.png" alt="image-20211223092705263" style="zoom:60%;" />
-
-<h2 id="联合VScode"><a href="#联合VScode" class="headerlink" title="联合VScode"></a>联合VScode</h2><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">C:/Softwares/VS Code/Code.<span class="keyword">exe</span> -g [<span class="keyword">file</span> name]:[<span class="built_in">line</span> <span class="keyword">number</span>]</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="联合-Modelsim"><a href="#联合-Modelsim" class="headerlink" title="联合 Modelsim"></a>联合 Modelsim</h2><p>见文件链接 <a href="./Modelsim%E4%BB%BF%E7%9C%9F.md">Modelsim仿真</a></p>
-]]></content>
-      <categories>
-        <category>软件使用</category>
-      </categories>
-      <tags>
-        <tag>软件使用</tag>
-        <tag>Vivado</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Office</title>
-    <url>/2023/07/08/office%E8%BD%AF%E4%BB%B6/</url>
-    <content><![CDATA[<h2 id="Word"><a href="#Word" class="headerlink" title="Word"></a>Word</h2><h3 id="目录"><a href="#目录" class="headerlink" title="目录"></a>目录</h3><h4 id="1-目录编号与文字的间距设置"><a href="#1-目录编号与文字的间距设置" class="headerlink" title="1.目录编号与文字的间距设置"></a>1.目录编号与文字的间距设置</h4><p>重新设置正文标题编号，右击编号，“调整列表缩进量”，在“编号之后”选择“空格”，不要选择“制表符”。</p>
-<h4 id="2-目录编号缩进设置"><a href="#2-目录编号缩进设置" class="headerlink" title="2. 目录编号缩进设置"></a>2. 目录编号缩进设置</h4><img src="/MD_IMG/Office软件.assets/image-20211110162456380.png" alt="image-20211110162456380" style="zoom: 60%;" />
-
-<p>设置步骤如下：</p>
-<ol>
-<li><p>找到引用，目录，点击小箭头，进入到标题设置页面</p>
-<img alt="20211110162944229](./MD_IMG/Office软件.assets/image-20211110162944229.png"  />
-</li>
-<li><p>点击修改按钮，再点击修改按钮</p>
-<img src="/MD_IMG/Office软件.assets/image-20211110163453823.png" alt="image-20211110163453823" style="zoom:80%;" />
-</li>
-<li><p>弹出修改样式框选择段落</p>
-</li>
-</ol>
-   <img src="/MD_IMG/Office软件.assets/image-20211110163641785.png" alt="image-20211110163641785" style="zoom:80%;" />
-
-<ol start="4">
-<li><p>设置各级目录对应的缩进字符</p>
-<img src="/MD_IMG/Office软件.assets/image-20211110164005630.png" alt="image-20211110164005630" style="zoom:80%;" /></li>
-</ol>
-<h2 id="Excel"><a href="#Excel" class="headerlink" title="Excel"></a>Excel</h2><h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><h4 id="MID（提取字符）"><a href="#MID（提取字符）" class="headerlink" title="MID（提取字符）"></a>MID（提取字符）</h4><ol>
-<li>作用：MID 返回文本字符串中从指定位置开始的特定数目的字符，该数目由用户指定。</li>
-<li>语法：MID(text,start_num,num_chars)<ul>
-<li>text表示指定的字符串，一般为引用的单元格；</li>
-<li>start_num表示指定位置</li>
-<li>num_chars表示指定个数</li>
-</ul>
-</li>
-<li>例子：<img src="/MD_IMG/Office软件.assets/image-20211111095827260.png" alt="image-20211111095827260" style="zoom:80%;" /></li>
-</ol>
-<h4 id="CONCAT（组合字符串）"><a href="#CONCAT（组合字符串）" class="headerlink" title="CONCAT（组合字符串）"></a>CONCAT（组合字符串）</h4><ol>
-<li>作用：CONCAT 函数将多个范围和&#x2F;或字符串中的文本组合在一起，但不提供分隔符或 IgnoreEmpty 参数。 </li>
-<li>语法：CONCAT(text1, [text2],…)</li>
-<li>例子：<img src="/MD_IMG/Office软件.assets/image-20211111100539686.png" alt="image-20211111100539686" style="zoom:80%;" /></li>
-</ol>
-<h4 id="EXACT（比较字符串）"><a href="#EXACT（比较字符串）" class="headerlink" title="EXACT（比较字符串）"></a>EXACT（比较字符串）</h4><ol>
-<li>作用：比较两个文本字符串，如果它们完全相同，则返回 TRUE，否则返回 FALSE。 函数 EXACT 区分大小写，但忽略格式上的差异。 使用 EXACT 可以检验在文档中输入的文本。</li>
-<li>语法：EXACT(text1, text2)</li>
-<li>例子：<img src="/MD_IMG/Office软件.assets/image-20211111101325595.png" alt="image-20211111101325595" style="zoom:80%;" /></li>
-</ol>
-<h2 id="PowerPoint"><a href="#PowerPoint" class="headerlink" title="PowerPoint"></a>PowerPoint</h2>]]></content>
-      <categories>
-        <category>软件使用</category>
-      </categories>
-      <tags>
-        <tag>软件使用</tag>
-        <tag>Office</tag>
       </tags>
   </entry>
   <entry>
@@ -3659,6 +3659,112 @@
       </tags>
   </entry>
   <entry>
+    <title>如何使用Hexo搭建个人博客</title>
+    <url>/2023/09/01/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2/</url>
+    <content><![CDATA[<h1 id="如何使用Hexo搭建个人博客"><a href="#如何使用Hexo搭建个人博客" class="headerlink" title="如何使用Hexo搭建个人博客"></a>如何使用Hexo搭建个人博客</h1><h2 id="环境搭建"><a href="#环境搭建" class="headerlink" title="环境搭建"></a>环境搭建</h2><p>Hexo 基于 Node.js，搭建过程中还需要使用 npm（Node.js 已带） 和 git，因此先搭建本地操作环境，安装 Node.js 和 Git。</p>
+<ul>
+<li>Node.js：<a href="https://link.zhihu.com/?target=https://nodejs.org/zh-cn">https://nodejs.org/zh-cn</a></li>
+<li>Git：<a href="https://link.zhihu.com/?target=https://git-scm.com/downloads">https://git-scm.com/downloads</a></li>
+</ul>
+<p>下载 Node.js 和 Git 程序并安装，一路点 “下一步” 按默认配置完成安装。</p>
+<p>安装完成后，Win+R 输入 cmd 并打开，依次输入 <code>node -v</code>、<code>npm -v</code> 和 <code>git --version</code> 并回车，如下图出现程序版本号即可。</p>
+<p><img src="/MD_IMG/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2.assets/image-20230902001643928.png" alt="image-20230902001643928"></p>
+<h2 id="连接-Github"><a href="#连接-Github" class="headerlink" title="连接 Github"></a>连接 Github</h2><p>使用邮箱注册 GitHub 账户，选择免费账户（Free），并完成邮件验证。</p>
+<p>右键 -&gt; Git Bash Here，<strong>设置用户名和邮箱</strong>：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">git config --global user.name &quot;GitHub 用户名&quot;</span><br><span class="line">git config --global user.email &quot;GitHub 邮箱&quot;</span><br></pre></td></tr></table></figure>
+
+<p><strong>创建 SSH 密匙</strong>：</p>
+<p>输入 <code>ssh-keygen -t rsa -C &quot;GitHub 邮箱&quot;</code>，然后一路回车。</p>
+<p><strong>添加密匙：</strong></p>
+<p>进入 [C:\Users\用户名.ssh] 目录（要勾选显示“隐藏的项目”），用记事本打开公钥 id_rsa.pub 文件并复制里面的内容。</p>
+<p>登陆 GitHub ，进入 Settings 页面，选择左边栏的 SSH and GPG keys，点击 New SSH key。</p>
+<p>Title 随便取个名字，粘贴复制的 id_rsa.pub 内容到 Key 中，点击 Add SSH key 完成添加。</p>
+<p><img src="/MD_IMG/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2.assets/image-20230902002852373.png" alt="image-20230902002852373"></p>
+<p><strong>验证连接：</strong></p>
+<p>打开 Git Bash，输入 <code>ssh -T git@github.com</code> 出现 “Are you sure……”，输入 yes 回车确认。</p>
+<p><img src="/MD_IMG/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2.assets/image-20230902002405693.png" alt="image-20230902002405693"></p>
+<p>显示 “Hi xxx! You’ve successfully……” 即连接成功。</p>
+<h2 id="创建-Github-Pages-仓库"><a href="#创建-Github-Pages-仓库" class="headerlink" title="创建 Github Pages 仓库"></a>创建 Github Pages 仓库</h2><p>GitHub 主页右上角加号 -&gt; New repository：</p>
+<ul>
+<li>Repository name 中输入 <code>用户名.github.io</code></li>
+<li>勾选 “Initialize this repository with a README”</li>
+<li>Description 选填</li>
+</ul>
+<p>填好后点击 Create repository 创建。</p>
+<p><img src="/MD_IMG/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2.assets/image-20230902002938749.png" alt="image-20230902002938749"></p>
+<p>创建后默认自动启用 HTTPS，博客地址为：<code>https://用户名.github.io</code></p>
+<h2 id="本地安装-Hexo-博客程序"><a href="#本地安装-Hexo-博客程序" class="headerlink" title="本地安装 Hexo 博客程序"></a>本地安装 Hexo 博客程序</h2><ul>
+<li>新建一个文件夹用来存放 Hexo 的程序文件，如 Hexo-Blog。打开该文件夹</li>
+<li>右键 -&gt; Git Bash Here。</li>
+</ul>
+<h3 id="安装-Hexo"><a href="#安装-Hexo" class="headerlink" title="安装 Hexo"></a><strong>安装 Hexo</strong></h3><p>使用 npm 一键安装 Hexo 博客程序：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">npm install hexo-cli -g</span><br></pre></td></tr></table></figure>
+
+<p>Mac 用户需要管理员权限（sudo），运行这条命令：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">sudo npm install hexo-cli -g</span><br></pre></td></tr></table></figure>
+
+<p>安装时间有点久（真的很慢！），界面也没任何反应，<strong>耐心等待</strong>，安装完成后如下图。</p>
+<p><img src="/MD_IMG/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2.assets/image-20230902003118699.png" alt="image-20230902003118699"></p>
+<h3 id="Hexo-初始化和本地预览"><a href="#Hexo-初始化和本地预览" class="headerlink" title="Hexo 初始化和本地预览"></a><strong>Hexo 初始化和本地预览</strong></h3><p><strong>初始化并安装所需组件：</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">hexo init blog     # 初始化</span><br><span class="line">cd blog</span><br><span class="line">npm install    # 安装组件</span><br></pre></td></tr></table></figure>
+
+<p>完成后依次输入下面命令，<strong>启动本地服务器进行预览</strong>：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">hexo g   # 生成页面</span><br><span class="line">hexo s   # 启动预览</span><br></pre></td></tr></table></figure>
+
+<p><strong>访问</strong> <code>http://localhost:4000</code><strong>，出现 Hexo 默认页面，本地博客安装成功！</strong></p>
+<p><strong>Tips：</strong>如果出现页面加载不出来，可能是端口被占用了。Ctrl+C 关闭服务器，运行 <code>hexo server -p 5000</code> 更改端口号后重试。</p>
+<p>Hexo 博客文件夹目录结构如下：</p>
+<p><img src="/MD_IMG/%E5%A6%82%E4%BD%95%E4%BD%BF%E7%94%A8Hexo%E6%90%AD%E5%BB%BA%E4%B8%AA%E4%BA%BA%E5%8D%9A%E5%AE%A2.assets/image-20230902003243320.png" alt="image-20230902003243320"></p>
+<h2 id="部署-Hexo-到-GitHub-Pages"><a href="#部署-Hexo-到-GitHub-Pages" class="headerlink" title="部署 Hexo 到 GitHub Pages"></a>部署 Hexo 到 GitHub Pages</h2><p>本地博客测试成功后，就是上传到 GitHub 进行部署，使其能够在网络上访问。</p>
+<p>首先<strong>安装 hexo-deployer-git</strong>：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">npm install hexo-deployer-git --save</span><br></pre></td></tr></table></figure>
+
+<p>然后<strong>修改 _config.yml</strong> 文件末尾的 Deployment 部分，修改成如下：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">deploy:</span><br><span class="line">  type: git</span><br><span class="line">  repository: git@github.com:用户名/用户名.github.io.git</span><br><span class="line">  branch: master</span><br></pre></td></tr></table></figure>
+
+<p>完成后运行 <code>hexo d</code> 将网站上传部署到 GitHub Pages。</p>
+<p>完成！这时访问我们的 GitHub 域名 <code>https://用户名.github.io</code> 就可以看到 Hexo 网站了。</p>
+<h2 id="开始使用"><a href="#开始使用" class="headerlink" title="开始使用"></a>开始使用</h2><h3 id="发布文章"><a href="#发布文章" class="headerlink" title="发布文章"></a><strong>发布文章</strong></h3><p>进入博客所在目录，右键打开 Git Bash Here，创建博文：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">hexo new &quot;My New Post&quot;</span><br></pre></td></tr></table></figure>
+
+<p>然后 source 文件夹中会出现一个 My New Post.md 文件，就可以使用 Markdown 编辑器在该文件中撰写文章了。</p>
+<p>写完后运行下面代码将文章渲染并部署到 GitHub Pages 上完成发布。<strong>以后每次发布文章都是这两条命令。</strong></p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">hexo g   # 生成页面</span><br><span class="line">hexo d   # 部署发布</span><br></pre></td></tr></table></figure>
+
+<p>也可以不使用命令自己创建 .md 文件，只需在文件开头手动加入如下格式 Front-matter 即可，写完后运行 <code>hexo g</code> 和 <code>hexo d</code> 发布。</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">---</span><br><span class="line">title: Hello World # 标题</span><br><span class="line">date: 2019/3/26 hh:mm:ss # 时间</span><br><span class="line">categories: # 分类</span><br><span class="line">- Diary</span><br><span class="line">tags: # 标签</span><br><span class="line">- PS3</span><br><span class="line">- Games</span><br><span class="line">---</span><br><span class="line"></span><br><span class="line">摘要</span><br><span class="line">&lt;!--more--&gt;</span><br><span class="line">正文</span><br></pre></td></tr></table></figure>
+
+<h3 id="网站设置"><a href="#网站设置" class="headerlink" title="网站设置"></a><strong>网站设置</strong></h3><p>包括网站名称、描述、作者、链接样式等，全部在网站目录下的 _config.yml 文件中，参考官方文档按需要编辑。</p>
+<p><strong>注意：冒号后要加一个空格！</strong></p>
+<h3 id="更换主题"><a href="#更换主题" class="headerlink" title="更换主题"></a><strong>更换主题</strong></h3><p>在<a href="https://hexo.io/themes/">Themes | Hexo</a>选择一个喜欢的主题，比如 <a href="https://shen-yu.gitee.io/2019/ayer/">Ayer中文说明 | 岛 (gitee.io)</a>，进入网站目录打开 Git Bash Here 下载主题：</p>
+<figure class="highlight text"><table><tr><td class="code"><pre><span class="line">git clone https://github.com/Shen-Yu/hexo-theme-ayer.git themes/ayer</span><br><span class="line"></span><br><span class="line">git clone https://github.com/next-theme/hexo-theme-next themes/next</span><br></pre></td></tr></table></figure>
+
+<p>然后修改 _config.yml 中的 theme 为新主题名称 next，发布。（有的主题需要将 _config.yml 替换为主题自带的，参考主题说明。）</p>
+<figure class="highlight xl"><table><tr><td class="code"><pre><span class="line">修改blog下的_config.yml</span><br><span class="line">	<span class="function"><span class="title">theme</span>: landscape -&gt;</span> <span class="built_in">theme</span>: ayer</span><br></pre></td></tr></table></figure>
+
+<h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a><strong>常用命令</strong></h3><figure class="highlight text"><table><tr><td class="code"><pre><span class="line">hexo new &quot;name&quot;       # 新建文章</span><br><span class="line">hexo new page &quot;name&quot;  # 新建页面</span><br><span class="line">hexo g                # 生成页面</span><br><span class="line">hexo d                # 部署</span><br><span class="line">hexo g -d             # 生成页面并部署</span><br><span class="line">hexo s                # 本地预览</span><br><span class="line">hexo clean            # 清除缓存和已生成的静态文件</span><br><span class="line">hexo help             # 帮助</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<h2 id="链接"><a href="#链接" class="headerlink" title="链接"></a>链接</h2><ul>
+<li><p>Hexo 官网链接：<a href="https://hexo.io/zh-cn/docs/">文档 | Hexo</a></p>
+</li>
+<li><p>热门主题：<a href="https://shen-yu.gitee.io/2019/ayer/">Ayer中文说明 | 岛 (gitee.io)</a></p>
+</li>
+<li><p><a href="https://developer.mozilla.org/zh-CN/docs/Web/CSS">Web开发技术 &gt; CSS：层叠样式表</a></p>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>待分类</category>
+      </categories>
+      <tags>
+        <tag>博客</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>数字电路基础</title>
     <url>/2023/07/08/%E6%95%B0%E5%AD%97%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/</url>
     <content><![CDATA[<h1 id="1-数字逻辑概论"><a href="#1-数字逻辑概论" class="headerlink" title="1. 数字逻辑概论"></a>1. 数字逻辑概论</h1><h2 id="1-1-数字信号与数字电路"><a href="#1-1-数字信号与数字电路" class="headerlink" title="1.1 数字信号与数字电路"></a>1.1 数字信号与数字电路</h2><h3 id="1-1-1-概念"><a href="#1-1-1-概念" class="headerlink" title="1.1.1 概念"></a>1.1.1 概念</h3><p>用数字信号完成对数字量进行算术运算和逻辑运算的电路称为数字电路或数字系统。由于它具有逻辑运算和逻辑处理功能，所以又称数字逻辑电路。</p>
@@ -4285,6 +4391,18 @@
       <tags>
         <tag>专业基础</tag>
         <tag>数字电路基础</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>如何搭建个人博客</title>
+    <url>/2023/07/08/%E6%A8%A1%E6%9D%BF/</url>
+    <content><![CDATA[]]></content>
+      <categories>
+        <category>协议</category>
+      </categories>
+      <tags>
+        <tag>协议</tag>
+        <tag>IIC</tag>
       </tags>
   </entry>
 </search>
