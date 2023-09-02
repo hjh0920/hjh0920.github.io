@@ -1742,82 +1742,6 @@
       </tags>
   </entry>
   <entry>
-    <title>Vivado</title>
-    <url>/2023/07/08/Vivado/</url>
-    <content><![CDATA[<h2 id="如何修改工程名称"><a href="#如何修改工程名称" class="headerlink" title="如何修改工程名称"></a>如何修改工程名称</h2><p>主要将 xxx.xpr文件和工程子文件夹名称修改</p>
-<p><img src="/MD_IMG/Vivado%E8%BD%AF%E4%BB%B6.assets/image-20230624225427709.png" alt="image-20230624225427709"></p>
-<img src="/MD_IMG/Vivado软件.assets/image-20230624225516561.png" alt="image-20230624225516561" style="zoom: 80%;" />
-
-<h2 id="如何保存-x2F-恢复时序报告（-rpx"><a href="#如何保存-x2F-恢复时序报告（-rpx" class="headerlink" title="如何保存&#x2F;恢复时序报告（.rpx)"></a>如何保存&#x2F;恢复时序报告（.rpx)</h2><h2 id="如何生成网表"><a href="#如何生成网表" class="headerlink" title="如何生成网表"></a>如何生成网表</h2><ol>
-<li><p>打开所要封装网表的工程，点击 Tool-&gt;Settings</p>
-</li>
-<li><p>点击 Synthesis，修改 Options 中的内容</p>
-</li>
-<li><p>-flatten_hierarchy 下拉框，改为 full</p>
-</li>
-<li><p>More Options 中输入 -mode out_of_context</p>
-</li>
-<li><p>将带封装文件设置为Top层</p>
-</li>
-<li><p>点击 Run Synthesis 进行文件综合，综合完成后打开综合</p>
-</li>
-<li><p>若生成 Verilog 文件</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_verilog -mode synth_stub E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.v</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>若生成 VHDL 文件</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_vhdl -mode synth_stub E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.vhd</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>生成网表文件</p>
-<ul>
-<li><p>若要封装的文件中未使用 xilinx 官方的IP，网表生成指令如下：</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_edif all E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.edf</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>若要封装的文件中使用 xilinx官方的IP，网表生成指令如下：</p>
-<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_edif -security_mode all E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.edf</span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-</ol>
-<h2 id="Modelsim覆盖率分析"><a href="#Modelsim覆盖率分析" class="headerlink" title="Modelsim覆盖率分析"></a>Modelsim覆盖率分析</h2><p><img src="/MD_IMG/Vivado%E8%BD%AF%E4%BB%B6.assets/image-20230119154330256.png" alt="image-20230119154330256"></p>
-<h2 id="Debug信号（VHDL）"><a href="#Debug信号（VHDL）" class="headerlink" title="Debug信号（VHDL）"></a>Debug信号（VHDL）</h2><figure class="highlight vhdl"><table><tr><td class="code"><pre><span class="line"><span class="keyword">attribute</span> MARK_DEBUG : <span class="built_in">string</span>;</span><br><span class="line"><span class="keyword">attribute</span> MARK_DEBUG : <span class="keyword">signal</span> <span class="keyword">is</span> <span class="string">&quot;TRUE&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<h2 id="Force-Up-to-Data-功能"><a href="#Force-Up-to-Data-功能" class="headerlink" title="Force Up-to-Data 功能"></a>Force Up-to-Data 功能</h2><p>当只加了注释，或修改了代码格式，并没有进行功能上的更改时，不需要重新运行综合&#x2F;实现来浪费时间，可以强制更新为Complete</p>
-<h2 id="不建Vivado工程，也能看Device视图"><a href="#不建Vivado工程，也能看Device视图" class="headerlink" title="不建Vivado工程，也能看Device视图"></a>不建Vivado工程，也能看Device视图</h2><p>在FPGA设计与开发中，Device视图和Package视图发挥着重要的作用。</p>
-<p>在Device视图下：</p>
-<ul>
-<li><strong>可以查看FPGA芯片可用资源</strong></li>
-</ul>
-<p>例如：LUT、FF、BRAM、DSP、URAM等的个数；</p>
-<ul>
-<li><strong>可以查看关键资源的分布情况</strong></li>
-</ul>
-<p>例如：PCIE的位置，高速收发器的位置，因为这些位置直接影响到PCB设计以及FPGA内部的数据流。</p>
-<ul>
-<li><strong>可用查看MMCM等时钟资源的位置</strong></li>
-</ul>
-<p>时钟的拓扑结构的质量直接影响到设计后期的时序收敛，在多die芯片中，这一点尤为重要。例如：某个芯片是3个die，设计中的一个时钟要给这3个die使用，那么最好将该时钟分配在中间那个die上，这样跨die次数最小，比较时钟跨die会增加Clock Skew。</p>
-<p>那么如何打开Device视图呢？一种可行的方法是创建Vivado I&#x2F;O工程，但这仍然显得繁琐。这里我们介绍一种更为直接的方法，就是使用Tcl命令link_design。打开Vivado，在Tcl Console中直接输入如下图所示命令：</p>
-<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">link_design -part xc7a100tfgg676<span class="number">-2</span></span><br></pre></td></tr></table></figure>
-
-<p>此时，该命令后只需跟随一个选项，即-part，-part用于指明具体的芯片型号。这样就打开了Vivado，之后选择Window，点击Device即可打开Device视图，点击Package即可打开Package视图。</p>
-<img src="/MD_IMG/Vivado软件.assets/image-20211223092634079-16800652291141.png" alt="image-20211223092634079" style="zoom: 60%;" />
-
-<img src="/MD_IMG/Vivado软件.assets/image-20211223092705263-16800652291162.png" alt="image-20211223092705263" style="zoom:60%;" />
-
-<h2 id="联合VScode"><a href="#联合VScode" class="headerlink" title="联合VScode"></a>联合VScode</h2><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">C:/Softwares/VS Code/Code.<span class="keyword">exe</span> -g [<span class="keyword">file</span> name]:[<span class="built_in">line</span> <span class="keyword">number</span>]</span><br></pre></td></tr></table></figure>
-
-
-
-<h2 id="联合-Modelsim"><a href="#联合-Modelsim" class="headerlink" title="联合 Modelsim"></a>联合 Modelsim</h2><p>见文件链接 <a href="./Modelsim%E4%BB%BF%E7%9C%9F.md">Modelsim仿真</a></p>
-]]></content>
-      <categories>
-        <category>软件使用</category>
-      </categories>
-      <tags>
-        <tag>软件使用</tag>
-        <tag>Vivado</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Verilog</title>
     <url>/2023/07/08/Verilog/</url>
     <content><![CDATA[<h2 id="设计方法"><a href="#设计方法" class="headerlink" title="设计方法"></a>设计方法</h2><ul>
@@ -2631,6 +2555,82 @@
       <tags>
         <tag>语法</tag>
         <tag>Verilog</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Vivado</title>
+    <url>/2023/07/08/Vivado/</url>
+    <content><![CDATA[<h2 id="如何修改工程名称"><a href="#如何修改工程名称" class="headerlink" title="如何修改工程名称"></a>如何修改工程名称</h2><p>主要将 xxx.xpr文件和工程子文件夹名称修改</p>
+<p><img src="/MD_IMG/Vivado%E8%BD%AF%E4%BB%B6.assets/image-20230624225427709.png" alt="image-20230624225427709"></p>
+<img src="/MD_IMG/Vivado软件.assets/image-20230624225516561.png" alt="image-20230624225516561" style="zoom: 80%;" />
+
+<h2 id="如何保存-x2F-恢复时序报告（-rpx"><a href="#如何保存-x2F-恢复时序报告（-rpx" class="headerlink" title="如何保存&#x2F;恢复时序报告（.rpx)"></a>如何保存&#x2F;恢复时序报告（.rpx)</h2><h2 id="如何生成网表"><a href="#如何生成网表" class="headerlink" title="如何生成网表"></a>如何生成网表</h2><ol>
+<li><p>打开所要封装网表的工程，点击 Tool-&gt;Settings</p>
+</li>
+<li><p>点击 Synthesis，修改 Options 中的内容</p>
+</li>
+<li><p>-flatten_hierarchy 下拉框，改为 full</p>
+</li>
+<li><p>More Options 中输入 -mode out_of_context</p>
+</li>
+<li><p>将带封装文件设置为Top层</p>
+</li>
+<li><p>点击 Run Synthesis 进行文件综合，综合完成后打开综合</p>
+</li>
+<li><p>若生成 Verilog 文件</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_verilog -mode synth_stub E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.v</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>若生成 VHDL 文件</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_vhdl -mode synth_stub E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.vhd</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>生成网表文件</p>
+<ul>
+<li><p>若要封装的文件中未使用 xilinx 官方的IP，网表生成指令如下：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_edif all E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.edf</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>若要封装的文件中使用 xilinx官方的IP，网表生成指令如下：</p>
+<figure class="highlight awk"><table><tr><td class="code"><pre><span class="line">write_edif -security_mode all E:<span class="regexp">/TX0121010/</span>src<span class="regexp">/ngc/i</span>nt_ctrl_axi.edf</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<h2 id="Modelsim覆盖率分析"><a href="#Modelsim覆盖率分析" class="headerlink" title="Modelsim覆盖率分析"></a>Modelsim覆盖率分析</h2><p><img src="/MD_IMG/Vivado%E8%BD%AF%E4%BB%B6.assets/image-20230119154330256.png" alt="image-20230119154330256"></p>
+<h2 id="Debug信号（VHDL）"><a href="#Debug信号（VHDL）" class="headerlink" title="Debug信号（VHDL）"></a>Debug信号（VHDL）</h2><figure class="highlight vhdl"><table><tr><td class="code"><pre><span class="line"><span class="keyword">attribute</span> MARK_DEBUG : <span class="built_in">string</span>;</span><br><span class="line"><span class="keyword">attribute</span> MARK_DEBUG : <span class="keyword">signal</span> <span class="keyword">is</span> <span class="string">&quot;TRUE&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="Force-Up-to-Data-功能"><a href="#Force-Up-to-Data-功能" class="headerlink" title="Force Up-to-Data 功能"></a>Force Up-to-Data 功能</h2><p>当只加了注释，或修改了代码格式，并没有进行功能上的更改时，不需要重新运行综合&#x2F;实现来浪费时间，可以强制更新为Complete</p>
+<h2 id="不建Vivado工程，也能看Device视图"><a href="#不建Vivado工程，也能看Device视图" class="headerlink" title="不建Vivado工程，也能看Device视图"></a>不建Vivado工程，也能看Device视图</h2><p>在FPGA设计与开发中，Device视图和Package视图发挥着重要的作用。</p>
+<p>在Device视图下：</p>
+<ul>
+<li><strong>可以查看FPGA芯片可用资源</strong></li>
+</ul>
+<p>例如：LUT、FF、BRAM、DSP、URAM等的个数；</p>
+<ul>
+<li><strong>可以查看关键资源的分布情况</strong></li>
+</ul>
+<p>例如：PCIE的位置，高速收发器的位置，因为这些位置直接影响到PCB设计以及FPGA内部的数据流。</p>
+<ul>
+<li><strong>可用查看MMCM等时钟资源的位置</strong></li>
+</ul>
+<p>时钟的拓扑结构的质量直接影响到设计后期的时序收敛，在多die芯片中，这一点尤为重要。例如：某个芯片是3个die，设计中的一个时钟要给这3个die使用，那么最好将该时钟分配在中间那个die上，这样跨die次数最小，比较时钟跨die会增加Clock Skew。</p>
+<p>那么如何打开Device视图呢？一种可行的方法是创建Vivado I&#x2F;O工程，但这仍然显得繁琐。这里我们介绍一种更为直接的方法，就是使用Tcl命令link_design。打开Vivado，在Tcl Console中直接输入如下图所示命令：</p>
+<figure class="highlight tcl"><table><tr><td class="code"><pre><span class="line">link_design -part xc7a100tfgg676<span class="number">-2</span></span><br></pre></td></tr></table></figure>
+
+<p>此时，该命令后只需跟随一个选项，即-part，-part用于指明具体的芯片型号。这样就打开了Vivado，之后选择Window，点击Device即可打开Device视图，点击Package即可打开Package视图。</p>
+<img src="/MD_IMG/Vivado软件.assets/image-20211223092634079-16800652291141.png" alt="image-20211223092634079" style="zoom: 60%;" />
+
+<img src="/MD_IMG/Vivado软件.assets/image-20211223092705263-16800652291162.png" alt="image-20211223092705263" style="zoom:60%;" />
+
+<h2 id="联合VScode"><a href="#联合VScode" class="headerlink" title="联合VScode"></a>联合VScode</h2><figure class="highlight vim"><table><tr><td class="code"><pre><span class="line">C:/Softwares/VS Code/Code.<span class="keyword">exe</span> -g [<span class="keyword">file</span> name]:[<span class="built_in">line</span> <span class="keyword">number</span>]</span><br></pre></td></tr></table></figure>
+
+
+
+<h2 id="联合-Modelsim"><a href="#联合-Modelsim" class="headerlink" title="联合 Modelsim"></a>联合 Modelsim</h2><p>见文件链接 <a href="./Modelsim%E4%BB%BF%E7%9C%9F.md">Modelsim仿真</a></p>
+]]></content>
+      <categories>
+        <category>软件使用</category>
+      </categories>
+      <tags>
+        <tag>软件使用</tag>
+        <tag>Vivado</tag>
       </tags>
   </entry>
   <entry>
