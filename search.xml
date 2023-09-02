@@ -4406,4 +4406,60 @@
         <tag>数字电路基础</tag>
       </tags>
   </entry>
+  <entry>
+    <title>快捷键</title>
+    <url>/2023/09/02/%E5%BF%AB%E6%8D%B7%E9%94%AE/</url>
+    <content><![CDATA[<h1 id="Edge"><a href="#Edge" class="headerlink" title="Edge"></a>Edge</h1><ul>
+<li>Ctrl+T：新建标签页</li>
+<li>Ctrl + Tab：切换下一个标签页</li>
+<li>Ctrl + Shift + Tab：切换上一个标签页</li>
+</ul>
+<h1 id="vscode"><a href="#vscode" class="headerlink" title="vscode"></a>vscode</h1><ul>
+<li><p>Ctrl+Shift+E：侧边资源管理器</p>
+</li>
+<li><p>Ctrl+Shift+F：侧边搜索</p>
+</li>
+<li><p>Ctrl+Shift+O：首选项</p>
+</li>
+<li><p>Ctrl+K、Ctrl+S：快捷键</p>
+</li>
+<li><p>Ctrl+K、Ctrl+T：颜色主题</p>
+</li>
+<li><p>Ctrl + Alt + U：转换大写</p>
+</li>
+<li><p>Ctrl + Alt + L：转换小写</p>
+</li>
+<li><p>ctrl + shift + m：问题</p>
+</li>
+<li><p>ctrl + shift + z：终端</p>
+</li>
+<li><p>ctrl + r：查找之前打开过的文件</p>
+</li>
+</ul>
+<h1 id="Win10"><a href="#Win10" class="headerlink" title="Win10"></a>Win10</h1><h2 id="常用cmd命令"><a href="#常用cmd命令" class="headerlink" title="常用cmd命令"></a>常用cmd命令</h2><ul>
+<li>跳转到上一层目录：<strong>cd..</strong></li>
+<li>跳转到当前盘根目录：<strong>cd\ </strong></li>
+<li>跳转到当前盘其他目录：<strong>cd C:\WINDOWS</strong></li>
+<li>跳转到其他盘：<strong>e:</strong></li>
+<li>&#x3D;&#x3D;跳转到任意盘的任意文件夹：<strong>cd&#x2F;d e:\softave</strong>&#x3D;&#x3D;</li>
+<li>查看自己的 <strong>IP</strong>：<strong>ipconfig</strong></li>
+<li>清空cmd窗口：<strong>cls</strong></li>
+<li>进入python：<strong>python</strong><ul>
+<li>进入python目录下，不能直接使用 <strong>pip install numpy</strong>，需要退出到根目录下才能使用</li>
+</ul>
+</li>
+<li>退出python：<strong>exit()</strong></li>
+</ul>
+<h2 id="快捷键"><a href="#快捷键" class="headerlink" title="快捷键"></a>快捷键</h2><ul>
+<li>win + R 输入： shell:common startup：自启动文件夹</li>
+<li></li>
+</ul>
+]]></content>
+      <categories>
+        <category>待整理</category>
+      </categories>
+      <tags>
+        <tag>快捷键</tag>
+      </tags>
+  </entry>
 </search>
