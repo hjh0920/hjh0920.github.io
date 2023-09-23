@@ -11,7 +11,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
-      <title>以太网 |  Welcome</title>
+      <title>以太网介绍 |  Welcome</title>
   <meta name="generator" content="hexo-theme-ayer">
       
       <link rel="shortcut icon" href="/favicon.ico" />
@@ -58,7 +58,7 @@
         </style>
       <section class="outer">
   <article
-  id="post-以太网"
+  id="post-以太网介绍"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -69,7 +69,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  以太网
+  以太网介绍
 </h1>
  
 
@@ -77,11 +77,11 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/08/%E4%BB%A5%E5%A4%AA%E7%BD%91/" class="article-date">
+      <a href="/2023/07/08/%E4%BB%A5%E5%A4%AA%E7%BD%91%E4%BB%8B%E7%BB%8D/" class="article-date">
   <time datetime="2023-07-08T03:42:54.000Z" itemprop="datePublished">2023-07-08</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%8D%8F%E8%AE%AE/">协议</a>
+    <a class="article-category-link" href="/categories/%E5%8D%8F%E8%AE%AE/">协议</a> / <a class="article-category-link" href="/categories/%E5%8D%8F%E8%AE%AE/%E6%8E%A5%E5%8F%A3/">接口</a> / <a class="article-category-link" href="/categories/%E5%8D%8F%E8%AE%AE/%E6%8E%A5%E5%8F%A3/%E4%BB%A5%E5%A4%AA%E7%BD%91/">以太网</a>
   </div>
  
     </div>
@@ -479,440 +479,7 @@
 <h2 id="XFI-x2F-XFP"><a href="#XFI-x2F-XFP" class="headerlink" title="XFI&#x2F;XFP"></a>XFI&#x2F;XFP</h2><p>XFI 是10G 以太网 PMA（Physical Medium Attachment）和 PMD（Physical Medium Dependent）之间的接口标准，它只有两对差分线（收&#x2F;发），共4根线，如下图所示。XFI 接口速度达到10.3125<br>Gbps，采用64B&#x2F;66B编码，在 XAUI 与 XFI 之间使用到 SerDes 以减小信号数。</p>
 <p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230618181815189.png" alt="image-20230618181815189"></p>
 <p>XFP（10 Gigabit Small Form Factor Pluggable）是指应用XFI接口的光模块，应用于10G以太网的光传输。XFP 光模块的尺寸略大于 SFP 和 SFP+ 光模块，三种光模块的详细对比见<a target="_blank" rel="noopener" href="http://www.differencebetween.info/difference-between-xfp-sfp-and-sfp-plus">链接</a>。</p>
-<h1 id="以太网帧"><a href="#以太网帧" class="headerlink" title="以太网帧"></a>以太网帧</h1><h2 id="以太网帧格式"><a href="#以太网帧格式" class="headerlink" title="以太网帧格式"></a>以太网帧格式</h2><p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230619234934505.png" alt="image-20230619234934505"></p>
-<h3 id="前导码（Preamble）"><a href="#前导码（Preamble）" class="headerlink" title="前导码（Preamble）"></a>前导码（Preamble）</h3><p>为了实现底层数据的正确阐述，物理层使用7个字节同步码（7 个 0x55），二进制表现为 0 和 1 交替，其作用是使发送方和接收方的时钟同步。</p>
-<h3 id="帧起始界定符（SFD，Start-Frame-Delimiter）"><a href="#帧起始界定符（SFD，Start-Frame-Delimiter）" class="headerlink" title="帧起始界定符（SFD，Start Frame Delimiter）"></a>帧起始界定符（SFD，Start Frame Delimiter）</h3><p>使用 1 个字节的SFD（0xd5），二进制表现为“10101011”，用来表示一帧的开始，即后面紧跟着传输的就是以太网的帧头。</p>
-<h3 id="以太网帧头"><a href="#以太网帧头" class="headerlink" title="以太网帧头"></a>以太网帧头</h3><h4 id="目的MAC地址"><a href="#目的MAC地址" class="headerlink" title="目的MAC地址"></a>目的MAC地址</h4><p>即接收端物理MAC地址，占用 6 个字节。MAC地址从应用上可分为<strong>单播地址、组播地址和广播地址</strong>。</p>
-<ul>
-<li>单播地址：第一个字节的最低位为0，比如00-00-00-11-11-11，一般用于标志唯一的设备；</li>
-<li>组播地址：第一个字节的最低位为1，比如01-00-00-11-11-11，一般用于标志同属一组的多个设备；</li>
-<li>广播地址：所有48bit全为1，即FF-FF-FF-FF-FF-FF，它用于标志同一网段中的所有设备。</li>
-</ul>
-<h4 id="源MAC地址"><a href="#源MAC地址" class="headerlink" title="源MAC地址"></a>源MAC地址</h4><p>即发送端物理MAC地址，占用6个字节。</p>
-<h4 id="长度-x2F-类型"><a href="#长度-x2F-类型" class="headerlink" title="长度&#x2F;类型"></a>长度&#x2F;类型</h4><p>长度&#x2F;类型具有两个意义</p>
-<ul>
-<li>当这两个字节的值<strong>小于1536</strong>（十六进制为0x0600）时，代表该以太网中数据段的长度；</li>
-<li>如果这两个字节的值<strong>大于1536</strong>，则表示该以太网中的数据属于哪个上层协议，例如0x0800代表IP协议（网际协议）、0x0806代表ARP协议（地址解析协议）等。</li>
-</ul>
-<h3 id="数据段"><a href="#数据段" class="headerlink" title="数据段"></a>数据段</h3><p>长度最小46个字节，最大1500个字节。</p>
-<p>长度最小46个字节，总的以太网帧长度最小为 64 个字节，其原因是因为以太网是不可靠的，这意味着它并不知道对方有没有收到自己发出的数据包，但如果他发出的数据包发生错误，需要进行重传。以太网的错误主要是发生碰撞，碰撞是指两台机器同时监听到网络是空闲的，同时发送数据就会发生碰撞，碰撞对于以太网来说是正常的。要保证以太网的重传，必须保证收到碰撞信号的时候数据包没有传完，要实现这一要求，发送方和接收方之间的距离很关键，也就是说信号在发送方和接收方之间传输的来回时间必须控制在一定范围之内。IEEE 定义了这个标准，一个碰撞域内最 远的两台机器之间的 round-trip time 要小于 512 bit time(传输一个比特需要的时间)，这也是我们常说的一个碰撞域的直径。512 个 bit time 也就是 64 字节的传输时间，如果以太网数据包 ≥ 64 个字节就能保证碰撞信号到达发送方的时候，数据包还没有传完。最小数据帧的设计和以太网电缆长度有关，为的是让两个相距最远的站点能够感知到双方的数据发生了碰撞，最远两端数据的往返时间就是争用期，以太网的争用期是 51.2 us，正好发送 64byte 数据。</p>
-<p>最大值 1500 称为以太网的最大传输单元（MTU，Maximum Transmission Unit），之所以限制最大传输单元是因为在多个计算机的数据帧排队等待传输时，如果某个数据帧太大的话，那么其它数据帧等待的时间就会加长，导致体验变差。另外还要考虑网络I&#x2F;O控制器缓存区资源以及网络最大的承载能力等因素，因此最大传输单元是由各种综合因素决定的。<strong>为了避免增加额外的配置，通常以太网的有效数据字段小于1500个字节，现在电脑的配置都很高了，很多都支持巨型帧，巨型帧可以超过 1500 个字节</strong>。</p>
-<p>不同的协议，数据段的组成结构不同，后面再详细说明。</p>
-<h3 id="帧检验序列（FCS，Frame-Check-Sequence）"><a href="#帧检验序列（FCS，Frame-Check-Sequence）" class="headerlink" title="帧检验序列（FCS，Frame Check Sequence）"></a>帧检验序列（FCS，Frame Check Sequence）</h3><p>为了确保数据的正确传输，在数据的尾部加入了4个字节的循环冗余校验码（CRC校验）来检测数据是否传输错误。<strong>CRC数据校验从以太网帧头开始即不包含前导码和帧起始界定符</strong>。通用的CRC标准有CRC-8、CRC-16、CRC-32、CRC-CCIT，其中在网络通信系统中应用最广泛的是CRC-32标准。</p>
-<h3 id="帧间隙（IFG，Interpacket-Gap）"><a href="#帧间隙（IFG，Interpacket-Gap）" class="headerlink" title="帧间隙（IFG，Interpacket Gap）"></a>帧间隙（IFG，Interpacket Gap）</h3><p>　帧间隙的时间就是网络设备和组件在接收一帧之后，需要短暂的时间来恢复并为接收下一帧做准备的时间，<strong>IFG的最小值是96 bit time</strong>，即在媒介中发送96位原始数据所需要的时间，在不同媒介中IFG的最小值是不一样的。不管10M&#x2F;100M&#x2F;1000M的以太网，两帧之间最少要有96bit time，IFG的最少间隔时间计算方法如下：</p>
-<ul>
-<li>10Mbit&#x2F;s最小时间为：96*100ns &#x3D; 9600ns；</li>
-<li>100Mbit&#x2F;s最小时间为：96*10ns &#x3D; 960ns；</li>
-<li>1000Mbit&#x2F;s最小时间为：96*1ns &#x3D; 96ns；</li>
-</ul>
-<h2 id="ARP-数据报"><a href="#ARP-数据报" class="headerlink" title="ARP 数据报"></a>ARP 数据报</h2><p>ARP 地址解析协议，即 ARP（Address Resolution Protocol），根据 IP 地址获取物理地址。主机发送包含目的 IP 地址的 ARP 请求广播（MAC 地址为 48’hff_ff_ff_ff_ff_ff）到网络上的主机，并接收返回消息，以此确定目标的物理地址，收到返回消息后将 IP 地址和物理地址保存到缓存中，<br>并保留一段时间，下次请求时直接查询 ARP 缓存以节约资源。下图为 ARP 数据报格式 。</p>
-<p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230619205401432.png" alt="image-20230619205401432"></p>
-<table>
-<thead>
-<tr>
-<th></th>
-<th>字段</th>
-<th>长度 (Byte)</th>
-<th>默认值</th>
-<th>备注</th>
-</tr>
-</thead>
-<tbody><tr>
-<td></td>
-<td>前导码+SFD</td>
-<td>8</td>
-<td>0x5555…D5</td>
-<td></td>
-</tr>
-<tr>
-<td>以太网首部</td>
-<td>目的 MAC 地址</td>
-<td>6</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>源 MAC 地址</td>
-<td>6</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>长度&#x2F;类型</td>
-<td>2</td>
-<td>0x0806</td>
-<td>ARP帧类型值</td>
-</tr>
-<tr>
-<td>ARP 字段</td>
-<td>硬件类型</td>
-<td>2</td>
-<td>0x0001</td>
-<td>指链路层网络类型，1 为以太网</td>
-</tr>
-<tr>
-<td></td>
-<td>上层协议类型</td>
-<td>2</td>
-<td>0x0800</td>
-<td>上层协议为 IP 协议</td>
-</tr>
-<tr>
-<td></td>
-<td>MAC地址长度</td>
-<td>1</td>
-<td>0x6</td>
-<td>以太网 MAC 地址长度为 6</td>
-</tr>
-<tr>
-<td></td>
-<td>IP地址长度</td>
-<td>1</td>
-<td>0x4</td>
-<td>IP 地址长度为 4</td>
-</tr>
-<tr>
-<td></td>
-<td>操作码</td>
-<td>2</td>
-<td>0x1 &#x2F; 0x2</td>
-<td>1 表示 ARP 请求包<br />2 表示 ARP 应答包</td>
-</tr>
-<tr>
-<td></td>
-<td>源 MAC 地址</td>
-<td>6</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>源 IP 地址</td>
-<td>4</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>目的 MAC 地址</td>
-<td>6</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>目的 IP 地址</td>
-<td>4</td>
-<td></td>
-<td></td>
-</tr>
-<tr>
-<td></td>
-<td>填充数据</td>
-<td>18</td>
-<td></td>
-<td>数据段最小长度为46</td>
-</tr>
-<tr>
-<td>以太网校验</td>
-<td>校验字</td>
-<td>4</td>
-<td></td>
-<td>除前导码+SFD 外均计算</td>
-</tr>
-</tbody></table>
-<h2 id="IP-数据报"><a href="#IP-数据报" class="headerlink" title="IP 数据报"></a>IP 数据报</h2><p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230619233823764.png" alt="image-20230619233823764"></p>
-<h3 id="IP-首部"><a href="#IP-首部" class="headerlink" title="IP 首部"></a>IP 首部</h3><p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230619233850673.png" alt="image-20230619233850673"></p>
-<ul>
-<li><strong>版本</strong> ：4位IP版本号（Version），这个值设置为二进制的 “0100” 时表示 IPv4，设置为 “0110” 时表示 IPv6，目前使用比较多的IP协议版本号是 4</li>
-<li><strong>首部长度</strong> ： 4位首部长度（IHL，Internet Header Length），表示IP首部一共有多少个 32bits（4个字节）。最大可表示15个 32 bits，因此 IP 的首部长度最大值为 60 字节</li>
-<li><strong>服务类型</strong> ：8位服务类型（TOS，Type of service），该字段被划分成两个子字段：3位优先级字段（现在已经基本忽略掉了）和4位TOS字段，最后一位固定为0。服务类型为0时表示一般服务</li>
-<li><strong>总长度</strong> ：16位IP数据报总长度（Total Length），包括IP首部和IP数据部分，以字节为单位。我们利用IP首部长度和IP数据报总长度，就可以知道IP数据报中数据内容的起始位置和长度。由于该字段长16bit，所以IP数据报最长可达65535字节。尽管理论上可以传输长达65535字节的IP数据报，但实际上还要考虑网络的最大承载能力等因素</li>
-<li><strong>标识</strong> ：16位标识（Identification）字段，用来标识主机发送的每一份数据报。通常每发送一份报文它的值就会加1</li>
-<li><strong>标志</strong> ：3位标志（Flags）字段<ul>
-<li>最高位为保留位</li>
-<li>中间位是 DF （Don’t Fragment），表示禁止分片，只有 DF &#x3D; 0 时才允许分片</li>
-<li>最低位是 MF （More Fragment），MF &#x3D; 1 表示后面还有分片，MF &#x3D; 0 表示最后一个分片</li>
-</ul>
-</li>
-<li><strong>片偏移</strong> ：13位片偏移字段，指较长的分组在分片后某片在原分组中的相对位置，以 8 字节为偏移单位，也就是说每个分片的长度一定是 8 字节的整数倍</li>
-<li><strong>生存时间</strong> ：8位生存时间字段TTL（Time To Live），设置了数据报可以经过的最多路由器数，表示数据报在网络上生存多久，防止丢失的数据包在无休止的传播TTL的初始值由源主机设置，一般为32、64或者128，一旦经过一个路由器，它的值就减 1，减到 0 时，数据报就丢弃，并发送 ICMP 消息通知源主机</li>
-<li><strong>协议</strong> ：8位协议（Protocol）类型，指出此数据报携带的数据使用何种协议以便目的主机的 IP 层将数据部分上交给哪个处理过程。 0x01 表示为 ICMP 协议, 0x02 表示为 IGMP 协议, 0x06 表示为 TCP 协议, 0x11 表示为 UDP 协议</li>
-<li><strong>首部校验和</strong> ：16位首部校验和（Header Checksum），该字段只校验数据报的首部，不包含数据部分；校验IP数据报头部是否被破坏、篡改和丢失等。</li>
-<li><strong>源 IP 地址</strong> ：32位源IP地址（Source Address），即发送端的IP地址，如192.168.1.123</li>
-<li><strong>目的 IP 地址</strong> ：32位目的IP地址（Destination Address），即接收端的IP地址，如192.168.1.102</li>
-<li><strong>可选字段</strong> ：是数据报中的一个可变长度的可选信息，选项字段以32bit为界，不足时插入值为0的填充字节，保证IP首部始终是32bit的整数倍，没有的话长度可以为 0 。</li>
-</ul>
-<p>　　IP首部校验和的计算方法：</p>
-<figure class="highlight apache"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">1</span>、将<span class="number">16</span>位检验和字段置为<span class="number">0</span>，然后将IP首部按照<span class="number">16</span>位分成多个单元；</span><br><span class="line"><span class="attribute">2</span>、对各个单元采用反码加法运算（即高位溢出位会加到低位，通常的补码运算是直接丢掉溢出的高位）；</span><br><span class="line"><span class="attribute">3</span>、此时仍然可能出现进位的情况，将得到的和再次分成高<span class="number">16</span>位和低<span class="number">16</span>位进行累加；</span><br><span class="line"><span class="attribute">4</span>、最后将得到的和的反码填入校验和字段。</span><br></pre></td></tr></table></figure>
-
-<p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230620232037234.png" alt="image-20230620232037234"></p>
-<h3 id="UDP-数据报格式"><a href="#UDP-数据报格式" class="headerlink" title="UDP 数据报格式"></a>UDP 数据报格式</h3><p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230619233823764.png" alt="image-20230619233823764"></p>
-<ul>
-<li><strong>源端口号</strong> ：16位发送端端口号，用于区分不同服务的端口，端口号的范围从0到65535</li>
-<li><strong>目的端口号</strong> ：16位接收端端口号</li>
-<li><strong>UDP 长度</strong> ：16位UDP长度，包含UDP首部长度 + 数据长度，单位是字节</li>
-<li><strong>UDP 校验和 ** ：16位UDP校验和。UDP计算校验和的方法和计算IP数据报首部校验和的方法相似，但不同的是IP数据报的校验和只检验IP数据报的首部，而</strong>UDP校验和包含三个部分：UDP 伪首部，UDP 首部和 UDP 的数据部分。伪首部的数据是从IP数据报头和UDP数据报头获取的，包括源IP地址，目的IP地址，协议类型和UDP长度**</li>
-</ul>
-<hr>
-<p>数据是可以直接封装在IP协议里而不使用TCP、UDP或者其它上层协议的。然而在网络传输中同一IP服务器需要提供各种不同的服务，各种不同的服务类型是使用端口号来区分的，例如用于浏览网页服务的80端口，用于FTP（文件传输协议）服务的21端口等。TCP和UDP都使用两个字节的端口号，理论上可以表示的范围为0~65535，足够满足各种不同的服务类型。</p>
-<p>TCP协议与UDP协议作为传输层最常用的两种传输协议，这两种协议都是使用IP作为网络层协议进行传输。下面是TCP协议与UDP协议的区别：</p>
-<figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">①TCP协议面向连接，是流传输协议，通过连接发送数据，而UDP协议传输不需要连接，是数据报协议；</span><br><span class="line">②TCP为可靠传输协议，而UDP为不可靠传输协议。即TCP协议可以保证数据的完整和有序，而UDP不能保证；</span><br><span class="line">③UDP由于不需要连接，故传输速度比TCP快，且占用资源比TCP少；</span><br><span class="line">④TCP协议常用在对数据文件完整性较高的一些场景中，如文件传输等。</span><br><span class="line"> UDP协议常用于对通讯速度有较高要求或者传输数据较少时，如视频直播和QQ等。</span><br></pre></td></tr></table></figure>
-
-<p>UDP 协议使用报头中的校验值来保证数据的安全。校验值首先在数据发送方通过特殊的算法 计算得出，在传递到接收方之后，还需要再重新计算。如果某个数据报在传输过程中被第三方篡 改或者由于线路噪音等原因受到损坏，发送和接收方的校验计算值将不会相符，由此 UDP 协议可以检测是否出错。虽然 UDP 提供有错误检测，但检测到错误时，只是简单地把损坏的消息段扔掉，或者给应用程序提供警告信息。</p>
-<h3 id="ICMP-报文"><a href="#ICMP-报文" class="headerlink" title="ICMP 报文"></a>ICMP 报文</h3><h4 id="报文格式"><a href="#报文格式" class="headerlink" title="报文格式"></a>报文格式</h4><p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230620130343446.png" alt="image-20230620130343446"></p>
-<ul>
-<li><p>ICMP 是 TCP&#x2F;IP 协议族的一个 <strong>IP 层子协议</strong>，包含在 IP 数据报里，用于 IP 主机、路由器之间传递控制消息。控制消息是指网络是否连通，主机是否可达等功能。其中 <strong>ping 功能采用回送请求和回答报文，回送请求报文类型为 0x08，回答报文类型为 0x00</strong></p>
-</li>
-<li><p><strong>ICMP报文可分为两大类</strong></p>
-<ol>
-<li>有关信息采集和配置的 ICMP 报文，称为<strong>查询报文</strong>（query）或者<strong>信息类报文</strong>(information message)</li>
-<li>有关 IP 数据报传递的ICMP报，称为<strong>差错报文</strong>（error message）</li>
-</ol>
-</li>
-<li><p><strong>校验和计算（校验 ICMP 首部和数据部分）</strong> ：</p>
-<ul>
-<li>将校验和字段设置为0</li>
-<li>每16个bit(即2个字节)组成一个数，相加，如果超过16个bit，把超过的高位值加到这16个bit值上，得到的新值再和下一个值相加</li>
-<li><strong>如果最后还剩8个bit值，不能简单的加到低位，要把这8个bit当成高位值，再用0填充一个16个bit值，相加</strong></li>
-<li>最后取反，填充到校验和字段</li>
-</ul>
-</li>
-<li><p><strong>报文类型字段（Type）及代码字段（Code）含义</strong></p>
-</li>
-</ul>
-<table>
-<thead>
-<tr>
-<th>类型TYPE</th>
-<th>代码CODE</th>
-<th>描述 Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>0</td>
-<td>0</td>
-<td>Echo Reply——回显应答（Ping应答）</td>
-</tr>
-<tr>
-<td>3</td>
-<td>0</td>
-<td>Network Unreachable——网络不可达</td>
-</tr>
-<tr>
-<td>3</td>
-<td>1</td>
-<td>Host Unreachable——主机不可达</td>
-</tr>
-<tr>
-<td>3</td>
-<td>2</td>
-<td>Protocol Unreachable——协议不可达</td>
-</tr>
-<tr>
-<td>3</td>
-<td>3</td>
-<td>Port Unreachable——端口不可达</td>
-</tr>
-<tr>
-<td>3</td>
-<td>4</td>
-<td>Fragmentation needed but no frag. bit set——需要进行分片但设置不分片比特</td>
-</tr>
-<tr>
-<td>3</td>
-<td>5</td>
-<td>Source routing failed——源站选路失败</td>
-</tr>
-<tr>
-<td>3</td>
-<td>6</td>
-<td>Destination network unknown——目的网络未知</td>
-</tr>
-<tr>
-<td>3</td>
-<td>7</td>
-<td>Destination host unknown——目的主机未知</td>
-</tr>
-<tr>
-<td>3</td>
-<td>8</td>
-<td>Source host isolated (obsolete)——源主机被隔离（作废不用）</td>
-</tr>
-<tr>
-<td>3</td>
-<td>9</td>
-<td>Destination network administratively prohibited——目的网络被强制禁止</td>
-</tr>
-<tr>
-<td>3</td>
-<td>10</td>
-<td>Destination host administratively prohibited——目的主机被强制禁止</td>
-</tr>
-<tr>
-<td>3</td>
-<td>11</td>
-<td>Network unreachable for TOS——由于服务类型TOS，网络不可达</td>
-</tr>
-<tr>
-<td>3</td>
-<td>12</td>
-<td>Host unreachable for TOS——由于服务类型TOS，主机不可达</td>
-</tr>
-<tr>
-<td>3</td>
-<td>13</td>
-<td>Communication administratively prohibited by filtering——由于过滤，通信被强制禁止</td>
-</tr>
-<tr>
-<td>3</td>
-<td>14</td>
-<td>Host precedence violation——主机越权</td>
-</tr>
-<tr>
-<td>3</td>
-<td>15</td>
-<td>Precedence cutoff in effect——优先中止生效</td>
-</tr>
-<tr>
-<td>4</td>
-<td>0</td>
-<td>Source quench——源端被关闭（基本流控制）</td>
-</tr>
-<tr>
-<td>5</td>
-<td>0</td>
-<td>Redirect for network——对网络重定向</td>
-</tr>
-<tr>
-<td>5</td>
-<td>1</td>
-<td>Redirect for host——对主机重定向</td>
-</tr>
-<tr>
-<td>5</td>
-<td>2</td>
-<td>Redirect for TOS and network——对服务类型和网络重定向</td>
-</tr>
-<tr>
-<td>5</td>
-<td>3</td>
-<td>Redirect for TOS and host——对服务类型和主机重定向</td>
-</tr>
-<tr>
-<td>8</td>
-<td>0</td>
-<td>Echo request——回显请求（Ping请求）</td>
-</tr>
-<tr>
-<td>9</td>
-<td>0</td>
-<td>Router advertisement——路由器通告</td>
-</tr>
-<tr>
-<td>10</td>
-<td>0</td>
-<td>Route solicitation——路由器请求</td>
-</tr>
-<tr>
-<td>11</td>
-<td>0</td>
-<td>TTL equals 0 during transit——传输期间生存时间为0</td>
-</tr>
-<tr>
-<td>11</td>
-<td>1</td>
-<td>TTL equals 0 during reassembly——在数据报组装期间生存时间为0</td>
-</tr>
-<tr>
-<td>12</td>
-<td>0</td>
-<td>IP header bad (catchall error)——坏的IP首部（包括各种差错）</td>
-</tr>
-<tr>
-<td>12</td>
-<td>1</td>
-<td>Required options missing——缺少必需的选项</td>
-</tr>
-<tr>
-<td>13</td>
-<td>0</td>
-<td>Timestamp request (obsolete)——时间戳请求（作废不用）</td>
-</tr>
-<tr>
-<td>14</td>
-<td></td>
-<td>Timestamp reply (obsolete)——时间戳应答（作废不用）</td>
-</tr>
-<tr>
-<td>15</td>
-<td>0</td>
-<td>Information request (obsolete)——信息请求（作废不用）</td>
-</tr>
-<tr>
-<td>16</td>
-<td>0</td>
-<td>Information reply (obsolete)——信息应答（作废不用）</td>
-</tr>
-<tr>
-<td>17</td>
-<td>0</td>
-<td>Address mask request——地址掩码请求</td>
-</tr>
-<tr>
-<td>18</td>
-<td>0</td>
-<td>Address mask reply——地址掩码应答</td>
-</tr>
-</tbody></table>
-<h4 id="ping-命令诊断网络故障"><a href="#ping-命令诊断网络故障" class="headerlink" title="ping 命令诊断网络故障"></a>ping 命令诊断网络故障</h4><ul>
-<li><p><strong>ping 命令只能检测两端口通或不通</strong></p>
-</li>
-<li><p>PING（Packet Internet Grope），因特网包探索器，用于测试网络连接量的程序。Ping 发送一个 ICMP 回声请求消息给目的地并报告是否收到所希望的 ICMP 回声应答。</p>
-</li>
-<li><p>ping指的是<strong>端对端</strong>连通，通常用来作为可用性的检查，但是某些病毒木马会强行大量远程执行ping命令抢占你的网络资源，导致系统变慢，网速变慢。严禁ping入侵作为大多数防火墙的一个基本功能提供给用户进行选择。</p>
-</li>
-<li><p>如果你打开IE浏览器访问网站失败，你可以通过ping命令测试到Internet的网络连通，可以为你排除网络故障提供线索，下面展示ping命令返回的信息以及分析其原因。</p>
-<ul>
-<li><p>目标主机不可到达</p>
-<p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230620230522983.png" alt="image-20230620230522983"></p>
-</li>
-<li><p>目标网络不可到达</p>
-<p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230620230538797.png" alt="image-20230620230538797"></p>
-</li>
-<li><p>请求超时</p>
-<p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230620230548715.png" alt="image-20230620230548715"></p>
-<p>说明丢包了</p>
-</li>
-<li><p>通过延迟评估网络带宽</p>
-<p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230620230607345.png" alt="image-20230620230607345"></p>
-<p>可以看到最小延迟为54ms，最大延迟57ms，平均延迟55ms</p>
-<p>当 ping 本计算机网关的时候延迟小，速度快</p>
-<p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230620230618540.png" alt="image-20230620230618540"></p>
-</li>
-</ul>
-</li>
-</ul>
-<h4 id="pathping命令跟踪数据包路径"><a href="#pathping命令跟踪数据包路径" class="headerlink" title="pathping命令跟踪数据包路径"></a>pathping命令跟踪数据包路径</h4><p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230620230651444.png" alt="image-20230620230651444"></p>
-<ol>
-<li><p>当PC0 ping PC1时不通，可能是1~4处某一处或多处断了，也可能是PC1没有开机。而使用PC0 pathping PC1时，从PC0到PC1，每经过一个路由器都会通过该路由器给PC0发回一个数据包说明PC0到该路由器的路径是通的。即Router1给PC0发回一个数据包则表示1、 2通；Router2给PC0发回一个数据包表示1、 2、 3通。在网络排错中具有很强的实用意义。</p>
-</li>
-<li><p>若 Router0 设置了进入的数据包无法追踪该路由器，PC0 pathping PC1时，数据包可以通过Router0，但是Router0不会给PC0返回一个数据包</p>
-</li>
-</ol>
-<hr>
-<p>输入命令</p>
-<figure class="highlight nginx"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">pathping</span> www.bilibili.com</span><br></pre></td></tr></table></figure>
-
-<p>表示从本计算机访问 “<a target="_blank" rel="noopener" href="http://www.bilibili.com”/">www.bilibili.com”</a> 该网站的服务器，并追踪途经的各个中转路由器</p>
-<p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230620231528107.png" alt="image-20230620231528107"></p>
-<p>同时pathping命令还会统计通信方到每个中转路由器的丢包率，由此可以看出从哪到哪丢包严重，网络延迟大，据此可以优化网络。</p>
-<blockquote>
-<p>相同类型的有trace route命令，该命令较为简略不会统计丢包率</p>
-</blockquote>
-<h3 id="IGMP-报文"><a href="#IGMP-报文" class="headerlink" title="IGMP 报文"></a>IGMP 报文</h3><h1 id="硬件接口"><a href="#硬件接口" class="headerlink" title="硬件接口"></a>硬件接口</h1><p>常见的以太网接口类型有RJ45接口（电脑网口）、RJ11接口（电话线）、SC光纤接口等。其中RJ45接口是我们常见的网络设备接口，其采用差分传输方式，具有传输速率快、抗干扰、传输距离远等优点。</p>
+<h1 id="硬件接口"><a href="#硬件接口" class="headerlink" title="硬件接口"></a>硬件接口</h1><p>常见的以太网接口类型有RJ45接口（电脑网口）、RJ11接口（电话线）、SC光纤接口等。其中RJ45接口是我们常见的网络设备接口，其采用差分传输方式，具有传输速率快、抗干扰、传输距离远等优点。</p>
 <p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230620233643610.png" alt="image-20230620233643610"></p>
 <p>RJ45接口定义以及各引脚功能说明如下图所示，在以太网中只使用了1、2、3、6这四根线，其中1、2这组负责传输数据（TX+、TX-），而3、6这组负责接收数据（RX+、RX-），另外四根线是备用的。</p>
 <p><img src="/MD_IMG/%E4%BB%A5%E5%A4%AA%E7%BD%91.assets/image-20230620233731232.png" alt="image-20230620233731232"></p>
@@ -934,7 +501,7 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BB%A5%E5%A4%AA%E7%BD%91/" rel="tag">以太网</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%8F%E8%AE%AE/" rel="tag">协议</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BB%A5%E5%A4%AA%E7%BD%91/" rel="tag">以太网</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E4%BB%A5%E5%A4%AA%E7%BD%91%E4%BB%8B%E7%BB%8D/" rel="tag">以太网介绍</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%8F%E8%AE%AE/" rel="tag">协议</a></li></ul>
 
     </footer>
   </div>
@@ -942,19 +509,19 @@
    
   <nav class="article-nav">
     
-      <a href="/2023/07/08/office%E8%BD%AF%E4%BB%B6/" class="article-nav-link">
+      <a href="/2023/07/08/axi_quad_spi/" class="article-nav-link">
         <strong class="article-nav-caption">上一篇</strong>
         <div class="article-nav-title">
           
-            Office
+            axi_quad_spi
           
         </div>
       </a>
     
     
-      <a href="/2023/07/08/%E6%A8%A1%E6%9D%BF/" class="article-nav-link">
+      <a href="/2023/07/08/office%E8%BD%AF%E4%BB%B6/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">如何搭建个人博客</div>
+        <div class="article-nav-title">Office</div>
       </a>
     
   </nav>

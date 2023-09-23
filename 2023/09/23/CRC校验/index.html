@@ -11,7 +11,7 @@
         name="viewport"
         content="width=device-width, initial-scale=1, maximum-scale=1"
       />
-      <title>如何搭建个人博客 |  Welcome</title>
+      <title>CRC校验 |  Welcome</title>
   <meta name="generator" content="hexo-theme-ayer">
       
       <link rel="shortcut icon" href="/favicon.ico" />
@@ -58,7 +58,7 @@
         </style>
       <section class="outer">
   <article
-  id="post-模板"
+  id="post-CRC校验"
   class="article article-type-post"
   itemscope
   itemprop="blogPost"
@@ -69,7 +69,7 @@
     <header class="article-header">
        
 <h1 class="article-title sea-center" style="border-left:0" itemprop="name">
-  如何搭建个人博客
+  CRC校验
 </h1>
  
 
@@ -77,22 +77,69 @@
     </header>
      
     <div class="article-meta">
-      <a href="/2023/07/08/%E6%A8%A1%E6%9D%BF/" class="article-date">
-  <time datetime="2023-07-08T03:42:54.000Z" itemprop="datePublished">2023-07-08</time>
+      <a href="/2023/09/23/CRC%E6%A0%A1%E9%AA%8C/" class="article-date">
+  <time datetime="2023-09-23T08:12:00.000Z" itemprop="datePublished">2023-09-23</time>
 </a> 
   <div class="article-category">
-    <a class="article-category-link" href="/categories/%E5%8D%8F%E8%AE%AE/">协议</a>
+    <a class="article-category-link" href="/categories/%E5%8D%8F%E8%AE%AE/">协议</a> / <a class="article-category-link" href="/categories/%E5%8D%8F%E8%AE%AE/%E5%85%B6%E4%BB%96/">其他</a>
   </div>
  
     </div>
       
+    <div class="tocbot"></div>
+
 
 
 
   
     <div class="article-entry" itemprop="articleBody">
        
-   
+  <h2 id="一、CRC介绍"><a href="#一、CRC介绍" class="headerlink" title="一、CRC介绍"></a>一、CRC介绍</h2><p><a target="_blank" rel="noopener" href="https://baike.baidu.com/item/%E5%BE%AA%E7%8E%AF%E5%86%97%E4%BD%99%E6%A0%A1%E9%AA%8C/3219009">循环冗余校验</a>（Cyclic Redundancy Check， CRC）是一种根据网络数据包或计算机文件等数据产生简短固定位数校验码的一种信道编码技术，主要用来检测或校验数据传输或者保存后可能出现的错误。它是利用除法及余数的原理来作错误侦测的。</p>
+<p>CRC的目的是保证数据的完整性，其方法是在发送数据的后面再增加多余的若干位数据，接收方使用同样的CRC计算方法，检查接收到的数据CRC是否为0： </p>
+<ul>
+<li><p>如果为0，则表示数据是完整的，接收方可以开开心心的去处理这个数据。</p>
+</li>
+<li><p>如果不为0，则表示数据不完整&#x2F;出错，接收方就需要处理下这个数据（一般是丢弃&#x2F;要求重发）。</p>
+</li>
+</ul>
+<p><strong>举例</strong>：CRC5-usb，多项式：x5+x2+1，输入数据反转，输出数据反转，初始值0x1F，输出异或值0x1F。</p>
+<img src="/MD_IMG/CRC校验.assets/image-20220126221439487.png" alt="image-20220126221439487" style="zoom: 50%;" />
+
+<p><strong>总结CRC计算过程</strong>：</p>
+<ol>
+<li><p>如果输入数据反转为True，对输入数据<strong>按字节反转</strong>后作为被除数；否则直接将输入数据作为被除数。</p>
+</li>
+<li><p>被除数补0，CRC码为几位就补几个0，CRC4补4个0，CRC5补5个0，…，CRC32补32个0。</p>
+</li>
+<li><p>如果初始值不为0，第一步计算需要先把被除数同初始值做模二加法运算（异或）。</p>
+</li>
+<li><p>进行二进制除法运算，求得余数，得到结果。(<strong>&#x3D;&#x3D;模二加减法实际上就是异或操作&#x3D;&#x3D;</strong>)</p>
+</li>
+<li><p>如果输出数据反转为True，那么最终的结果还需要进行<strong>按位反转</strong>。</p>
+</li>
+<li><p>如果结果异或值不为0，那么最后的结果需要同结果异或值做异或运算。</p>
+</li>
+</ol>
+<p>了解了CRC的原理，会发现<strong>：输入初始值，输入数据反转，输出数据反转，结果异或值都只跟输入输出数据相关的，主要是多项式（Poly）的区别。</strong> </p>
+<p>参考资料：</p>
+<ol>
+<li><a target="_blank" rel="noopener" href="https://www.bilibili.com/read/cv12483775">史上解释CRC最清楚的文章 - 哔哩哔哩 (bilibili.com)</a></li>
+</ol>
+<h2 id="二、在线计算器"><a href="#二、在线计算器" class="headerlink" title="二、在线计算器"></a>二、在线计算器</h2><p><a target="_blank" rel="noopener" href="http://www.ip33.com/crc.html">CRC（循环冗余校验）在线计算_ip33.com</a></p>
+<p>&#x3D;&#x3D;注意：CRC参数模型不要参考这个，有些是错误的&#x3D;&#x3D;</p>
+<img src="/MD_IMG/CRC校验.assets/image-20220126221102293.png" alt="image-20220126221102293" style="zoom: 50%;" />
+
+<h2 id="三、HDL代码生成器"><a href="#三、HDL代码生成器" class="headerlink" title="三、HDL代码生成器"></a>三、HDL代码生成器</h2><p><a target="_blank" rel="noopener" href="https://bues.ch/cms/hacking/crcgen">CRC代码生成器</a></p>
+<img src="/MD_IMG/CRC校验.assets/image-20220126222819812.png" alt="image-20220126222819812" style="zoom: 50%;" />
+
+<h2 id="四、Python计算CRC"><a href="#四、Python计算CRC" class="headerlink" title="四、Python计算CRC"></a>四、Python计算CRC</h2><p>&#x3D;&#x3D;注：这里用的是python3.10&#x3D;&#x3D;，参数模型见下节。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> re <span class="keyword">import</span> A</span><br><span class="line"><span class="keyword">import</span> crcmod</span><br><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line"><span class="keyword">import</span> struct</span><br><span class="line"><span class="comment">######################## CRC 校验介绍######################</span></span><br><span class="line"><span class="comment"># CRC即循环冗余校验码（Cyclic Redundancy Check）：是数据通信领域中最常用的一种查错校验码，</span></span><br><span class="line"><span class="comment"># 其特征是信息字段和校验字段的长度可以任意选定。循环冗余检查（CRC）是一种数据传输检错功能，</span></span><br><span class="line"><span class="comment"># 对数据进行多项式计算，并将得到的结果附在帧的后面，接收设备也执行类似的算法，以保证数据传输的正确性和完整性。</span></span><br><span class="line"><span class="comment">## CRC算法参数模型解释：</span></span><br><span class="line"><span class="comment">##    poly   : 生成多项式</span></span><br><span class="line"><span class="comment">##    initCrc: 算法开始时寄存器（crc）的初始化预置值，十六进制表示。</span></span><br><span class="line"><span class="comment">##    rev    : 判断输入每个字节是否按位反转; 在计算后之后，异或输出之前，整个数据是否按位反转</span></span><br><span class="line"><span class="comment">##    xorOut : 计算结果与次参数异或后得到最终的CRC值</span></span><br><span class="line"></span><br><span class="line"><span class="comment">## 官方网站  ：http://crcmod.sourceforge.net/crcmod.predefined.html</span></span><br><span class="line"><span class="comment">## 在线计算器：http://www.ip33.com/crc.html</span></span><br><span class="line"></span><br><span class="line"><span class="comment">######################## CRC 计算模型######################</span></span><br><span class="line">crc32_func = crcmod.mkCrcFun(poly=<span class="number">0x104C11DB7</span>, initCrc=<span class="number">0xFFFFFFFF</span>, rev=<span class="literal">True</span>, xorOut=<span class="number">0xFFFFFFFF</span>)    <span class="comment">## CRC-32</span></span><br><span class="line"><span class="comment">######################## 测试单个数据 ######################</span></span><br><span class="line"><span class="comment"># bData = b&#x27;\xAA&#x27;</span></span><br><span class="line"><span class="comment"># print(&quot;result:&quot;,hex(crc32_func(bData)))#,int(0x7394f613))))</span></span><br><span class="line"><span class="comment">######################## 读取文件数据、写结果 ######################</span></span><br><span class="line">fp = <span class="built_in">open</span>(<span class="string">&quot;F:\\Project\pyfile\\test_data\\test.hex&quot;</span>, <span class="string">&#x27;rb&#x27;</span>)</span><br><span class="line">fp2 = <span class="built_in">open</span>(<span class="string">&quot;F:\\Project\pyfile\\test_data\\test_result.txt&quot;</span>, <span class="string">&#x27;w&#x27;</span>)</span><br><span class="line"></span><br><span class="line">a=<span class="number">0</span></span><br><span class="line">bDataInit = <span class="number">0</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    tempByte = fp.read(<span class="number">1</span>)</span><br><span class="line">    <span class="keyword">if</span> tempByte:</span><br><span class="line">        bDataInit = crc32_func(tempByte,bDataInit)</span><br><span class="line">        fp2.write(<span class="string">&quot;%d:\t%s\t%s\n&quot;</span> % (a,tempByte.<span class="built_in">hex</span>() ,<span class="built_in">hex</span>(bDataInit)))</span><br><span class="line">        <span class="keyword">if</span> a &lt; <span class="number">20</span> :</span><br><span class="line">            <span class="built_in">print</span>(a,<span class="string">&quot;: result:&quot;</span>,<span class="built_in">hex</span>(bDataInit))</span><br><span class="line">        a=a+<span class="number">1</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;Calculate Done!&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(a,<span class="string">&quot;: result:&quot;</span>,<span class="built_in">hex</span>(bDataInit))</span><br><span class="line">        <span class="keyword">break</span></span><br><span class="line">fp.close()</span><br><span class="line">fp2.close()</span><br></pre></td></tr></table></figure>
+
+<h2 id="五、CRC参考模型"><a href="#五、CRC参考模型" class="headerlink" title="五、CRC参考模型"></a>五、CRC参考模型</h2><p><strong>官方网址</strong>：<a target="_blank" rel="noopener" href="http://crcmod.sourceforge.net/crcmod.predefined.html">crcmod.predefined – CRC calculation using predefined algorithms — crcmod v1.7</a></p>
+<img src="/MD_IMG/CRC校验.assets/image-20220126225241459.png" alt="image-20220126225241459" style="zoom: 50%;" />
+
+<hr>
+ 
       <!-- reward -->
       
         <div id="reword-out" style="border-top-width: 20px;padding-top: 30px;">
@@ -110,7 +157,7 @@
     
     <footer class="article-footer">
        
-  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/IIC/" rel="tag">IIC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%8F%E8%AE%AE/" rel="tag">协议</a></li></ul>
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/CRC/" rel="tag">CRC</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E5%8D%8F%E8%AE%AE/" rel="tag">协议</a></li></ul>
 
     </footer>
   </div>
@@ -118,19 +165,10 @@
    
   <nav class="article-nav">
     
-      <a href="/2023/07/08/%E4%BB%A5%E5%A4%AA%E7%BD%91/" class="article-nav-link">
-        <strong class="article-nav-caption">上一篇</strong>
-        <div class="article-nav-title">
-          
-            以太网
-          
-        </div>
-      </a>
     
-    
-      <a href="/2023/07/08/%E6%95%B0%E5%AD%97%E7%94%B5%E8%B7%AF%E5%9F%BA%E7%A1%80/" class="article-nav-link">
+      <a href="/2023/09/02/%E5%BF%AB%E6%8D%B7%E9%94%AE/" class="article-nav-link">
         <strong class="article-nav-caption">下一篇</strong>
-        <div class="article-nav-title">数字电路基础</div>
+        <div class="article-nav-title">快捷键</div>
       </a>
     
   </nav>
