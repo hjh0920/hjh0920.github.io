@@ -1,0 +1,936 @@
+<!DOCTYPE html>
+
+
+<html lang="en">
+  
+
+    <head>
+      <meta charset="utf-8" />
+        
+      <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1"
+      />
+      <title>Xilinx 7系列FPGA配置 |  Welcome</title>
+  <meta name="generator" content="hexo-theme-ayer">
+      
+      <link rel="shortcut icon" href="/favicon.ico" />
+       
+<link rel="stylesheet" href="/dist/main.css">
+
+      
+<link rel="stylesheet" href="/css/fonts/remixicon.css">
+
+      
+<link rel="stylesheet" href="/css/custom.css">
+ 
+      <script src="https://cdn.staticfile.org/pace/1.2.4/pace.min.js"></script>
+       
+ 
+
+      <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/@sweetalert2/theme-bulma@5.0.1/bulma.min.css"
+      />
+      <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.min.js"></script>
+
+      <!-- mermaid -->
+      
+      <style>
+        .swal2-styled.swal2-confirm {
+          font-size: 1.6rem;
+        }
+      </style>
+    </head>
+  </html>
+</html>
+
+
+<body>
+  <div id="app">
+    
+      
+    <main class="content on">
+        <style>
+            .outer {
+                margin-left: 15%;
+            }
+        </style>
+      <section class="outer">
+  <article
+  id="post-Xilinx 7系列FPGA配置"
+  class="article article-type-post"
+  itemscope
+  itemprop="blogPost"
+  data-scroll-reveal
+>
+  <div class="article-inner">
+    
+    <header class="article-header">
+       
+<h1 class="article-title sea-center" style="border-left:0" itemprop="name">
+  Xilinx 7系列FPGA配置
+</h1>
+ 
+
+      
+    </header>
+     
+    <div class="article-meta">
+      <a href="/2023/11/11/Xilinx%207%E7%B3%BB%E5%88%97FPGA%E9%85%8D%E7%BD%AE/" class="article-date">
+  <time datetime="2023-11-11T14:31:54.000Z" itemprop="datePublished">2023-11-11</time>
+</a> 
+  <div class="article-category">
+    <a class="article-category-link" href="/categories/Xilinx/">Xilinx</a> / <a class="article-category-link" href="/categories/Xilinx/%E6%96%87%E6%A1%A3%E6%80%BB%E7%BB%93/">文档总结</a>
+  </div>
+ 
+    </div>
+      
+    <div class="tocbot"></div>
+
+
+
+
+  
+    <div class="article-entry" itemprop="articleBody">
+       
+  <h2 id="配置模式"><a href="#配置模式" class="headerlink" title="配置模式"></a>配置模式</h2><p>如果 M[2:0] 为 ”101“，则该FPGA 只支持 JTAG 进行配置。处于其余配置模式下时，依旧可以使用 JTAG 模式进行调试，并且优先级最高。</p>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image1.png" style="zoom:67%;" />
+
+<h3 id="串行配置模式"><a href="#串行配置模式" class="headerlink" title="串行配置模式"></a>串行配置模式</h3><h4 id="接口"><a href="#接口" class="headerlink" title="接口"></a>接口</h4><img src="/MD_IMG/ug470_7Series_Config.assets/image3.png" style="zoom:50%;" />
+
+<h4 id="从-连接方式"><a href="#从-连接方式" class="headerlink" title="从-连接方式"></a>从-连接方式</h4><p><img src="/MD_IMG/ug470_7Series_Config.assets/image4.png"></p>
+<h4 id="主-连接方式"><a href="#主-连接方式" class="headerlink" title="主-连接方式"></a>主-连接方式</h4><ul>
+<li>除了CCLK 连接不同，其他都和从串行模式一样</li>
+</ul>
+<h4 id="串行菊花链（非同时配置）"><a href="#串行菊花链（非同时配置）" class="headerlink" title="串行菊花链（非同时配置）"></a>串行菊花链（非同时配置）</h4><ul>
+<li>上升沿采样DIN数据，下降沿DOUT输出数据，形成上下流关系； </li>
+<li>SPI 在该连接方式下不支持重配置功能；</li>
+<li>第一个器件最后完成配置；当链中最远端器件完成配置，则将DONE变为高阻态，这样下一个器件检测到DONE为高则开始配置；</li>
+<li>7系列必须放在第一个；</li>
+<li>DOUT传输的总数据量有限制，所以要根据程序大小计算好可以连接的器件个数</li>
+</ul>
+<p><img src="/MD_IMG/ug470_7Series_Config.assets/image67.png"></p>
+<h4 id="串行配置（同时配置）"><a href="#串行配置（同时配置）" class="headerlink" title="串行配置（同时配置）"></a>串行配置（同时配置）</h4><ul>
+<li>所有器件要一样（IDCODE一样），配置程序也一样</li>
+</ul>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image68.png" style="zoom:80%;" />
+
+
+
+<h4 id="时序"><a href="#时序" class="headerlink" title="时序"></a>时序</h4><p><img src="/MD_IMG/ug470_7Series_Config.assets/image5.png"></p>
+<h3 id="主SPI配置模式"><a href="#主SPI配置模式" class="headerlink" title="主SPI配置模式"></a>主SPI配置模式</h3><h4 id="SPIx1-x2F-x2-连接图"><a href="#SPIx1-x2F-x2-连接图" class="headerlink" title="SPIx1&#x2F;x2 连接图"></a>SPIx1&#x2F;x2 连接图</h4><ul>
+<li>INIT_B 需要外部上拉电阻；</li>
+<li>菊花链模式不支持SPIx2和x4，DOUT连接下个器件的DIN形成菊花链； </li>
+<li>FPGA VCCO_0 要适配 FLASH器件的VCC；</li>
+<li>默认SPI器件在CCLK下降沿锁存数据，FPGA在上升沿采样数据（可以通过配置SPI_FALL_EDGE属性更改为下降沿采样）；</li>
+<li>可通过ConfigRate属性调节CCLK频率；可通过ExtMasterCclk_en属性使能外部输入时钟EMCCLK作为CCLK源使用；</li>
+<li>VCCBATT用于AES密钥存储，需要时连接</li>
+</ul>
+<p><img src="/MD_IMG/ug470_7Series_Config.assets/image18.png"></p>
+<h4 id="SPIx1模式时序"><a href="#SPIx1模式时序" class="headerlink" title="SPIx1模式时序"></a>SPIx1模式时序</h4><ul>
+<li>CCLK初始始终为3MHz，配置ConfigRate只有在读写数据时生效，写地址和指令时不生效；</li>
+<li>SPI FLASH在配置后不使用，建议将FCS_B拉高；</li>
+<li>PUDC_B为低，在写完读指令和地址后，MOSI需要拉高或者为高阻态</li>
+</ul>
+<p><img src="/MD_IMG/ug470_7Series_Config.assets/image19.png"></p>
+<h4 id="SPIx4-连接图"><a href="#SPIx4-连接图" class="headerlink" title="SPIx4 连接图"></a>SPIx4 连接图</h4><p><img src="/MD_IMG/ug470_7Series_Config.assets/image20.png"></p>
+<h4 id="SPI操作指令"><a href="#SPI操作指令" class="headerlink" title="SPI操作指令"></a>SPI操作指令</h4><ul>
+<li>通过spi_buswidth属性改变读写位宽</li>
+</ul>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image21.png" style="zoom:50%;" />
+
+<h4 id="操作flash空间大于128Mb"><a href="#操作flash空间大于128Mb" class="headerlink" title="操作flash空间大于128Mb"></a>操作flash空间大于128Mb</h4><ul>
+<li>通过使能 spi_32bit_addr 属性支持32bit地址模式</li>
+</ul>
+<h4 id="SPI配置时序"><a href="#SPI配置时序" class="headerlink" title="SPI配置时序"></a>SPI配置时序</h4><ul>
+<li>默认SPI器件在CCLK下降沿锁存数据，FPGA在上升沿采样数据；</li>
+<li>可以通过配置SPI_FALL_EDGE属性更改为下降沿采样，但是一开始还是上升沿采样，只有到读取bit流中的更改为下降沿这个配置信息之后才会生效，这个在使能外部时钟源和更改速率之前生效</li>
+</ul>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image22.png" style="zoom: 67%;" />
+
+<h4 id="SPI最大速率计算"><a href="#SPI最大速率计算" class="headerlink" title="SPI最大速率计算"></a>SPI最大速率计算</h4><img src="/MD_IMG/ug470_7Series_Config.assets/image23-1698560450479-28.png" style="zoom:50%;" />
+<img src="/MD_IMG/ug470_7Series_Config.assets/image24.png" style="zoom: 67%;" />
+
+<h4 id="上电顺序要求"><a href="#上电顺序要求" class="headerlink" title="上电顺序要求"></a>上电顺序要求</h4><p>SPI flash必须在FPGA 拉低FCS_B和发送读指令之前具备接受指令状态</p>
+<h3 id="主BPI配置模式"><a href="#主BPI配置模式" class="headerlink" title="主BPI配置模式"></a>主BPI配置模式</h3><ul>
+<li>某些引脚位于 bank15，Artix-7 中 7A50T 以及更小器件和 Spartan-7系列不支持 BPI 配置；</li>
+<li>BPI模式支持异步和同步读取两种方式，默认异步；</li>
+<li>异步读取支持x8和x16两种位宽，均为自动识别</li>
+</ul>
+<h4 id="接口-1"><a href="#接口-1" class="headerlink" title="接口"></a>接口</h4><img src="/MD_IMG/ug470_7Series_Config.assets/image25.png" style="zoom:50%;" />
+
+<h4 id="异步读取模式"><a href="#异步读取模式" class="headerlink" title="异步读取模式"></a>异步读取模式</h4><h5 id="连接图"><a href="#连接图" class="headerlink" title="连接图"></a>连接图</h5><ul>
+<li>BPI模式：M[2:0]&#x3D; 101 ；</li>
+<li>CCLK必须作为输出悬空； </li>
+<li>RS[1:0]用于多镜像配置（MultiBoot）</li>
+</ul>
+<p><img src="/MD_IMG/ug470_7Series_Config.assets/image26.png"></p>
+<h5 id="时序-1"><a href="#时序-1" class="headerlink" title="时序"></a>时序</h5><ol>
+<li>开始配置：上电或者低脉冲PROGRAM_B信号；</li>
+<li>上电配置：PROGRAM_B低电平时拉低INIT_B;</li>
+<li>初始化完成：INIT_B变高，INIT_B上升沿采样M[2:0]，识别配置模式；</li>
+<li>识别为BPI模式：FWE_B拉高，FOE_B拉低，FCS_B拉低；</li>
+<li>主模式时INIT_B上升沿一段延时后输出CCLK； </li>
+<li>FPGA输出初始地址并维持10个CCLK； </li>
+<li>FPGA在CCLK上升沿读取数据；</li>
+<li>CRC错误，INIT_B输出低，DONE保持低电平； </li>
+<li>加载完成，DONE拉高；</li>
+<li>CCLK变为高阻态；</li>
+<li>在GTS_cycle后多功能I&#x2F;O引脚变为用户模式，默认为DONE变为高后一个周期</li>
+</ol>
+<p><img src="/MD_IMG/ug470_7Series_Config.assets/image27.png"></p>
+<h4 id="同步读取模式"><a href="#同步读取模式" class="headerlink" title="同步读取模式"></a>同步读取模式</h4><h5 id="连接图-1"><a href="#连接图-1" class="headerlink" title="连接图"></a>连接图</h5><ol>
+<li>同步读取模式是最快的配置模式；</li>
+<li>一开始使用默认CCLK速率和异步读取模式，直到读取bitstream的header才转换为同步读模式；</li>
+<li>同步模式需要通过设置BPI_sync_mode属性设置，有两种属性值：Type1（用于G18F信号flash）；Type2（用于P30&#x2F;P33信号flash）； </li>
+<li>同步读模式，FPGA CCLK输出连接BPI Flash，ADV_B连接FLASH ADV引脚； </li>
+<li>FPGA配置完成后 BPI flash保持同步读模式；</li>
+<li>同步读模式只支持x16； </li>
+<li>bit顺序和SelectMap一样</li>
+</ol>
+<p><img src="/MD_IMG/ug470_7Series_Config.assets/image28.png"></p>
+<h4 id="最大配置速率计算"><a href="#最大配置速率计算" class="headerlink" title="最大配置速率计算"></a>最大配置速率计算</h4><img src="/MD_IMG/ug470_7Series_Config.assets/image29.png" style="zoom: 50%;" />
+![](./media/image30.png)
+
+<h4 id="上电顺序要求-1"><a href="#上电顺序要求-1" class="headerlink" title="上电顺序要求"></a>上电顺序要求</h4><ul>
+<li>在FPGA驱动FCS_B低电平并输出第一个地址之前，BPI闪存必须准备好进行异步读取，以确保BPI闪存可以输出存储的比特流。</li>
+</ul>
+<h3 id="SelectMAP-配置模式"><a href="#SelectMAP-配置模式" class="headerlink" title="SelectMAP 配置模式"></a>SelectMAP 配置模式</h3><h4 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h4><ul>
+<li><p>总线宽度 8、16、32bits，可以自动识别总线宽度；</p>
+</li>
+<li><p>支持配置和读取操作；</p>
+</li>
+<li><p>读操作只有从 SelectMAP模式支持；</p>
+</li>
+<li><p>CCLK主模式下为输出；从模式下为输入；</p>
+</li>
+<li><p>模式：单器件从模式、多器件菊花链模式、多相同器件模式</p>
+</li>
+</ul>
+<h4 id="接口-2"><a href="#接口-2" class="headerlink" title="接口"></a>接口</h4><img src="/MD_IMG/ug470_7Series_Config.assets/image7.png" style="zoom:50%;" />
+
+<h4 id="Data-Ordering"><a href="#Data-Ordering" class="headerlink" title="Data Ordering"></a>Data Ordering</h4><p><img src="/MD_IMG/ug470_7Series_Config.assets/image8.png"><br><img src="/MD_IMG/ug470_7Series_Config.assets/image9.png" style="zoom:67%;" /></p>
+<h4 id="单器件配置模式"><a href="#单器件配置模式" class="headerlink" title="单器件配置模式"></a>单器件配置模式</h4><h5 id="连接示例"><a href="#连接示例" class="headerlink" title="连接示例"></a>连接示例</h5><p><img src="/MD_IMG/ug470_7Series_Config.assets/image10.png"></p>
+<h5 id="数据加载"><a href="#数据加载" class="headerlink" title="数据加载"></a>数据加载</h5><p>支持连续和非连续数据加载，数据加载由 CSI_B、RDWR_B、CCLK信号控制</p>
+<ul>
+<li><p>CSI_B</p>
+<ul>
+<li><p>SelectMAP 接口使能，低有效；</p>
+</li>
+<li><p>当不需要SelectMAP和读回操作时，CSI_B可以接地</p>
+</li>
+</ul>
+</li>
+<li><p>RDWR_B</p>
+<ul>
+<li>输入输出使能，低电平输入（写FPGA)，高电平输出（读FPGA)；</li>
+<li>CSI_B使能时，RDWR_B保持不变，否则会中断配置和回读操作</li>
+</ul>
+</li>
+<li><p>CCLK</p>
+<ul>
+<li>所有数据操作同步于CCLK；</li>
+<li>配置FPGA：FPGA在时钟上升沿采样；</li>
+<li>回读FPGA：FPGA在时钟上升沿更新数据</li>
+</ul>
+</li>
+</ul>
+<h6 id="连续配置时序"><a href="#连续配置时序" class="headerlink" title="连续配置时序"></a>连续配置时序</h6><img src="/MD_IMG/ug470_7Series_Config.assets/image11.png" style="zoom:67%;" />
+
+
+
+<h6 id="非连续配置时序"><a href="#非连续配置时序" class="headerlink" title="非连续配置时序"></a>非连续配置时序</h6><p>两种非连续配置方式：</p>
+<ul>
+<li>通过控制CSI_B信号；</li>
+<li>通过控制CCLK信号</li>
+</ul>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image12.png" style="zoom:67%;" />
+<img src="/MD_IMG/ug470_7Series_Config.assets/image13.png" style="zoom:67%;" />
+
+<h5 id="终止操作"><a href="#终止操作" class="headerlink" title="终止操作"></a>终止操作</h5><ul>
+<li>分为配置终止和回读终止操作；</li>
+<li>当CSI_B有效时改变RDWR_B触发终止操作；</li>
+<li>配置终止会持续4个CCLK周期，同时数据线D0-7会返回状态字；回读终止不返回状字；</li>
+<li>终止操作完成后会恢复配置&#x2F;回读操作；或者可以通过产生PROGRAM_B低脉冲复位整个器件</li>
+</ul>
+<h6 id="时序-2"><a href="#时序-2" class="headerlink" title="时序"></a>时序</h6><img src="/MD_IMG/ug470_7Series_Config.assets/image14.png" style="zoom:67%;" />
+<img src="/MD_IMG/ug470_7Series_Config.assets/image15.png" style="zoom:67%;" />
+
+<h6 id="状态字定义"><a href="#状态字定义" class="headerlink" title="状态字定义"></a>状态字定义</h6><img src="/MD_IMG/ug470_7Series_Config.assets/image16.png" style="zoom:67%;" />
+
+<h6 id="状态字数据对齐"><a href="#状态字数据对齐" class="headerlink" title="状态字数据对齐"></a>状态字数据对齐</h6><img src="/MD_IMG/ug470_7Series_Config.assets/image17.png" style="zoom:67%;" />
+
+<h4 id="多器件SelectMAP独立配置"><a href="#多器件SelectMAP独立配置" class="headerlink" title="多器件SelectMAP独立配置"></a>多器件SelectMAP独立配置</h4><ul>
+<li>通过CS单独控制每个器件</li>
+</ul>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image69.png" style="zoom:80%;" />
+
+<h4 id="多器件SelectMAP同时配置"><a href="#多器件SelectMAP同时配置" class="headerlink" title="多器件SelectMAP同时配置"></a>多器件SelectMAP同时配置</h4><img src="/MD_IMG/ug470_7Series_Config.assets/image71.png" style="zoom:67%;" />
+
+<h4 id="并行菊花链配置"><a href="#并行菊花链配置" class="headerlink" title="并行菊花链配置"></a>并行菊花链配置</h4><ul>
+<li>CS_B为菊花链； </li>
+<li>第一个器件可以为Master&#x2F;Slave SelecrMAP、BPI，其他必须都为Slave SelecrMAP</li>
+</ul>
+<p><img src="/MD_IMG/ug470_7Series_Config.assets/image70.png"></p>
+<h3 id="JTAG配置模式"><a href="#JTAG配置模式" class="headerlink" title="JTAG配置模式"></a>JTAG配置模式</h3><ul>
+<li>无论M[2:0]配置为何值，都支持JTAG在线配置</li>
+</ul>
+<h2 id="配置引脚"><a href="#配置引脚" class="headerlink" title="配置引脚"></a>配置引脚</h2><p><img src="/MD_IMG/ug470_7Series_Config.assets/image31.png"><br><img src="/MD_IMG/ug470_7Series_Config.assets/image32.png"></p>
+<h3 id="CVGBVS"><a href="#CVGBVS" class="headerlink" title="CVGBVS"></a>CVGBVS</h3><ul>
+<li>输入引脚； </li>
+<li>CVGBVS决定bank0 I&#x2F;O支持的电压值，以及配置区间bank14、bank15的I&#x2F;O所支持的电压值；</li>
+<li>若I&#x2F;O工作在1.8V或者更低电压下，CVGBVS接GND；</li>
+<li>若I&#x2F;O工作在2.5V&#x2F;3.3V下，CVGBVS接VCCO_0(3.3V&#x2F;2.5V); </li>
+<li>7系列有两种I&#x2F;O bank类型：high-range (HR I&#x2F;O) banks 支持3.3,2.5V电压标准；a few lower voltage I&#x2F;O standards, and high-performance (HP I&#x2F;O) banks 支持 1.8V 或者更低的电压标准；</li>
+</ul>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image33.png" style="zoom:67%;" />
+
+<h3 id="PROGRAM-B"><a href="#PROGRAM-B" class="headerlink" title="PROGRAM_B"></a>PROGRAM_B</h3><ul>
+<li>输入引脚，下降沿有效，用于复位整个器件；</li>
+<li>上升沿开始启动配置，但上电时把 PROGRAM_B 保持低电平不会使 FPGA配置保持复位状态，延迟配置时间需要使用 INIT_B 信号配合完成</li>
+<li>引脚外部需要通过4.7kΩ 以上电阻上拉至VCCO_0</li>
+</ul>
+<h3 id="INIT-B"><a href="#INIT-B" class="headerlink" title="INIT_B"></a>INIT_B</h3><ul>
+<li>FPGA 初始化引脚或配置错误信号,低电平有效。当 FPGA 处于配置复位状态或当FPGA 正在初始化(清除)其配置存储器(PROGRAM_B信号为低电平)时或当 FPGA 检测到配置错误时,FPGA 会将该引脚驱动为低电平；</li>
+<li>在上电期间,可以通过讲该引脚拉低,来延迟上电配置程序的时间 ；</li>
+<li>当完成初始化后,该引脚被释放,外部上拉电阻讲该引脚拉高,当检测到该信号上升沿之后,FPGA会读取M[2:0]引脚状态,从而确定后续采用哪种配置方式进行配置 ；</li>
+<li>引脚外部需要通过4.7KΩ以上的电阻上拉至VCCO_0 ；</li>
+<li>M[2:0]被采样之后：INIT_B作为输出，0表示CRC或IDCODE错误（这时DONE为低电平），0或表示回读CRC错误（这时DONE为高电平，且回读CRC使能）；1表示没有CRC错误，初始化完成</li>
+</ul>
+<h3 id="PUDC-B"><a href="#PUDC-B" class="headerlink" title="PUDC_B"></a>PUDC_B</h3><ul>
+<li>输入引脚（不可悬空），在配置期间I&#x2F;O引脚内部上拉电阻使能；</li>
+<li>低电平，配置期间所有未赋值引脚为高电平；</li>
+<li>高电平，配置期间所有未赋值引脚为高阻态</li>
+</ul>
+<h3 id="VCCBATT"><a href="#VCCBATT" class="headerlink" title="VCCBATT"></a>VCCBATT</h3><ul>
+<li>FPGA内部易失性存储器的电池备用电源,用于存储AES解密器的密钥,如果不需要使用AES易失性密钥存储区域中的解密器密钥,那么将该引脚接地就行,该引脚不是I&#x2F;O,不受VCCO_0的影响</li>
+</ul>
+<h3 id="RS0-RS1"><a href="#RS0-RS1" class="headerlink" title="RS0, RS1"></a>RS0, RS1</h3><ul>
+<li>输出引脚，RS[1:0]用多镜像配置（MultiBoot）</li>
+</ul>
+<h3 id="RDWR-B"><a href="#RDWR-B" class="headerlink" title="RDWR_B"></a>RDWR_B</h3><ul>
+<li>输入引脚； </li>
+<li>高电平：FPGA输出数据到SelectMap数据线上；</li>
+<li>低电平：外部控制器通过SelectMap数据线写数据到FPGA</li>
+</ul>
+<h3 id="FCS-B"><a href="#FCS-B" class="headerlink" title="FCS_B"></a>FCS_B</h3><ul>
+<li>输出引脚，flash片选信号，低有效</li>
+</ul>
+<h3 id="FOE-B"><a href="#FOE-B" class="headerlink" title="FOE_B"></a>FOE_B</h3><ul>
+<li>输出引脚，flash输出使能，低有效</li>
+</ul>
+<h3 id="FWE-B"><a href="#FWE-B" class="headerlink" title="FWE_B"></a>FWE_B</h3><ul>
+<li>输出引脚，flash写使能，低有效</li>
+</ul>
+<h2 id="Configuration-Details"><a href="#Configuration-Details" class="headerlink" title="Configuration Details"></a>Configuration Details</h2><h3 id="配置文件格式"><a href="#配置文件格式" class="headerlink" title="配置文件格式"></a>配置文件格式</h3><p><img src="/MD_IMG/ug470_7Series_Config.assets/image-20231029143213478.png" alt="image-20231029143213478"></p>
+<h3 id="总线位宽自动检测"><a href="#总线位宽自动检测" class="headerlink" title="总线位宽自动检测"></a>总线位宽自动检测</h3><ul>
+<li>Serial、JTAG、SPI模式不支持总线位宽自动检测功能；</li>
+<li>只检测D[7:0]的值，检测到0xBB，若下一次检测到0x11，则为x8；若下一次检测到0x22，则为x16；若下一次检测到0x44，则为x32；然后立即切换总线位宽，开始检测同步字</li>
+</ul>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image36.png" style="zoom: 67%;" />
+
+<h3 id="同步字"><a href="#同步字" class="headerlink" title="同步字"></a>同步字</h3><ul>
+<li>识别到同步字前没有其他包数据</li>
+</ul>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image37.png" style="zoom:67%;" />
+
+<h3 id="位交换和总线字序"><a href="#位交换和总线字序" class="headerlink" title="位交换和总线字序"></a>位交换和总线字序</h3><img src="/MD_IMG/ug470_7Series_Config.assets/image38.png" style="zoom:67%;" />
+<img src="/MD_IMG/ug470_7Series_Config.assets/image39.png" style="zoom:67%;" />
+<img src="/MD_IMG/ug470_7Series_Config.assets/image40.png" style="zoom:67%;" />
+
+<h3 id="延迟配置"><a href="#延迟配置" class="headerlink" title="延迟配置"></a>延迟配置</h3><ul>
+<li>通过 INIT_B保持低电平来延迟配置。当INIT_B拉高后（完成初始化阶段），再次拉低不会延迟配置。</li>
+</ul>
+<h4 id="延迟相关信号"><a href="#延迟相关信号" class="headerlink" title="延迟相关信号"></a>延迟相关信号</h4><img src="/MD_IMG/ug470_7Series_Config.assets/image41.png" style="zoom:80%;" />
+
+<h3 id="配置顺序"><a href="#配置顺序" class="headerlink" title="配置顺序"></a>配置顺序</h3><img src="/MD_IMG/ug470_7Series_Config.assets/image42.png" style="zoom:80%;" />
+
+<h4 id="Setup"><a href="#Setup" class="headerlink" title="Setup"></a>Setup</h4><h5 id="Device-Power-Up-Step-1"><a href="#Device-Power-Up-Step-1" class="headerlink" title="Device Power-Up (Step 1)"></a>Device Power-Up (Step 1)</h5><ul>
+<li>电源引脚</li>
+</ul>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image43.png" style="zoom:67%;" />
+
+<ul>
+<li>上电时序</li>
+</ul>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image44.png" style="zoom: 67%;" />
+<img src="/MD_IMG/ug470_7Series_Config.assets/image45.png" style="zoom:67%;" />
+
+<h5 id="Clear-Configuration-Memory-Step-2-Initialization"><a href="#Clear-Configuration-Memory-Step-2-Initialization" class="headerlink" title="Clear Configuration Memory (Step 2, Initialization)"></a>Clear Configuration Memory (Step 2, Initialization)</h5><ul>
+<li>以下情况都会触发“清除配置存储”：重新上电、PROGRAM_B低脉冲、JTAG JPROGRAM指令、IPROG指令、fallback重配置；</li>
+<li>BRAM和寄存器都会通过GSR拉高初始化；</li>
+<li>这段期间，除了少数配置输出引脚，其他I&#x2F;O通过GTS处于高阻态，如果PUDC_B为低，则为内部上拉</li>
+</ul>
+<h5 id="Sample-Mode-Pins-Step-3"><a href="#Sample-Mode-Pins-Step-3" class="headerlink" title="Sample Mode Pins (Step 3)"></a>Sample Mode Pins (Step 3)</h5><ul>
+<li>INIT_B拉高后，器件采集M[2:0]模式引脚值，驱动CCLK（master模式下），然后在CCLK上升沿采集配置数据引脚值</li>
+</ul>
+<h4 id="Bitstream-Loading"><a href="#Bitstream-Loading" class="headerlink" title="Bitstream Loading"></a>Bitstream Loading</h4><h5 id="Synchronization-Step-4"><a href="#Synchronization-Step-4" class="headerlink" title="Synchronization (Step 4)"></a>Synchronization (Step 4)</h5><ul>
+<li>对于BPI模式、SelectMAP模式，同步前需要先自动识别位宽；</li>
+<li>任何同步字前的数据都会被忽略，除了位宽检测序列；</li>
+<li>同步阶段对于大多数用户是透明的，因为工具生成的bit包含位宽检测序列及同步字</li>
+</ul>
+<hr>
+<p>同步阶段相关信号 </p>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image46.png" style="zoom:80%;" />
+
+<h5 id="Check-Device-ID-Step-5"><a href="#Check-Device-ID-Step-5" class="headerlink" title="Check Device ID (Step 5)"></a>Check Device ID (Step 5)</h5><ul>
+<li><p>同步之后进行器件ID检验，如果ID不匹配则回退进行重配置</p>
+</li>
+<li><p>7系列 jtag ID Code寄存器格式</p>
+</li>
+</ul>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image47.png" style="zoom:67%;" />
+
+<h5 id="Load-Configuration-Data-Frames-Step-6"><a href="#Load-Configuration-Data-Frames-Step-6" class="headerlink" title="Load Configuration Data Frames (Step 6)"></a>Load Configuration Data Frames (Step 6)</h5><ul>
+<li>同步字加载及器件ID检查完成后，开始加载配置数据帧</li>
+</ul>
+<hr>
+<ul>
+<li>Configuration Packets ：Type1、Type2两种，寄存器地址只用5bit</li>
+</ul>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image48.png" style="zoom:67%;" />
+<img src="/MD_IMG/ug470_7Series_Config.assets/image49.png" style="zoom:67%;" />
+
+<img src="/MD_IMG/ug470_7Series_Config.assets/image50.png" style="zoom: 33%;" />
+
+<h5 id="Cyclic-Redundancy-Check-Step-7"><a href="#Cyclic-Redundancy-Check-Step-7" class="headerlink" title="Cyclic Redundancy Check (Step 7)"></a>Cyclic Redundancy Check (Step 7)</h5><ul>
+<li>FPGA 计算CRC跟bit里的校验值比较；</li>
+<li>同步丢失后，后续的指令都被忽略，最配置失败—DONE低，INIT_B高</li>
+</ul>
+<h4 id="Startup"><a href="#Startup" class="headerlink" title="Startup"></a>Startup</h4><ul>
+<li>DONE置位后要保留足够时间保证能到 phase7，保守时间为64个时钟周期</li>
+</ul>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image51.png" style="zoom:67%;" />
+
+<ul>
+<li>防止DONE、GTS、GWE在MMCMs锁相和DCI匹配前置位</li>
+</ul>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image52.png" style="zoom: 67%;" />
+
+<p><img src="/MD_IMG/ug470_7Series_Config.assets/image53.png"><br><img src="/MD_IMG/ug470_7Series_Config.assets/image54.png" style="zoom:67%;" /></p>
+<h4 id="配置过程I-x2F-O电平变化（EOS）"><a href="#配置过程I-x2F-O电平变化（EOS）" class="headerlink" title="配置过程I&#x2F;O电平变化（EOS）"></a>配置过程I&#x2F;O电平变化（EOS）</h4><ul>
+<li>在End Of Startup后一个CFGCLK发生0-1-0的电平转变过程；</li>
+<li>避免产生影响：VCCO14、15接2.5&#x2F;3.3V；或者外部引脚上拉；还可以逻辑设计忽略EOS 后第一个CFGCLK上升沿之后至少200ns不采纳数据</li>
+</ul>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image55.png" style="zoom:67%;" />
+
+<h4 id="STARTUPE2原语"><a href="#STARTUPE2原语" class="headerlink" title="STARTUPE2原语"></a>STARTUPE2原语</h4><img src="/MD_IMG/ug470_7Series_Config.assets/image56.png" style="zoom: 50%;" />
+
+<h3 id="Bitstream-Security"><a href="#Bitstream-Security" class="headerlink" title="Bitstream Security"></a>Bitstream Security</h3><h3 id="Bitstream-Composition"><a href="#Bitstream-Composition" class="headerlink" title="Bitstream Composition"></a>Bitstream Composition</h3><img src="/MD_IMG/ug470_7Series_Config.assets/image-20231029141811995.png" alt="image-20231029141811995" style="zoom:80%;" />
+
+<img src="/MD_IMG/ug470_7Series_Config.assets/image-20231029141918297.png" alt="image-20231029141918297" style="zoom:80%;" />
+
+<img src="/MD_IMG/ug470_7Series_Config.assets/image-20231029141925287.png" alt="image-20231029141925287" style="zoom: 80%;" />
+
+<h2 id="配置寄存器"><a href="#配置寄存器" class="headerlink" title="配置寄存器"></a>配置寄存器</h2><img src="/MD_IMG/ug470_7Series_Config.assets/image-20231029142516904.png" alt="image-20231029142516904" style="zoom:67%;" />
+
+<h2 id="重配置和多镜像"><a href="#重配置和多镜像" class="headerlink" title="重配置和多镜像"></a>重配置和多镜像</h2><h3 id="Fallback-MultiBoot"><a href="#Fallback-MultiBoot" class="headerlink" title="Fallback MultiBoot"></a>Fallback MultiBoot</h3><ul>
+<li>回退功能使能：ConfigFallback（通过xdc约束或者bitstream设置）；</li>
+<li>回退重配置时将忽略IPROG，看门狗计时器关闭；</li>
+<li>重配置失败，配置终止，INIT_B和DONE保持低电平</li>
+</ul>
+<h4 id="先加载golden再触发MultiBoot"><a href="#先加载golden再触发MultiBoot" class="headerlink" title="先加载golden再触发MultiBoot"></a>先加载golden再触发MultiBoot</h4><img src="/MD_IMG/ug470_7Series_Config.assets/image59.png" style="zoom:67%;" />
+
+<h4 id="直接加载MultiBoot"><a href="#直接加载MultiBoot" class="headerlink" title="直接加载MultiBoot"></a>直接加载MultiBoot</h4><ul>
+<li>对于SPI模式，回退默认使用x1进行golden镜像加载；</li>
+<li>对于BPI模式，回退默认使用异步读模式进行镜像加载，所以当配置为同步读模式时要注意CCLK，同时要满足异步和同步读模式；</li>
+<li>BPI模式，硬件设计RS引脚要根据upper address进行上拉或者下拉</li>
+</ul>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image60.png" style="zoom:67%;" />
+
+<h3 id="IPROG"><a href="#IPROG" class="headerlink" title="IPROG"></a>IPROG</h3><ul>
+<li>IPROG（Internal PROGRAM）指令和PROGRAM_B引脚给低脉冲作用类似，区别在于IPROG不复位WBSTAR、TIMER、BSPI和BOOTSTS寄存器值；</li>
+<li>IPROG指令触发初始化，同时INIT和DONE拉低；</li>
+<li>两种发起指令方式：逻辑控制ICAPE2；生成bit时在golden bit前加入WBSTAR和IPROG指令； 4.当触发回退重新加载时IPROG指令将被忽略</li>
+</ul>
+<h4 id="IPROG-Using-ICAPE2"><a href="#IPROG-Using-ICAPE2" class="headerlink" title="IPROG Using ICAPE2"></a>IPROG Using ICAPE2</h4><ul>
+<li>输入配置信息需要位转换； </li>
+<li>发送流程：同步字-&gt;WBSTAR-&gt;IPROG</li>
+</ul>
+<img src="/MD_IMG/ug470_7Series_Config.assets/image-20231029142328206.png" alt="image-20231029142328206" style="zoom: 50%;" />
+
+<h4 id="IPROG-Embedded-in-the-Bitstream"><a href="#IPROG-Embedded-in-the-Bitstream" class="headerlink" title="IPROG Embedded in the Bitstream"></a>IPROG Embedded in the Bitstream</h4><img src="/MD_IMG/ug470_7Series_Config.assets/image63.png" style="zoom: 67%;" />
+
+<h4 id="Status-Register-for-Fallback-and-IPROG-Reconfiguration"><a href="#Status-Register-for-Fallback-and-IPROG-Reconfiguration" class="headerlink" title="Status Register for Fallback and IPROG Reconfiguration"></a>Status Register for Fallback and IPROG Reconfiguration</h4><ul>
+<li>BOOTSTS用于存储配置历史； </li>
+<li>Valid用于只是当前Status是否有效；</li>
+<li>Status_0用于记录最新配置状态； Status_1用于记录上一次配置状态；</li>
+</ul>
+<p><img src="/MD_IMG/ug470_7Series_Config.assets/image64.png"></p>
+<ul>
+<li>Status_1 表示执行了IPROG，检测到CRC错误； </li>
+<li>Status_0表示回退加载成功，同时也有IPROG，只是回退重配置忽略IPROG指令，但是同样记录状态</li>
+</ul>
+<h3 id="WBSTAR-Register"><a href="#WBSTAR-Register" class="headerlink" title="WBSTAR Register"></a>WBSTAR Register</h3><ul>
+<li>执行IPROG指令后，FPGA从WBSTAR指示的地址开始读指令</li>
+</ul>
+<p><img src="/MD_IMG/ug470_7Series_Config.assets/image65.png"></p>
+<h3 id="Watchdog-Timer"><a href="#Watchdog-Timer" class="headerlink" title="Watchdog Timer"></a>Watchdog Timer</h3><ul>
+<li>两种模式：配置监控、用户逻辑监控； </li>
+<li>计数到达0，触发回退；</li>
+<li>计时器寄存器计数时钟为CFGMCLK（65MHz））256分频，一个时钟周期为4000ns，计数器位宽30bits，所以可以计时4230秒；</li>
+<li>回退重配置时，Watchdog不使能</li>
+</ul>
+<h4 id="Configuration-Monitor-Mode"><a href="#Configuration-Monitor-Mode" class="headerlink" title="Configuration Monitor Mode"></a>Configuration Monitor Mode</h4><ul>
+<li>TIMER寄存器：TIME_CFG_MON设为1，并设置超时计数值</li>
+</ul>
+<h4 id="User-Monitor-Mode"><a href="#User-Monitor-Mode" class="headerlink" title="User Monitor Mode"></a>User Monitor Mode</h4><ul>
+<li>TIMER寄存器：TIME_USR_MON设为1，并设置超时计数值</li>
+</ul>
+<h3 id="RS-Pins"><a href="#RS-Pins" class="headerlink" title="RS Pins"></a>RS Pins</h3><ul>
+<li><p>除SPI配置模式，RS信号均由WBSTAR寄存器控制输出； </p>
+</li>
+<li><p>当BPI或Master SelectMap模式回退时，输出低电平； </p>
+</li>
+<li><p>在多镜像场景用作为高位地址线；</p>
+</li>
+<li><p>除CCLK外所有BPI引脚均为多功能I&#x2F;O，配置完成后（DONE为高）均可由用户控制</p>
+</li>
+</ul>
+<p><img src="/MD_IMG/ug470_7Series_Config.assets/image66.png"></p>
+<h2 id="JTAG高级用法"><a href="#JTAG高级用法" class="headerlink" title="JTAG高级用法"></a>JTAG高级用法</h2><p><img src="/MD_IMG/ug470_7Series_Config.assets/image-20231029141657293.png" alt="image-20231029141657293"></p>
+<h2 id="参考文献"><a href="#参考文献" class="headerlink" title="参考文献"></a>参考文献</h2><p><a target="_blank" rel="noopener" href="https://docs.xilinx.com/r/en-US/ug470_7Series_Config">7 Series FPGAs Configuration User Guide  (UG470) </a></p>
+ 
+      <!-- reward -->
+      
+        <div id="reword-out" style="border-top-width: 20px;padding-top: 30px;">
+            <div id="reward-btn" style="
+                margin-bottom: 0px;
+                margin-top: 0px;
+                ">Donate
+            </div>
+        </div>
+      
+    </div>
+    
+
+    <!-- copyright -->
+    
+    <footer class="article-footer">
+       
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Xilinx/" rel="tag">Xilinx</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Xilinx-7%E7%B3%BB%E5%88%97FPGA%E9%85%8D%E7%BD%AE/" rel="tag">Xilinx 7系列FPGA配置</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/%E6%96%87%E6%A1%A3%E6%80%BB%E7%BB%93/" rel="tag">文档总结</a></li></ul>
+
+    </footer>
+  </div>
+
+   
+  <nav class="article-nav">
+    
+    
+      <a href="/2023/09/23/CRC%E6%A0%A1%E9%AA%8C/" class="article-nav-link">
+        <strong class="article-nav-caption">下一篇</strong>
+        <div class="article-nav-title">CRC校验</div>
+      </a>
+    
+  </nav>
+
+  
+   
+  
+   
+    <script src="https://cdn.staticfile.org/twikoo/1.4.18/twikoo.all.min.js"></script>
+    <div id="twikoo" class="twikoo"></div>
+    <script>
+        twikoo.init({
+            envId: ""
+        })
+    </script>
+ 
+</article>
+
+</section>
+      <footer class="footer">
+  <div class="outer">
+    <ul>
+        <li style="
+            padding-bottom: 0px;
+            width: 30px;
+            padding-right: 5px;
+        ">
+        <img src="/images/favicon.ico">
+      </li>
+      <li>
+        &copy;
+        2023
+        <!-- <i class="ri-heart-fill heart_icon"></i> Arlen -->
+        , 
+        Arlen
+        .
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      <li>
+        
+      </li>
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      
+    </ul>
+    <ul>
+      <li>
+        <!-- cnzz统计 -->
+        
+      </li>
+    </ul>
+  </div>
+</footer>    
+    </main>
+    <div class="float_btns">
+      <div class="totop" id="totop">
+  <i class="ri-arrow-up-line"></i>
+</div>
+
+<div class="todark" id="todark">
+  <i class="ri-moon-line"></i>
+</div>
+
+    </div>
+    <aside class="sidebar on">
+      <button class="navbar-toggle">
+    <style>
+        .navbar-toggle {
+            background-color: rgba(0,0,0,.05);
+        }
+    </style>
+</button>
+<nav class="navbar">
+  
+  <div class="logo">
+    <a href="/"><img src="/images/ayer.png" alt="Welcome"></a>
+  </div>
+  
+  <ul class="nav nav-main">
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/">主页</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/archives">归档</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/categories">分类</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/tags">标签</a>
+    </li>
+    
+    <li class="nav-item">
+      <a class="nav-item-link" href="/about">关于</a>
+    </li>
+    
+  </ul>
+</nav>
+<nav class="navbar navbar-bottom">
+  <ul class="nav">
+    <li class="nav-item">
+      
+      <a class="nav-item-link nav-item-search"  title="Search">
+        <i class="ri-search-line"></i>
+      </a>
+      
+      <a class="nav-item-link" target="_blank" href="https://github.com/hjh0920">
+        <i class="ri-github-fill"></i>
+        <!-- <i class="ri-github-line"></i> -->
+      </a>
+    </li>
+  </ul>
+  <style>
+    .navbar .nav .nav-item-link {
+        display: block;
+        padding: 1rem;
+        color: #918888;
+        text-decoration: none;
+        cursor: pointer;
+    }
+  </style>
+</nav>
+<div class="search-form-wrap">
+  <div class="local-search local-search-plugin">
+  <input type="search" id="local-search-input" class="local-search-input" placeholder="Search...">
+  <div id="local-search-result" class="local-search-result"></div>
+</div>
+</div>
+      <style>
+        .sidebar {
+          background-color: rgba(0,0,0,.1);
+        }
+      </style>
+    </aside>
+    <div id="mask"></div>
+
+<!-- #reward -->
+<div id="reward">
+  <span class="close"><i class="ri-close-line"></i></span>
+  <p class="reward-p"><i class="ri-cup-line"></i>请我喝杯咖啡吧~</p>
+  <div class="reward-box">
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/alipay.jpg">
+      <span class="reward-type">支付宝</span>
+    </div>
+    
+    
+    <div class="reward-item">
+      <img class="reward-img" src="/images/wechat.jpg">
+      <span class="reward-type">微信</span>
+    </div>
+    
+  </div>
+</div>
+    
+<script src="/js/jquery-3.6.0.min.js"></script>
+ 
+<script src="/js/lazyload.min.js"></script>
+
+<!-- Tocbot -->
+ 
+<script src="/js/tocbot.min.js"></script>
+
+<script>
+  tocbot.init({
+    // Where to render the table of contents.
+    tocSelector: ".tocbot",
+    // Where to grab the headings to build the table of contents.
+    contentSelector: ".article-entry",
+    // Which headings to grab inside of the contentSelector element.
+    headingSelector: "h1, h2, h3, h4, h5, h6",
+    // For headings inside relative or absolute positioned containers within content.
+    hasInnerContainers: true,
+    // Smooth scrolling enabled.
+    scrollSmooth: true,
+    // If there is a fixed article scroll container, set to calculate titles' offset
+    scrollContainer: "main",
+    // Element to add the positionFixedClass to.
+    positionFixedSelector: ".tocbot",
+    // Fixed position class to add to make sidebar fixed after scrolling
+    // down past the fixedSidebarOffset.
+    positionFixedClass: "is-position-fixed",
+    // fixedSidebarOffset can be any number but by default is set
+    // to auto which sets the fixedSidebarOffset to the sidebar
+    // element's offsetTop from the top of the document on init.
+    fixedSidebarOffset: "auto",
+    // How many heading levels should not be collpased.
+    // For example, number 6 will show everything since
+    // there are only 6 heading levels and number 0 will collpase them all.
+    // The sections that are hidden will open
+    // and close as you scroll to headings within them.
+    // collapseDepth: "is-collapsed",
+  });
+</script>
+
+<script src="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.js"></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.staticfile.org/jquery-modal/0.9.2/jquery.modal.min.css"
+/>
+<script src="https://cdn.staticfile.org/justifiedGallery/3.8.1/js/jquery.justifiedGallery.min.js"></script>
+
+<script src="/dist/main.js"></script>
+
+<!-- ImageViewer -->
+ <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.css">
+<link rel="stylesheet" href="https://cdn.staticfile.org/photoswipe/4.1.3/default-skin/default-skin.min.css">
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe.min.js"></script>
+<script src="https://cdn.staticfile.org/photoswipe/4.1.3/photoswipe-ui-default.min.js"></script>
+
+<script>
+    function viewer_init() {
+        let pswpElement = document.querySelectorAll('.pswp')[0];
+        let $imgArr = document.querySelectorAll(('.article-entry img:not(.reward-img)'))
+
+        $imgArr.forEach(($em, i) => {
+            $em.onclick = () => {
+                // slider展开状态
+                // todo: 这样不好，后面改成状态
+                if (document.querySelector('.left-col.show')) return
+                let items = []
+                $imgArr.forEach(($em2, i2) => {
+                    let img = $em2.getAttribute('data-idx', i2)
+                    let src = $em2.getAttribute('data-target') || $em2.getAttribute('src')
+                    let title = $em2.getAttribute('alt')
+                    // 获得原图尺寸
+                    const image = new Image()
+                    image.src = src
+                    items.push({
+                        src: src,
+                        w: image.width || $em2.width,
+                        h: image.height || $em2.height,
+                        title: title
+                    })
+                })
+                var gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, {
+                    index: parseInt(i)
+                });
+                gallery.init()
+            }
+        })
+    }
+    viewer_init()
+</script> 
+<!-- MathJax -->
+
+<!-- Katex -->
+
+<!-- busuanzi  -->
+
+<!-- ClickLove -->
+ 
+<script src="/js/clickLove.js"></script>
+ 
+<!-- ClickBoom1 -->
+
+<!-- ClickBoom2 -->
+
+<!-- CodeCopy -->
+ 
+<link rel="stylesheet" href="/css/clipboard.css">
+ <script src="https://cdn.staticfile.org/clipboard.js/2.0.10/clipboard.min.js"></script>
+<script>
+  function wait(callback, seconds) {
+    var timelag = null;
+    timelag = window.setTimeout(callback, seconds);
+  }
+  !function (e, t, a) {
+    var initCopyCode = function(){
+      var copyHtml = '';
+      copyHtml += '<button class="btn-copy" data-clipboard-snippet="">';
+      copyHtml += '<i class="ri-file-copy-2-line"></i><span>COPY</span>';
+      copyHtml += '</button>';
+      $(".highlight .code pre").before(copyHtml);
+      $(".article pre code").before(copyHtml);
+      var clipboard = new ClipboardJS('.btn-copy', {
+        target: function(trigger) {
+          return trigger.nextElementSibling;
+        }
+      });
+      clipboard.on('success', function(e) {
+        let $btn = $(e.trigger);
+        $btn.addClass('copied');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-checkbox-circle-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPIED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-checkbox-circle-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+      clipboard.on('error', function(e) {
+        e.clearSelection();
+        let $btn = $(e.trigger);
+        $btn.addClass('copy-failed');
+        let $icon = $($btn.find('i'));
+        $icon.removeClass('ri-file-copy-2-line');
+        $icon.addClass('ri-time-line');
+        let $span = $($btn.find('span'));
+        $span[0].innerText = 'COPY FAILED';
+        
+        wait(function () { // 等待两秒钟后恢复
+          $icon.removeClass('ri-time-line');
+          $icon.addClass('ri-file-copy-2-line');
+          $span[0].innerText = 'COPY';
+        }, 2000);
+      });
+    }
+    initCopyCode();
+  }(window, document);
+</script>
+ 
+<!-- CanvasBackground -->
+
+<script>
+  if (window.mermaid) {
+    mermaid.initialize({ theme: "forest" });
+  }
+</script>
+
+
+    
+    
+
+  </div>
+</body>
+
+</html>
